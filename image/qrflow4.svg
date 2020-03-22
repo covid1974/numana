@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Creator: fig2dev Version 3.2 Patchlevel 5e -->
+
+<!-- CreationDate: Thu Dec 26 11:44:09 2019 -->
+
+<!-- Magnification: 1.000 -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="4.4in"
+   height="5.1in"
+   viewBox="2238 438 5274 6174"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="qrflow4.svg">
+  <metadata
+     id="metadata106">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs104" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="640"
+     inkscape:window-height="480"
+     id="namedview102"
+     showgrid="false"
+     inkscape:zoom="0.51416123"
+     inkscape:cx="198"
+     inkscape:cy="229.5"
+     inkscape:window-x="53"
+     inkscape:window-y="34"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg2" />
+  <g
+     style="stroke-width:.025in; fill:none"
+     id="g4">
+    <!-- Line: box -->
+    <rect
+       x="3150"
+       y="450"
+       width="3450"
+       height="600"
+       rx="0"
+       style="stroke:#000000;stroke-width:7; stroke-linejoin:miter; stroke-linecap:butt; "
+       id="rect6" />
+    <!-- Line: box -->
+    <rect
+       x="2850"
+       y="1500"
+       width="3900"
+       height="600"
+       rx="0"
+       style="stroke:#000000;stroke-width:7; stroke-linejoin:miter; stroke-linecap:butt; "
+       id="rect8" />
+    <!-- Line: box -->
+    <rect
+       x="3450"
+       y="2700"
+       width="2700"
+       height="450"
+       rx="0"
+       style="stroke:#000000;stroke-width:7; stroke-linejoin:miter; stroke-linecap:butt; "
+       id="rect10" />
+    <!-- Line: box -->
+    <rect
+       x="2550"
+       y="3600"
+       width="4650"
+       height="600"
+       rx="0"
+       style="stroke:#000000;stroke-width:7; stroke-linejoin:miter; stroke-linecap:butt; "
+       id="rect12" />
+    <!-- Line: box -->
+    <rect
+       x="2250"
+       y="4800"
+       width="5250"
+       height="600"
+       rx="0"
+       style="stroke:#000000;stroke-width:7; stroke-linejoin:miter; stroke-linecap:butt; "
+       id="rect14" />
+    <!-- Line: box -->
+    <rect
+       x="3300"
+       y="6150"
+       width="3150"
+       height="450"
+       rx="0"
+       style="stroke:#000000;stroke-width:7; stroke-linejoin:miter; stroke-linecap:butt; "
+       id="rect16" />
+    <!-- Line -->
+    <polyline
+       points="4800,1050 4800,1260 "
+       style="stroke:#000000;stroke-width:7; stroke-linejoin:miter; stroke-linecap:butt; "
+       id="polyline18" />
+    <!-- Arrowhead on XXXpoint 4800 1050 - 4800 1515-->
+    <polygon
+       points="4728 1198 4800 1498 4872 1198 4800 1258 4728 1198  "
+       style="stroke:#000000;stroke-width:7;stroke-miterlimit:8; fill:#000000;"
+       id="polygon20" />
+    <!-- Line -->
+    <polyline
+       points="4800,2100 4800,2310 "
+       style="stroke:#000000;stroke-width:7; stroke-linejoin:miter; stroke-linecap:butt; "
+       id="polyline22" />
+    <!-- Arrowhead on XXXpoint 4800 2100 - 4800 2565-->
+    <polygon
+       points="4728 2248 4800 2548 4872 2248 4800 2308 4728 2248  "
+       style="stroke:#000000;stroke-width:7;stroke-miterlimit:8; fill:#000000;"
+       id="polygon24" />
+    <!-- Line -->
+    <polyline
+       points="4800,3150 4800,3360 "
+       style="stroke:#000000;stroke-width:7; stroke-linejoin:miter; stroke-linecap:butt; "
+       id="polyline26" />
+    <!-- Arrowhead on XXXpoint 4800 3150 - 4800 3615-->
+    <polygon
+       points="4728 3298 4800 3598 4872 3298 4800 3358 4728 3298  "
+       style="stroke:#000000;stroke-width:7;stroke-miterlimit:8; fill:#000000;"
+       id="polygon28" />
+    <!-- Line -->
+    <polyline
+       points="4800,4200 4800,4560 "
+       style="stroke:#000000;stroke-width:7; stroke-linejoin:miter; stroke-linecap:butt; "
+       id="polyline30" />
+    <!-- Arrowhead on XXXpoint 4800 4200 - 4800 4815-->
+    <polygon
+       points="4728 4498 4800 4798 4872 4498 4800 4558 4728 4498  "
+       style="stroke:#000000;stroke-width:7;stroke-miterlimit:8; fill:#000000;"
+       id="polygon32" />
+    <!-- Line -->
+    <polyline
+       points="4800,5400 4800,5910 "
+       style="stroke:#000000;stroke-width:7; stroke-linejoin:miter; stroke-linecap:butt; "
+       id="polyline34" />
+    <!-- Arrowhead on XXXpoint 4800 5400 - 4800 6165-->
+    <polygon
+       points="4728 5848 4800 6148 4872 5848 4800 5908 4728 5848  "
+       style="stroke:#000000;stroke-width:7;stroke-miterlimit:8; fill:#000000;"
+       id="polygon36" />
+    <!-- Text -->
+    <text
+       xml:space="preserve"
+       x="4800"
+       y="900"
+       fill="#000000"
+       font-family="Times"
+       font-style="normal"
+       font-weight="normal"
+       font-size="240"
+       text-anchor="middle"
+       id="text38">normsq1 = \sum<tspan
+   font-size="160"
+   dy="35"
+   id="tspan40">j=i+1</tspan><tspan
+   dy="-35"
+   id="tspan42" /><tspan
+   font-size="160"
+   dy="-85"
+   id="tspan44">n-1</tspan><tspan
+   dy="50"
+   id="tspan46"> a</tspan><tspan
+   font-size="160"
+   dy="35"
+   id="tspan48">j i</tspan><tspan
+   dy="-35"
+   id="tspan50" /><tspan
+   font-size="160"
+   dy="-85"
+   id="tspan52">2</tspan><tspan
+   dy="50"
+   id="tspan54" /></text>
+    <!-- Text -->
+    <text
+       xml:space="preserve"
+       x="4800"
+       y="1950"
+       fill="#000000"
+       font-family="Times"
+       font-style="normal"
+       font-weight="normal"
+       font-size="240"
+       text-anchor="middle"
+       id="text56">norm = \sqrt{normsq1+a<tspan
+   font-size="160"
+   dy="35"
+   id="tspan58">i i</tspan><tspan
+   dy="-35"
+   id="tspan60" /><tspan
+   font-size="160"
+   dy="-85"
+   id="tspan62">2</tspan><tspan
+   dy="50"
+   id="tspan64">}</tspan></text>
+    <!-- Text -->
+    <text
+       xml:space="preserve"
+       x="4800"
+       y="4050"
+       fill="#000000"
+       font-family="Times"
+       font-style="normal"
+       font-weight="normal"
+       font-size="240"
+       text-anchor="middle"
+       id="text66">normDiff = \sqrt{normsq1 + a<tspan
+   font-size="160"
+   dy="35"
+   id="tspan68">i i</tspan><tspan
+   dy="-35"
+   id="tspan70" /><tspan
+   font-size="160"
+   dy="-85"
+   id="tspan72">2</tspan><tspan
+   dy="50"
+   id="tspan74">}</tspan></text>
+    <!-- Text -->
+    <text
+       xml:space="preserve"
+       x="4800"
+       y="3000"
+       fill="#000000"
+       font-family="Times"
+       font-style="normal"
+       font-weight="normal"
+       font-size="240"
+       text-anchor="middle"
+       id="text76">a<tspan
+   font-size="160"
+   dy="35"
+   id="tspan78">i i</tspan><tspan
+   dy="-35"
+   id="tspan80"> = a</tspan><tspan
+   font-size="160"
+   dy="35"
+   id="tspan82">i i</tspan><tspan
+   dy="-35"
+   id="tspan84"> - norm</tspan></text>
+    <!-- Text -->
+    <text
+       xml:space="preserve"
+       x="4800"
+       y="5250"
+       fill="#000000"
+       font-family="Times"
+       font-style="normal"
+       font-weight="normal"
+       font-size="240"
+       text-anchor="middle"
+       id="text86">Divide a<tspan
+   font-size="160"
+   dy="35"
+   id="tspan88">i i</tspan><tspan
+   dy="-35"
+   id="tspan90">,..., a</tspan><tspan
+   font-size="160"
+   dy="35"
+   id="tspan92">n-1, i</tspan><tspan
+   dy="-35"
+   id="tspan94"> by normDiff</tspan></text>
+    <!-- Text -->
+    <text
+       xml:space="preserve"
+       x="4800"
+       y="6450"
+       fill="#000000"
+       font-family="Times"
+       font-style="normal"
+       font-weight="normal"
+       font-size="240"
+       text-anchor="middle"
+       id="text96">Store norm in a<tspan
+   font-size="160"
+   dy="35"
+   id="tspan98">n i</tspan><tspan
+   dy="-35"
+   id="tspan100" /></text>
+  </g>
+</svg>

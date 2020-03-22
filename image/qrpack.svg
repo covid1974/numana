@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Creator: fig2dev Version 3.2 Patchlevel 5e -->
+
+<!-- CreationDate: Thu Dec 26 11:36:58 2019 -->
+
+<!-- Magnification: 1.000 -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="2.7729926in"
+   height="4.5579424in"
+   viewBox="2085 265 3328.4576 5520.1746"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="qrpack.svg">
+  <metadata
+     id="metadata76">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs74" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="640"
+     inkscape:window-height="480"
+     id="namedview72"
+     showgrid="false"
+     inkscape:zoom="0.58271605"
+     inkscape:cx="142.39803"
+     inkscape:cy="121.82204"
+     inkscape:window-x="53"
+     inkscape:window-y="34"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg2"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
+  <rect
+     id="rect6"
+     style="fill:#7f7f7f;stroke:#000000;stroke-width:7;stroke-linecap:butt;stroke-linejoin:miter"
+     rx="0"
+     height="300"
+     width="1800"
+     y="4282.7744"
+     x="2078.4426" />
+  <polyline
+     id="polyline8"
+     style="fill:none;stroke:#000000;stroke-width:7;stroke-linecap:butt;stroke-linejoin:miter"
+     points="2550,4950 2743,4564 "
+     transform="translate(-21.557402,82.774296)" />
+  <polygon
+     id="polygon10"
+     style="fill:#000000;stroke:#000000;stroke-width:7;stroke-miterlimit:8"
+     points="2741,4565 2779,4651 2779,4651 2849,4351 2650,4587 "
+     transform="translate(-21.557402,82.774296)" />
+  <polyline
+     id="polyline12"
+     style="fill:none;stroke:#000000;stroke-width:7;stroke-linecap:butt;stroke-linejoin:miter"
+     points="3600,4200 3600,4500 "
+     transform="translate(-21.557402,82.774296)" />
+  <polyline
+     id="polyline14"
+     style="fill:none;stroke:#000000;stroke-width:7;stroke-linecap:butt;stroke-linejoin:miter"
+     points="3300,4200 3300,4500 "
+     transform="translate(-21.557402,82.774296)" />
+  <polyline
+     id="polyline16"
+     style="fill:none;stroke:#000000;stroke-width:7;stroke-linecap:butt;stroke-linejoin:miter"
+     points="3000,4200 3000,4500 "
+     transform="translate(-21.557402,82.774296)" />
+  <polyline
+     id="polyline18"
+     style="fill:none;stroke:#000000;stroke-width:7;stroke-linecap:butt;stroke-linejoin:miter"
+     points="2700,4200 2700,4500 "
+     transform="translate(-21.557402,82.774296)" />
+  <polyline
+     id="polyline20"
+     style="fill:none;stroke:#000000;stroke-width:7;stroke-linecap:butt;stroke-linejoin:miter"
+     points="2400,4200 2400,4500 "
+     transform="translate(-21.557402,82.774296)" />
+  <polygon
+     id="polygon22"
+     style="fill:#7f7f7f;stroke:#000000;stroke-width:7;stroke-linecap:butt;stroke-linejoin:miter"
+     points="3300,2400 3600,2400 3600,2700 3900,2700 3900,1200 2100,1200 2100,1200 2400,1200 2400,1500 2700,1500 2700,1800 3000,1800 3000,2100 3300,2100 "
+     transform="translate(-21.557402,82.774296)" />
+  <rect
+     id="rect24"
+     style="fill:none;stroke:#000000;stroke-width:7;stroke-linecap:butt;stroke-linejoin:miter"
+     rx="0"
+     height="1500"
+     width="300"
+     y="2482.7742"
+     x="3278.4426" />
+  <rect
+     id="rect26"
+     style="fill:none;stroke:#000000;stroke-width:7;stroke-linecap:butt;stroke-linejoin:miter"
+     rx="0"
+     height="1800"
+     width="300"
+     y="2182.7744"
+     x="2978.4426" />
+  <rect
+     id="rect28"
+     style="fill:none;stroke:#000000;stroke-width:7;stroke-linecap:butt;stroke-linejoin:miter"
+     rx="0"
+     height="2100"
+     width="300"
+     y="1882.7743"
+     x="2678.4426" />
+  <rect
+     id="rect30"
+     style="fill:none;stroke:#000000;stroke-width:7;stroke-linecap:butt;stroke-linejoin:miter"
+     rx="0"
+     height="2400"
+     width="300"
+     y="1582.7743"
+     x="2378.4426" />
+  <rect
+     id="rect32"
+     style="fill:none;stroke:#000000;stroke-width:7;stroke-linecap:butt;stroke-linejoin:miter"
+     rx="0"
+     height="2700"
+     width="300"
+     y="1282.7743"
+     x="2078.4426" />
+  <rect
+     id="rect34"
+     style="fill:none;stroke:#000000;stroke-width:7;stroke-linecap:butt;stroke-linejoin:miter"
+     rx="0"
+     height="2700"
+     width="1800"
+     y="1282.7743"
+     x="2078.4426" />
+  <text
+     style="font-style:italic;font-weight:bold;font-size:144px;font-family:Helvetica;text-anchor:start;fill:#000000;stroke-width:0.025in"
+     id="text36"
+     font-size="144"
+     font-weight="bold"
+     font-style="italic"
+     y="3397.7742"
+     x="3713.4426"
+     xml:space="preserve">6</text>
+  <text
+     style="font-style:italic;font-weight:bold;font-size:144px;font-family:Helvetica;text-anchor:start;fill:#000000;stroke-width:0.025in"
+     id="text38"
+     font-size="144"
+     font-weight="bold"
+     font-style="italic"
+     y="3307.7742"
+     x="3638.4426"
+     xml:space="preserve">u</text>
+  <text
+     style="font-style:italic;font-weight:bold;font-size:144px;font-family:Helvetica;text-anchor:start;fill:#000000;stroke-width:0.025in"
+     id="text40"
+     font-size="144"
+     font-weight="bold"
+     font-style="italic"
+     y="3697.7742"
+     x="3398.4426"
+     xml:space="preserve">5</text>
+  <text
+     style="font-style:italic;font-weight:bold;font-size:144px;font-family:Helvetica;text-anchor:start;fill:#000000;stroke-width:0.025in"
+     id="text42"
+     font-size="144"
+     font-weight="bold"
+     font-style="italic"
+     y="3622.7742"
+     x="3323.4426"
+     xml:space="preserve">u</text>
+  <text
+     style="font-style:italic;font-weight:bold;font-size:144px;font-family:Helvetica;text-anchor:start;fill:#000000;stroke-width:0.025in"
+     id="text44"
+     font-size="144"
+     font-weight="bold"
+     font-style="italic"
+     y="3427.7742"
+     x="3098.4426"
+     xml:space="preserve">4</text>
+  <text
+     style="font-style:italic;font-weight:bold;font-size:144px;font-family:Helvetica;text-anchor:start;fill:#000000;stroke-width:0.025in"
+     id="text46"
+     font-size="144"
+     font-weight="bold"
+     font-style="italic"
+     y="3337.7742"
+     x="3023.4426"
+     xml:space="preserve">u</text>
+  <text
+     style="font-style:italic;font-weight:bold;font-size:144px;font-family:Helvetica;text-anchor:start;fill:#000000;stroke-width:0.025in"
+     id="text48"
+     font-size="144"
+     font-weight="bold"
+     font-style="italic"
+     y="3712.7742"
+     x="2828.4426"
+     xml:space="preserve">3</text>
+  <text
+     style="font-style:italic;font-weight:bold;font-size:144px;font-family:Helvetica;text-anchor:start;fill:#000000;stroke-width:0.025in"
+     id="text50"
+     font-size="144"
+     font-weight="bold"
+     font-style="italic"
+     y="3622.7742"
+     x="2723.4426"
+     xml:space="preserve">u</text>
+  <text
+     style="font-style:italic;font-weight:bold;font-size:144px;font-family:Helvetica;text-anchor:start;fill:#000000;stroke-width:0.025in"
+     id="text52"
+     font-size="144"
+     font-weight="bold"
+     font-style="italic"
+     y="3457.7742"
+     x="2528.4426"
+     xml:space="preserve">2</text>
+  <text
+     style="font-style:italic;font-weight:bold;font-size:144px;font-family:Helvetica;text-anchor:start;fill:#000000;stroke-width:0.025in"
+     id="text54"
+     font-size="144"
+     font-weight="bold"
+     font-style="italic"
+     y="3367.7742"
+     x="2438.4426"
+     xml:space="preserve">u</text>
+  <text
+     style="font-style:italic;font-weight:bold;font-size:144px;font-family:Helvetica;text-anchor:start;fill:#000000;stroke-width:0.025in"
+     id="text56"
+     font-size="144"
+     font-weight="bold"
+     font-style="italic"
+     y="3697.7742"
+     x="2228.4426"
+     xml:space="preserve">1</text>
+  <text
+     style="font-style:italic;font-weight:bold;font-size:144px;font-family:Helvetica;text-anchor:start;fill:#000000;stroke-width:0.025in"
+     id="text58"
+     font-size="144"
+     font-weight="bold"
+     font-style="italic"
+     y="3622.7742"
+     x="2123.4426"
+     xml:space="preserve">u</text>
+  <text
+     style="font-style:normal;font-weight:normal;font-size:240px;font-family:Times;text-anchor:start;fill:#000000;stroke-width:0.025in"
+     id="text60"
+     font-size="240"
+     font-weight="normal"
+     font-style="normal"
+     y="5782.7744"
+     x="2228.4426"
+     xml:space="preserve">of R</text>
+  <text
+     style="font-style:normal;font-weight:normal;font-size:240px;font-family:Times;text-anchor:start;fill:#000000;stroke-width:0.025in"
+     id="text62"
+     font-size="240"
+     font-weight="normal"
+     font-style="normal"
+     y="5482.7744"
+     x="2228.4426"
+     xml:space="preserve">diagonal entries</text>
+  <text
+     style="font-style:normal;font-weight:normal;font-size:240px;font-family:Times;text-anchor:start;fill:#000000;stroke-width:0.025in"
+     id="text64"
+     font-size="240"
+     font-weight="normal"
+     font-style="normal"
+     y="682.56244"
+     x="3948.9934"
+     xml:space="preserve">part of R</text>
+  <text
+     style="font-style:normal;font-weight:normal;font-size:240px;font-family:Times;text-anchor:start;fill:#000000;stroke-width:0.025in"
+     id="text66"
+     font-size="240"
+     font-weight="normal"
+     font-style="normal"
+     y="428.92001"
+     x="3348.5698"
+     xml:space="preserve">strict upper triangular</text>
+  <polyline
+     id="polyline68"
+     style="fill:none;stroke:#000000;stroke-width:7;stroke-linecap:butt;stroke-linejoin:miter"
+     points="4350,750 3769,1330 "
+     transform="translate(-21.557402,82.774296)" />
+  <polygon
+     id="polygon70"
+     style="fill:#000000;stroke:#000000;stroke-width:7;stroke-miterlimit:8"
+     points="3770,1328 3762,1235 3762,1235 3601,1498 3864,1336 "
+     transform="translate(-21.557402,82.774296)" />
+</svg>

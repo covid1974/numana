@@ -1,0 +1,1658 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta content="text/html;charset=UTF-8" http-equiv="Content-Type"/>
+<link rel="stylesheet" type="text/css" href="../tools/ctut.css"/>
+<link type="text/css" rel="stylesheet" href="../tools/style.css"/>
+<style type="text/css">@font-face {font-family: SHREE_BAN_OTF_0592;src: local("../tools/SHREE_BAN_OTF_0592"),url(../tools/SHREE0592.woff) format("opentype");</style>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<script src="../tools/jquery-1.10.2.min.js"></script>
+
+<script>
+aha = function(code) {
+  window.open("https://rdrr.io/snippets/embed/?code="+code)
+}
+
+togglePhoto = function(photoId) {
+   var me = document.getElementById("pic_"+photoId)
+   if(me.style.display=="block"){
+     me.style.display="none";
+   }
+   else if (me.style.display=="none"){
+     me.style.display="block";
+   }
+}
+
+hideShow = function(lb) {
+   var me = document.getElementById(lb)
+   if(me.style.display=="block"){
+     me.style.display="none";
+   }
+   else if (me.style.display=="none"){
+     me.style.display="block";
+   }
+}
+
+grabData = function(data){
+  return "https://farm"+data.photo.farm+".staticflickr.com/"+data.photo.server+"/"+data.photo.id+"_"+
+            data.photo.secret+".jpg"
+}
+
+fromFlickr = function(photoId) {
+
+$.getJSON("https://api.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=23a138c73bdbe1e68601aa7866924e62&user_id=109924623@N07&photo_id="+photoId+"&lang=en-us&format=json&jsoncallback=?",
+  function(data) {
+    imgURL = grabData(data)
+    var l = document.getElementById("lnk_"+photoId)
+    l.href = "https://www.flickr.com/photos/109924623@N07/"+photoId
+    var i = document.getElementById("pic_"+photoId)
+    i.src=imgURL
+    i.onload = function() {
+      document.getElementById("status_"+photoId).innerHTML="[Image loaded. Click to show/hide.]"
+    }
+  })
+}
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js","color.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+    tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]},
+    TeX: {
+      Macros: {
+        h: ["{\\hat #1}",1],
+        b: ["{\\overline #1}", 1],
+        row: "{\\mathcal R}",
+        col: "{\\mathcal C}",
+        nul: "{\\mathcal N}"
+      }
+    }
+  });
+</script><script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script src="../tools/htmlwidgets.js"></script>
+<link href="../tools/rgl.css" rel="stylesheet"></link>
+<script src="../tools/rglClass.src.js"></script>
+<script src="../tools/CanvasMatrix.src.js"></script>
+<script src="../tools/rglWebGL.js"></script>
+</head>
+<body>
+<a href="http://www.isical.ac.in/~arnabc/">[Home]</a>
+<h3>Table of contents</h3>
+<ul>
+<li>
+<a href="#Matrix algorithms">Matrix algorithms</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;
+<a href="#Gauss-Jordan elimination">Gauss-Jordan elimination</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="#Pivoting">Pivoting</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="#Inversion using Gauss-Jordan elimination">Inversion using Gauss-Jordan elimination</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="#Determinant using Gaussian elimination">Determinant using Gaussian elimination</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;
+<a href="#$QR$ decomposition">$QR$ decomposition</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;
+<a href="#Householder transformation">Householder transformation</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="#Using Householder for $QR$">Using Householder for $QR$</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="#Efficient implementation">Efficient implementation</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="#Application to least squares">Application to least squares</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;
+<a href="#Eigenanalysis: power method">Eigenanalysis: power method</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="#When does it work?">When does it work?</a>
+</li>
+</ul>
+<hr/>
+
+$\newcommand{\bx}{{\bf x}}
+\newcommand{\by}{{\bf y}}
+\newcommand{\bu}{{\bf u}}
+\newcommand{\bb}{{\bf b}}
+\newcommand{\bv}{{\bf v}}
+\renewcommand{\bc}{{\bf c}}
+\newcommand{\bz}{{\bf 0}}
+\newcommand{\ba}{{\bf a}}
+\newcommand{\bq}{{\bf q}}
+\newcommand{\bp}{{\bf p}}
+$
+
+<title>Matrix algorithms</title>
+
+<table width="100%">
+<tr>
+<td align="right"><i>Last
+updated on:
+WED MAR 04 IST 2020</i></td>
+</tr>
+</table>
+
+<h1><a
+name="Matrix algorithms">Matrix algorithms</a></h1>
+
+<h2><a
+name="Gauss-Jordan elimination">Gauss-Jordan elimination</a></h2>
+We shall start with a few concepts already familiar to you. 
+
+<p>
+<b>EXAMPLE:</b>&nbsp;
+Consider the following three equations:
+$$\begin{eqnarray*}
+2x-3y+z&amp; =&amp; 5\\
+3x+y+2z&amp; =&amp; 15\\
+2x + 3z&amp; =&amp; -2
+\end{eqnarray*}$$
+This is an example of a <i> system of linear equations.</i>
+<img src="../image/box.png"></p>
+
+We can write a system of $m$ linear equations in $n$ unknowns
+using matrix notation:
+$$
+A \bx = \bb,
+$$
+where $A_{m\times n}$ is called the <i> coefficient matrix,</i>
+$\bx_{n\times 1}$ is called the vector of unknowns, and
+$\bb_{m\times 1}$ is called the rhs vector.
+
+<p>
+<b>EXAMPLE:</b>&nbsp;
+The system in the last example can be written as
+$$
+\left[\begin{array}{ccccccccccc}2&amp; -3&amp; 1\\3&amp; 1&amp; 2\\2&amp; 0&amp; 3
+\end{array}\right] \left[\begin{array}{ccccccccccc}x\\y\\z
+\end{array}\right] = \left[\begin{array}{ccccccccccc}5\\15\\-2
+\end{array}\right].
+$$
+Thus, here
+$$
+A = \left[\begin{array}{ccccccccccc}2&amp; -3&amp; 1\\3&amp; 1&amp; 2\\2&amp; 0&amp; 3
+\end{array}\right],~~~\bx = \left[\begin{array}{ccccccccccc}x\\y\\z
+\end{array}\right],~~~
+\bb = \left[\begin{array}{ccccccccccc}5\\15\\-2
+\end{array}\right].
+$$
+<img src="../image/box.png"></p>
+
+ If the rhs vector $\bb$ is $\bz$, then we call the system <b> homogeneous</b>, else we call it <b> non-homogeneous</b>. 
+
+<p></p>
+
+Any value of $\bx$ for which $A\bx = \bb,$ is called a <i>
+solution</i>  of the system. A system of linear equations has either exactly
+one solution, or infinitely many solutions or no solution at all. In the
+last case we call the system <b> inconsistent</b>. Otherwise it is called
+<b> consistent</b>.
+
+
+The next example shows the method for solving a system of linear
+equations that we learn at high school.
+
+<p>
+<b>EXAMPLE:</b>&nbsp;
+Consider the following system of three linear equations, which we call
+$\alpha_1,\beta_1$ and $\gamma_1.$
+
+
+$$\begin{array}{lrrrrrrrrrrrr}
+\alpha_1 :~~~&amp; x&amp; -y&amp; +z&amp; =&amp; 2 \\
+\beta_1 :~~~&amp; 2x&amp; +5y&amp; -z&amp; =&amp; 9 \\
+\gamma_1 :~~~&amp; x&amp; +2y&amp; -3z&amp; =&amp;  -4
+\end{array}$$
+In high school we used to solve this by eliminating the unknowns one by
+one until only one remained. Here we shall do this for all the unknowns simultaneously. 
+
+
+Let us first eliminate $x$ from the last two equations by subtracting
+multiples of the first equation from them. Here are the resulting 3
+equations, which we call
+$\alpha_2,\beta_2$ and $\gamma_2.$
+
+$$\begin{array}{lrrrrrrrrrrrr}
+\alpha_2=&amp; \alpha_1 :~~~&amp; x&amp; -y&amp; +z&amp; =&amp; 2 \\
+\beta_2=&amp; \beta_1-2\alpha_1 :~~~&amp;  &amp; 7y&amp; -3z&amp; =&amp; 5 \\
+\gamma_2=&amp; \gamma_1-\alpha_1 :~~~&amp;  &amp; 3y&amp; -4z&amp; =&amp;  -6
+\end{array}$$ 
+We want the coefficient of $y$ in the second equation to be $1:$
+$$\begin{array}{lrrrrrrrrrrrr}
+\alpha_3=&amp; \alpha_2 :~~~&amp; x&amp; -y &amp; +z&amp; =&amp; 2 \\
+\beta_3=&amp; \frac 17\beta_2 :~~~&amp;  &amp; y&amp; -\frac 37z&amp; =&amp; \frac 57 \\
+\gamma_3=&amp;  \gamma_2 :~~~&amp;  &amp; 3y &amp; -4z&amp; =&amp;  -6
+\end{array}$$
+Now let us eliminate $y$ from the all the equations except
+the second one:
+$$\begin{array}{lrrrrrrrrrrrr}
+\alpha_4=&amp; \alpha_3+\beta_2 :~~~&amp; x&amp; &amp; +\frac 47z&amp; =&amp; \frac{19}{7} \\
+\beta_4=&amp; \beta_3 :~~~&amp;  &amp; y&amp; -\frac 37z&amp; =&amp; \frac 57 \\
+\gamma_4=&amp; \gamma_3-3\beta_2 :~~~&amp;  &amp;  &amp; -\frac{19}{7}z&amp; =&amp;  -\frac{57}{7}
+\end{array}$$
+Next, we want the coefficient of $z$ in the third equation
+to be $1:$
+$$\begin{array}{lrrrrrrrrrrrr}
+\alpha_5=&amp; \alpha_4 :~~~&amp; x&amp; &amp; +\frac 47z&amp; =&amp; \frac{19}{7} \\
+\beta_5=&amp; \beta_4 :~~~&amp;  &amp; y&amp; -\frac 37z&amp; =&amp; \frac 57 \\
+\gamma_5=&amp; -\frac{7}{19}\gamma_4 :~~~&amp;  &amp;  &amp; z&amp; =&amp;  3
+\end{array}$$
+Finally, eliminate $z$ from all but the last equation:
+$$\begin{array}{lrrrrrrrrrrrr}
+\alpha_6=&amp; \alpha_5-\frac 74\gamma_5 :~~~&amp; x&amp; &amp; &amp; =&amp; 1 \\
+\beta_6=&amp; \beta_5+\frac 73 \gamma_5 :~~~&amp;  &amp; y&amp; &amp; =&amp; 2 \\
+\gamma_6=&amp; \gamma_5 :~~~&amp;  &amp;  &amp; z&amp; =&amp;  3
+\end{array}$$
+This gives us the final solution.
+<p></p>
+
+<img src="../image/box.png"></p>
+
+This is what is called Gauss-Jordan elimination 
+in computational matrix theory. While doing
+Gauss-Jordan elimination it is customary to write the system at each step in
+the <b> augmented matrix form</b>. This is done in the example below.
+ 
+<p>
+<b>EXAMPLE:</b>&nbsp; The augmented matrix form of the given system is as follows.
+$$\left[\begin{array}{rrr|r}
+1&amp; -1&amp; 1&amp; 2 \\
+2&amp; 5&amp; -1&amp; 9 \\
+1&amp; 2&amp; -3&amp;  -4
+\end{array}\right]$$
+It is obtained by appending the rhs after the matrix. We draw a vertical
+line to keep the rhs separate. 
+<p></p>
+Here is a sequence of augmented matrices that we encountered
+during the process:
+$$
+\left[\begin{array}{rrr|r}
+\fbox1 &amp; -1 &amp; 1 &amp; 2\\
+2 &amp; 5 &amp; -1 &amp; 7\\
+1 &amp; 2 &amp; -3 &amp; -4
+\end{array}\right]
+\stackrel{S\searrow}{\longrightarrow}
+\left[\begin{array}{rrr|r}
+1 &amp; -1 &amp; 1 &amp; 2\\
+0 &amp; \fbox7 &amp; -3 &amp; 5\\
+0 &amp; 3 &amp; -4 &amp; -6
+\end{array}\right]
+\stackrel{M}{\longrightarrow}
+\left[\begin{array}{rrr|r}
+1 &amp; -1 &amp; 1 &amp; 2\\
+0 &amp; \fbox1 &amp; -\frac 37 &amp; \frac 57\\
+0 &amp; 3 &amp; -4 &amp; -6
+\end{array}\right]
+\stackrel{S\searrow}{\longrightarrow}
+\left[\begin{array}{rrr|r}
+1 &amp; 0 &amp; \frac 47 &amp; 2\\
+0 &amp; 1 &amp; -\frac 37 &amp; \frac 57\\
+0 &amp; 0 &amp; \fbox{$-\frac{19}{7}$} &amp; -\frac{57}{7}
+\end{array}\right]
+\stackrel{M}{\longrightarrow}
+\left[\begin{array}{rrr|r}
+1 &amp; 0 &amp; \frac 47 &amp; 2\\
+0 &amp; 1 &amp; -\frac 37 &amp; \frac 57\\
+0 &amp; 0 &amp; \fbox1 &amp; 3
+\end{array}\right]
+\stackrel{S\searrow}{\longrightarrow}
+\left[\begin{array}{rrr|r}
+1 &amp; 0 &amp; 0 &amp; 1\\
+0 &amp; 1 &amp; 0 &amp; 2\\
+0 &amp; 0 &amp; 1 &amp; 3
+\end{array}\right]
+$$
+Here we have used 3 symbols $S$, $M$
+and $\searrow$. Let us understand them. Before each step we
+choose an entry in the lhs of the augmented matrix (framed inside rectangles above). This
+is called the <b>pivot</b>, and its row and column are called the <b>pivotal
+row</b>  and <b>pivotal column</b>. Initially the top left hand entry is chosen as the
+pivot.
+<ul>
+<li>An $M$-step divides the pivotal row by the pivot
+(so that the pivot becomes $1$). </li>
+
+<li>An $S$-step subtracts suitable multiples of the pivotal
+row from the other rows to make the all the entries in the pivotal
+column zero (except the pivot itself).</li>
+
+<li>The $\searrow$ step moves the pivot one step downwards
+and to the right.</li>
+</ul>
+
+<img src="../image/box.png"></p>
+
+
+
+
+<fieldset>
+<legend><b><i>Gauss-Jordan elimination (without pivoting)</i></b></legend>
+In Gauss-Jordan elimination of a $n\times n$ system
+we start with the pivot at the $(1,1)$-th position. Then we 
+perform the following operations.
+$$
+\underbrace{(M,S,\searrow),\cdots,(M,S,\searrow)}
+_{n-1\mbox{ times}},M,S.
+$$
+</fieldset>
+The following J code implements this:
+<span class="j">
+<pre>
+m=: monad : 'pr=:y % pj{y'
+s=: monad : 'y - (pj{y) * pr'
+</pre>
+</span>
+
+<p>
+<a href="javascript:hideShow('j1');">[J Help]</a>
+<div id="j1" style="display:none;background-color:#ffcccc;">
+<ul>
+
+<li>
+<code>monad</code>: A function <code>f</code> that is invoked
+as <code>f y</code>, <i>i.e.</i>, single argument that is written to
+the right of the function name, <i>e.g.</i>, $\tan y$ Inside the
+definition of the function, the argument is always called <code>y</code>.</li>
+
+<li>
+<code>dyad</code>: A function <code>f</code> that is invoked
+as <code>x f y</code>, <i>i.e.</i>, 2 arguments  written on both sides
+of the function name, <i>e.g.</i> $x + y$. Inside the
+definition of the function, the left hand argument is
+called <code>x</code>, and the right hand argument is called <code>y</code>.</li>
+
+<li>
+<code>{</code> selects elements of a list, <i>e.g.</i> <code>1{2 3
+_1 2</code> will return 3, the 1-th element (counting starts
+from 0).</li>
+
+</ul>
+</div>
+</p>
+Let's try them out on a random matrix:
+<span class="j">
+<pre>
+'a1 b1 c1 d1'=:amat=:? 4 5$ 100
+mat=: |:}:|: amat
+rhs=: {:|: amat
+</pre>
+</span>
+
+<p>
+<a href="javascript:hideShow('j2');">[J Help]</a>
+<div id="j2" style="display:none;background-color:#ffcccc;">
+<ul>
+
+<li>
+<code>'a b'=: 1 2</code> makes parallel assignments to
+variables <code>a</code> and <code>b</code>.</li>
+
+<li>
+<code>? 100</code> generates a random integer from the
+set $\{0,1,...,99\}.$ To generate 3 such random integers we
+need <code>? 100 100 100</code>. </li>
+
+<li>
+<code>4 5 $ 100</code> creates a $4\times 5$ matrix
+with each element equal to 100.</li>
+
+<li>
+<code>? 4 5 $ 100</code> creates a $4\times 5$ matrix
+with each element drawn iid from the
+set $\{0,1,...,99\}.$</li>
+
+<li>
+<code>|:</code> (transpose) transposes a matrix.</li>
+
+<li>
+<code>}:</code> (curtail) chops off the tail of a list,
+<i>e.g.</i> <code>}: 1 2 3 4</code> returns <code>1 2 3</code>.</li>
+
+</ul>
+</div>
+</p>
+Next, we start the algorithm by setting the pivot column (indexed
+by <code>pj</code>, say) to 0.
+<span class="j">
+<pre>
+pj=:0
+
+]a2=: m a1
+]b2=: s b1
+]c2=: s c1
+]d2=: s d1
+</pre>
+</span>
+
+<p>
+<a href="javascript:hideShow('j3');">[J Help]</a>
+<div id="j3" style="display:none;background-color:#ffcccc;">
+<ul>
+
+<li>
+<code>]</code> identity map (when used as
+monad) $f(y)=y.$ Here it is used as a trick to print the assigned
+value.</li>
+
+</ul>
+</div>
+</p>
+That's the end of the first pass. The remaining passes are similar:
+<span class="j">
+<pre>
+pj=:1
+]b3=: m b2
+]a3=: s a2
+]c3=: s c2
+]d3=: s d2
+pj=:2
+]c4=: m c3
+]a4=: s a3
+]b4=: s b3
+]d4=: s d3
+pj=:3
+]d5=: m d4
+]a5=: s a4
+]b5=: s b4
+]c5=: s c4
+</pre>
+</span>
+Check against the solution computed by J:
+<span class="j">
+<pre>
+rhs %. mat
+</pre>
+</span>
+
+<p>
+<a href="javascript:hideShow('j4');">[J Help]</a>
+<div id="j4" style="display:none;background-color:#ffcccc;">
+<ul>
+
+<li>
+<code>%.</code> solves a system of equations in the least
+squares sense.</li>
+
+</ul>
+</div>
+</p>
+
+
+<h3><a
+name="Pivoting">Pivoting</a></h3>
+The $M$- and $S$-steps require the pivot to 
+be nonzero. However, in the above algorithm the pivot may become
+zero. 
+<p>
+<b>EXAMPLE:</b>&nbsp;
+If the system is 
+$$\begin{array}{lrrrrrrrrrrrr}
+ &amp; 3 y &amp; - 5z &amp; = &amp; -1\\
+4x &amp; + y &amp; + z &amp; = &amp; 6\\
+-x &amp; - 8y &amp; - z &amp; = &amp; -4
+\end{array}$$
+then the $(1,1)$-th entry is 0. 
+
+<p></p>
+
+Yet it is hardly a problem, because we just have to use some
+other equation to eliminate $x$ with. For this we may choose
+just any equation that has $x$ in it (<i>i.e.</i>, the coefficient
+of $x$ is nonzero). For example, we may choose
+the $3$rd equation:
+equations to rewrite the system as
+$$\begin{array}{lrrrrrrrrrrrr}
+ &amp; 3 y &amp; - 5z &amp; = &amp; -1\\
+4x &amp; + y &amp; + z &amp; = &amp; 6\\
+\fbox{$-x$} &amp; - 8y &amp; - z &amp; = &amp; -4
+\end{array}$$
+Or we could have eliminated some other variable instead
+of $x$ using the first equation:
+$$\begin{array}{lrrrrrrrrrrrr}
+ &amp; \fbox{$3 y$} &amp; - 5z &amp; = &amp; -1\\
+4x &amp; + y &amp; + z &amp; = &amp; 6\\
+-x &amp; - 8y &amp; - z &amp; = &amp; -4
+\end{array}$$
+<img src="../image/box.png"></p>
+These are called <b>pivoting</b>.
+It is useful
+even when the pivot is nonzero, but is very small in absolute value. 
+This is because
+division by numbers near zero in a computer introduces large errors in the output. 
+
+
+<p></p>
+
+In terms of augmented matrices, pivoting means choosing the pivot
+position appropriately at the start of each step. There are just
+two rules to keep in mind: 
+<ul>
+
+<li>
+the pivot must not be zero (<i>i.e.</i>, if
+you plan to eliminate a variable using some equation, then that
+variable should be present in that equation!).</li>
+
+<li>if you have already used the $(i,j)$-th entry as the
+pivot in some step, then no future pivot should be from
+the $i$-th row or the $j$-th column. In other words,
+never eliminate the same variable twice, and never use the same
+equation to eliminate multiple variables (else, the first
+variable may come back!).</li>
+
+</ul>
+Also we follow another <i>desirable</i> property:
+
+<ul>
+
+<li>Among all available pivot positions (<i>i.e.</i>, all $(i,j)$'s where
+the $i$-th row and the $j$-th column are still
+unused), choose the pivot as the entry farthest from $0.$</li>
+
+</ul>
+Most textbooks present pivoting in terms of swapping rows and
+ columns of the augmented matrix. For example, if at the very
+ first step you'd like to use the $(2,3)$-th entry as the
+ pivot, then they would say: swap rows 1 and 2, and swap columns
+ 1 and 3. Thus, for them the pivot position at the $k$-th
+ step is always $(k,k).$ If you want anything else at that
+ position, you manually swap the rows and columns to bring it at
+ the $(k,k)$-th position.
+
+<p></p>
+
+ In our example we
+swap row 2 with row 3, and column 2 with column 3 to get
+$$
+\left[\begin{array}{rrr|r}
+\fbox0 &amp;  3 &amp;  -5 &amp;  -1\\
+4 &amp;  1 &amp;  1 &amp;  6\\
+-1 &amp;  -8 &amp;  -1 &amp;  -4
+\end{array}\right]
+\stackrel{P}{\longrightarrow}
+\left[\begin{array}{rrr|r}
+\fbox{-8} &amp;  -1 &amp;  -1 &amp;  -4\\
+1 &amp;  4 &amp;  1 &amp;  6\\
+3 &amp;  0 &amp;  -5 &amp;  -1
+\end{array}\right]
+$$
+Here $P$ is our symbol for pivoting.
+<p></p>
+Recall that the columns of the matrix correspond to the variables of the
+equations. So swapping the columns also involves reordering the variables. 
+A simple
+way to keep track of the order of the variables is to write the variables
+above the 
+columns. If we call the variables as $x,y,z$ in the last example then
+we shall write:
+
+$$
+\left[\begin{array}{rrr|r}
+x &amp;  y &amp; z\\
+\hline
+\fbox0 &amp;  3 &amp;  -5 &amp;  -1\\
+4 &amp;  1 &amp;  1 &amp;  6\\
+-1 &amp;  -8 &amp;  -1 &amp;  -4
+\end{array}\right]
+\stackrel{P}{\longrightarrow}
+\left[\begin{array}{rrr|r}
+y &amp;  x &amp; z\\
+\hline
+\fbox{-8} &amp;  -1 &amp;  -1 &amp;  -4\\
+1 &amp;  4 &amp;  1 &amp;  6\\
+3 &amp;  0 &amp;  -5 &amp;  -1
+\end{array}\right]
+$$
+
+<span class="j">
+<pre>
+amat=: 3 4 $ 0 3 _5 _1 4 1 1 6 _1 _8 _1 _4
+'a1 b1 c1'=:amat
+pj=:1
+]c2=:m c1
+]a2=:s a1
+]b2=:s b1
+a2,b2,:c2
+
+pj=:2
+]a3=:m a2
+]b3=:s b2
+]c3=:s c2
+a3,b3,:c3
+
+pj=:0
+]b4=:m b3
+]a4=:s a3
+]c4=:s c3
+a4,b4,:c4
+</pre>
+</span>
+Here you end up with 
+<pre>
+0 0 1 | 0.371951
+1 0 0 | 1.33537
+0 1 0 | 0.286585
+</pre>
+The left hand side is a permuation matrix, which tells us how to
+interpret the right hand side: $z = 0.371951$, $x =
+1.33537$ and $y = 0.286585$.
+
+<fieldset>
+<legend><b><i>Gauss-Jordan elimination (with pivoting)</i></b></legend>
+We perform the following steps:
+$$
+\underbrace{P,M,S,\cdots,P,M,S}
+_{n\mbox{ times}}.
+$$
+</fieldset>
+
+
+<h3><a
+name="Inversion using Gauss-Jordan elimination">Inversion using Gauss-Jordan elimination</a></h3>
+Gauss-Jordan elimination (with pivoting) may  be used to find inverse of a
+given nonsingular square matrix, since finding inverse is the same as
+solving the system 
+$$
+AX = I.
+$$
+
+
+<p>
+<b>EXAMPLE:</b>&nbsp;
+Suppose that we want to find the inverse of the matrix 
+$\left[\begin{array}{ccccccccccc}1&amp; -1&amp; 1 \\
+2&amp; 5&amp; -1 \\
+1&amp; 2&amp; -3
+\end{array}\right].$
+Then we append an identity matrix of the same size to the right of this
+matrix to get the 
+augmented matrix 
+$$\left[\begin{array}{rrr|rrr}
+1&amp; -1&amp; 1&amp; 1 &amp; 0 &amp; 0\\
+2&amp; 5&amp; -1&amp; 0 &amp; 1&amp; 0\\
+1&amp; 2&amp; -3&amp; 0&amp; 0&amp; 1
+\end{array}\right].$$
+Now go on applying Gauss-Jordan elimination until the
+left hand matrix is reduced to a permuation matrix. The right hand part at the final step
+will give the required inverse (after the permutation).
+$$
+\left[\begin{array}{rrr|rrr}
+\fbox1&amp; -1&amp; 1&amp; 1 &amp; 0 &amp; 0\\
+2&amp; 5&amp; -1&amp; 0 &amp; 1&amp; 0\\
+1&amp; 2&amp; -3&amp; 0&amp; 0&amp; 1
+\end{array}\right] 
+\stackrel{M,S,\searrow}{\longrightarrow}
+\left[\begin{array}{rrr|rrr}
+1&amp; -1&amp;  1&amp;  1&amp; 0&amp; 0 \\
+0&amp; \fbox7 &amp; -3&amp; -2&amp; 1&amp; 0 \\
+0&amp; 3 &amp; -4&amp; -1&amp; 0&amp; 1
+\end{array}\right]
+\stackrel{M,S,\searrow}{\longrightarrow}
+\left[\begin{array}{rrr|rrr}
+1&amp; 0&amp;  \frac{4}{7}&amp; \frac{5}{7}&amp; \frac{1}{7}&amp; 0 \\
+0&amp; 1&amp; \frac{-3}{7}&amp; \frac{-2}{7}&amp; \frac{1}{7}&amp; 0 \\
+0&amp; 0 &amp; \fbox{$\frac{-19}{7}$}&amp; \frac{-1}{7}&amp; \frac{-3}{7}&amp; 1
+\end{array}\right]
+\stackrel{M,S,\searrow}{\longrightarrow}
+\left[\begin{array}{rrr|rrr}
+1&amp; 0&amp; 0&amp;  \frac{91}{133}&amp; \frac{7}{133}&amp; \frac{4}{19} \\
+0&amp; 1&amp; 0&amp; \frac{-35}{133}&amp; \frac{28}{133}&amp; \frac{-3}{19} \\
+0&amp; 0&amp; 1&amp; \frac{1}{19}&amp; \frac{3}{19}&amp; \frac{-7}{19}
+\end{array}\right]$$ 
+
+Thus, the required inverse is 
+$$\left[\begin{array}{ccccccccccc} \frac{91}{133}&amp; \frac{7}{133}&amp; \frac{4}{19}
+\\\frac{-35}{133}&amp; \frac{28}{133}&amp; \frac{-3}{19}
+\\\frac{1}{19}&amp; \frac{3}{19}&amp; \frac{-7}{19}
+\end{array}\right].$$ 
+<img src="../image/box.png"></p>
+The following J code will help you to play with this idea.
+<span class="j">
+<pre>
+mat=: ? 3 3 $ 100
+]'a1 b1 c1'=: mat,. e. i. 3
+pj=:2
+]a2=: m a1
+]b2=: s b1
+]c2=: s c1
+</pre>
+</span>
+
+<p>
+<a href="javascript:hideShow('inv');">[J Help]</a>
+<div id="inv" style="display:none;background-color:#ffcccc;">
+<ul>
+
+<li>
+<code>e.</code> finds the positions of each value in a
+list. For example, <code>e. 2 5 2</code> will give 3 lists:
+<ul>
+<li> the first one showing the positions of 2, <i>i.e.</i>, 1 0
+ 1,</li>
+
+<li> the second shows the positions of 5, <i>i.e.</i>, 0 1 0,</li>
+
+<li>the third again shows the positions of 2, <i>i.e.</i>, 1 0 1.</li>
+
+</ul>
+Thus, if all the elements are distinct, then you get an identity
+matrix. In particular, <code>e. i. 3</code> is a handy way to
+create the identity matrix of order 3.</li>
+
+</ul>
+</div>
+</p>
+
+<b>Why this works:</b> It is based on the simple fact from linear
+algebra that if we form the matrix product $AB,$ then
+the $j$-th column of $AB$ is actually $A\bb_j,$
+where $\bb_j$ is the $j$-th column of $B.$
+<p></p>
+From this it follows that the row operations are effectively
+multiplication by a matrix from the left. For example, 
+<ul>
+
+<li>multiplying a row by a  scalar is like this:
+$$
+\left[\begin{array}{ccccccccccc}1 &amp; 0 &amp; 0\\0 &amp; 2 &amp; 0\\0&amp; 0 &amp; 1
+\end{array}\right] 
+\left[\begin{array}{ccccccccccc}
+b_{11} &amp; b_{12} &amp; b_{13} &amp; b{14}\\
+b_{21} &amp; b_{22} &amp; b_{23} &amp; b{24}\\
+b_{31} &amp; b_{32} &amp; b_{33} &amp; b{34}
+
+\end{array}\right]
+ = 
+\left[\begin{array}{ccccccccccc}
+b_{11} &amp; b_{12} &amp; b_{13} &amp; b{14}\\
+2b_{21} &amp; 2b_{22} &amp; 2b_{23} &amp; 2b{24}\\
+b_{31} &amp; b_{32} &amp; b_{33} &amp; b{34}
+
+\end{array}\right].
+$$
+</li>
+
+<li>Adding a multiple of a row to another is like:
+$$
+\left[\begin{array}{ccccccccccc}1 &amp; 0 &amp; 3\\0 &amp; 1 &amp; 0\\0&amp; 0 &amp; 1
+\end{array}\right] 
+\left[\begin{array}{ccccccccccc}
+b_{11} &amp; b_{12} &amp; b_{13} &amp; b{14}\\
+b_{21} &amp; b_{22} &amp; b_{23} &amp; b{24}\\
+b_{31} &amp; b_{32} &amp; b_{33} &amp; b{34}
+
+\end{array}\right]
+ = 
+\left[\begin{array}{ccccccccccc}
+b_{11}+3b_{31} &amp; b_{12}+3b_{32} &amp; b_{13}+2b_{33} &amp; b{14}+2b_{34}\\
+2b_{21} &amp; 2b_{22} &amp; 2b_{23} &amp; 2b{24}\\
+b_{31} &amp; b_{32} &amp; b_{33} &amp; b{34}
+
+\end{array}\right].
+$$
+</li>
+
+</ul>
+If a row operation is invertible (<i>i.e.</i>, it is possible for you to
+recover the original matrix from the transformed matrix), then
+the corresponding premultiplir matrix must be nonsingular. Both
+the above operations are invertible (assuming the scalar
+multiplier in the first is nonzero), and so the corresponding
+premultiplier matrices are nonsingular. These premultipliers are
+called <b>elementary matrices</b>. They may be obtained by
+applying the row operations to the identity matrix. For example,
+to obtain the premultiplier for "subtracting 5 times the 4th row
+to the 2nd in a $5\times n$ matrix" start with
+the $5\times5$ identity matrix
+$$
+\left[\begin{array}{ccccccccccc}
+1&amp;0&amp;0&amp;0&amp;0\\
+0&amp;1&amp;0&amp;0&amp;0\\
+0&amp;0&amp;1&amp;0&amp;0\\
+0&amp;0&amp;0&amp;1&amp;0\\
+0&amp;0&amp;0&amp;0&amp;1
+
+\end{array}\right].
+$$
+Then apply the operation on this to get
+$$
+\left[\begin{array}{ccccccccccc}
+1&amp;0&amp;0&amp;0&amp;0\\
+0&amp;1&amp;0&amp;-5&amp;0\\
+0&amp;0&amp;1&amp;0&amp;0\\
+0&amp;0&amp;0&amp;1&amp;0\\
+0&amp;0&amp;0&amp;0&amp;1
+
+\end{array}\right].
+$$
+This is the reqired premultiplier (why?).
+<p></p>
+
+Thus, each step in the GJ algorithm is a left multiplication by a nonsingular
+matrix. Suppose that we start with $(A~|~I)$ and end
+with $(P~|~ B),$ where $P$ is a permutation
+matrix. This means 
+$$
+(P~|~B) = N(A~|~I),
+$$
+where $N$ is nonsingular matrix representing the combined
+effect of all the GJ steps. Then 
+$$
+P = NA \mbox{ and } B = N.
+$$
+Since $P$ is a permutation matrix, hence $P'P=I.$
+So $P'NA = I.$ Thus, $A ^{-1}  = P'N = P'B.$ In other
+words, you permute the <i>rows</i> of $B$ according
+to $P'$ to get $A ^{-1}.$
+
+<h3><a
+name="Determinant using Gaussian elimination">Determinant using Gaussian elimination</a></h3>
+
+<p>
+<b>EXERCISE:</b>&nbsp;Find out how one may use the  Gauss-Jordan
+elimination algorithm to compute the determinant. <img src="../image/box.png"></p>
+
+
+
+<p>
+<a name="gj"><b>
+<div id="gj">PROJECT:</div>
+</b></a>&nbsp;Write a program that will apply Gauss-Jordan elimination to an arbitrary matrix of order
+ $m\times n$  over ${\mathbb R}.$ It should perform
+ the row swaps only when the pivot is zero.  The resulting form is called the <b>reduced row echelon
+ form (RREF)</b>  of the matrix. This form has the interesting property
+ that any two matrices with the same size and same row space must
+ have the same RREF. The program should also find  bases of the
+ column space, row space and null space of the matrix using the
+ computed  RREF.<img src="../image/box.png"></p>
+
+
+<h2><a
+name="$QR$ decomposition">$QR$ decomposition</a></h2>
+
+<fieldset>
+<legend><b><i>Theorem</i></b></legend>
+For any $n$ by $p$ matrix $A$ with $n\geq p$ we have
+an $n$ by $n$ orthogonal matrix $Q$ and an $n$ by
+$p$ upper triangular matrix $R$ such that
+$$A = QR.$$
+</fieldset>
+
+This decomposition is the matrix version of the Gram-Schmidt
+Orthogonalization (GSO). <b>[If you do not know GSO, then skip to
+the next heading: <a href="#Householder%20transformation">Householder 
+transformation</a>.]</b>To see this we first consider the case where $A$
+is full column rank (<i> <i>i.e.</i>,</i> the columns are independent.) Call the
+columns 
+$$
+\ba_1,...,\ba_p.
+$$
+Apply GSO to get an orthonormal set of vectors 
+$$
+\bq_1,...,\bq_p
+$$
+given by
+$$
+\bq_i  =  unit(\ba_i-\sum_{j=1}^{i-1}(\bq_j'\ba_i) \bq_j)
+$$
+computed in the order $i=1,...,p.$ Here $unit(\bv)$ is defined as
+$$
+unit(\bv) = \bv/\|\bv\|,\quad \bv\neq \bz.
+$$
+
+Notice that $span\{\ba_1,...,\ba_i\}=span\{\bq_1,...,\bq_i\}.$ 
+So we can write 
+$$\ba_j = r_{1j} \bq_1 + r_{2j} \bq_2 + \cdots + r_{jj} \bq_i.$$
+Indeed, we have 
+$$r_{ij}  = \bq_i' \ba_j \mbox{ for } i \leq j.$$
+Define the matrix $R$ using the $r_{ij}$'s, and
+form $Q$ with  $\bq_i$'s as its columns.
+<p></p>
+
+The following J code will let you explore the idea.
+<span class="j">
+<pre>
+d=:+/@:*
+n=:%:@d~
+u=: %n
+along=: d * [
+</pre>
+</span>
+Let's create some vectors:
+<span class="j">
+<pre>
+]'a1 a2 a3'=: ? 3 4 $ 0
+]q1=: u a1
+]q2=: u a2 - a2 along q1
+]q3=: u a3 - (a3 along q1) + a3 along q2
+]r11=: q1 d a1
+]r12=: q1 d a2
+]r22=: q2 d a2
+</pre>
+</span>
+
+<p>
+<a href="javascript:hideShow('gso');">[J Help]</a>
+<div id="gso" style="display:none;background-color:#ffcccc;">
+<ul>
+
+<li>
+<code>@:</code> is a form of composition, where the inner
+function operates element by element, and the other function
+works on the list as a whole. For example, <code>1 2 3 (+/@:*) 4
+5 6</code> will first apply the <code>*</code> element by element
+to get a list <code>1*4 2*5 3*6</code>, and then <code>+/</code>
+(summation) will sum the list to produce <code>(1*4) + (2*5) + (3*6)</code>.
+</li>
+
+</ul>
+</div>
+</p>
+If $A$ is not full column rank, then some
+$(\ba_i-\sum_{j=1}^{i-1}(\bq_j'\ba_i)\bq_j)$ will be zero, hence we cannot apply
+$unit$ to it. But then we can take $\bq_i$ equal to any unit
+norm vector orthogonal to $\bq_1,...,\bq_{i-1}$ and set $r_{ii}=0.$ 
+<p></p>
+However, GSO is not the best way to compute $QR$ decomposition of a
+matrix. This is because in the $unit$ steps you have to divide
+by the norms which may be too small. Division by small numbers in a computer may lead to numerical instability. The standard
+ way to implement it is
+using Householder's transformation, that we discuss next.
+
+<h2><a
+name="Householder transformation">Householder transformation</a></h2>
+If $A$ is any orthogonal matrix, then we now that $\|Ax\| = \|x\|.$
+In other words an orthogonal matrix does not change shape or size of an object. It can
+only rotate and reflect it. We want to ask if the reverse is true:
+<blockquote> If 
+$x\neq y$ are two vectors of same length, then does there
+exist an orthogonal $A$ that takes $x$ to $y$ and vice
+versa? That is, we are looking for an orthogonal $A$ (possibly
+depending on $x,y$) such that
+$$
+Ax = y \mbox{ and } Ay=x?
+$$</blockquote>
+The answer is ''Yes.'' In fact, there may be many. Householder's transform
+is one such:
+$$
+A = I-2uu', \mbox{ where } u = unit(x-y).
+$$
+
+<p>
+<b>EXERCISE:</b>&nbsp;
+Show that this $A$ is orthogonal and it sends $x$ to $y$
+and vice versa.
+<img src="../image/box.png"></p>
+
+
+<p>
+<b>EXAMPLE:</b>&nbsp;
+In general you need $n^2$ scalar multiplications to multiply
+an $n\times n$ matrix with an $n\times 1$ vector.
+However, show that if the matrix is a Householder matrix then only
+$2n+1$ scalar multiplications are needed.
+<p></p>
+<b>SOLUTION:</b>
+$$
+A\bv = (I-2\bu\bu')\bv = \bv-2\bu\bu'\bv.
+$$
+Now $\bu'\bv$ is a scalar that requires $n$
+multiplications to compute. Multiply that with $2$ (one more
+multiplication) to get the scalar $2\bu'\bv = \lambda,$
+say. Finally, multiply each entry of $\bu$
+with $\lambda $ (requiring $n$ more multiplications).
+<img src="../image/box.png"></p>
+
+The following J code provides the tools necessary to explore the
+Householder idea. You'll need to understand the above solution in
+order to
+understand the definition of <code>h</code> below to multiply by
+a Huseholder matrix. 
+<span class="j">
+<pre>
+h=: ] - 2*[*d
+</pre>
+</span>
+Let's try it out on some vectors.
+<span class="j">
+<pre>
+a=: 4 3 0
+b=: 0 5 0
+]diff=: u a - b
+diff h b
+</pre>
+</span>
+
+
+<p>
+<b>EXERCISE:</b>&nbsp;
+Show that in 2 dimensions Householder's transform is the only such
+transform. Show that this uniqueness does not hold for higher dimensions.
+<img src="../image/box.png"></p>
+
+
+
+<h3><a
+name="Using Householder for $QR$">Using Householder for $QR$</a></h3>
+The idea is to shave the columns of $X$ one by one by multiplying
+with Householder matrices. For any non zero vector $u$ define
+$H_u$ as the Householder matrix that reduces $u$ to 
+$$
+v = \left[\begin{array}{ccccccccccc}\|u\|^2\\0\\\vdots\\0
+\end{array}\right].
+$$
+
+<p>
+<b>EXERCISE:</b>&nbsp;
+Let us partition a vector $\bu$ as
+$$
+\bu_{n\times 1} = \left[\begin{array}{ccccccccccc}\bu_1\\\bu_2
+\end{array}\right],
+$$
+where both $\bu_1,\bu_2$ are vectors ($\bu_2$ being 
+$k\times 1).$ Consider the $n\times n$
+matrix
+$$
+H = \left[\begin{array}{ccccccccccc}I &amp;  0\\0 &amp;  H_{\bu_2}
+\end{array}\right].
+$$
+Show that $H$ is orthogonal and compute $Hu.$ We shall say that
+$H$ shaves the last $k-1$ elements of $u.$
+<img src="../image/box.png"></p>
+
+Let the first column of $X$ be $a.$ Let $H_1$ shave its
+lower $n-1$ entries.  Consider  the second column  $b$ of
+$H_1A.$ Let $H_2$ shave off its lower $n-2$ entries.
+Next let $c$ denote the third column of $H_2H_1X,$ and so on.
+Proceeding in this way, we get $H_1,H_2,...,H_p$ all of which are
+orthogonal Householder matrices. Define
+$$
+Q = (H_1H_2\cdots H_p)'
+$$
+and $R = Q'X$ to get a $QR$ decomposition.
+
+<p>
+<b>EXERCISE:</b>&nbsp;
+Carry this out for the following $5\times 4$ case.
+$$
+\left[\begin{array}{ccccccccccc}
+1&amp;  2 &amp;  3 &amp;  4\\
+1&amp;  3 &amp;  2 &amp;  4\\
+1&amp;  -2 &amp;  5 &amp;  0\\
+7&amp;  2 &amp;  1 &amp;  3\\
+-2&amp;  8 &amp;  5 &amp;  4
+
+\end{array}\right]
+$$
+<img src="../image/box.png"></p>
+
+We shall now apply it to a $4\times 3$ matrix. 
+<span class="j">
+<pre>
+sh=: ({. - n) , }.
+
+]'a1 b1 c1'=: ? 3 4 $ 100
+</pre>
+</span>
+
+<p>
+<a href="javascript:hideShow('qq');">[J Help]</a>
+<div id="qq" style="display:none;background-color:#ffcccc;">
+<ul>
+
+<li>
+<code>{.</code> (head) extracts the head of a list,
+<i>e.g.</i>, <code>{. 1 2 3 4</code> is <code>1</code>.</li>
+
+<li>
+<code>}.</code> (behead) removes the head of a list,
+<i>e.g.</i>, <code>}. 1 2 3 4</code> is <code>2 3 4</code>.</li>
+
+<li>Read <code>({. - n) , }.</code> as "(head minus norm)
+followed by the rest".</li>
+
+</ul>
+</div>
+</p>
+
+The steps are
+shown in the diagram below (red is the entry computed in that
+step, grey means already computed, black means 0):
+<center>
+<table width="100%">
+<tr>
+<th><img width="" src="image/qrst.png"></th>
+</tr>
+<tr>
+<th>Steps in the computation of $R$ and
+the $\bu$'s</th>
+</tr>
+</table>
+</center>
+
+<span class="j">
+<pre>
+n a1                      NB. (1)
+]u1=:u sh a1              NB. (2)
+
+]b2=:u1 h b1              NB. (3)
+]c2=:u1 h c1              NB. (4)
+
+
+n 1}. b2                  NB. (5) 
+
+]u2=: u sh }. b2         NB. (6)
+
+]c3=:u2 h }. c2          NB. (7) 
+
+
+n }. c3                  NB. (8)
+
+u sh }. c3               NB. (9)
+</pre>
+</span>
+
+
+<h3><a
+name="Efficient implementation">Efficient implementation</a></h3>
+Notice that though the Householder matrix 
+$$
+I - 2\bu\bu'
+$$
+is an $n\times n$ matrix, it is actually determined by only $n$
+numbers. Thus, we can effectively store the matrix in linear space. In
+particular, the matrix $H_1$ needs only $n$ spaces, $H_2$
+needs only $n-1$ spaces and so on. 
+
+So we shall try to store these in the ``shaved'' parts of $X.$
+Let 
+$H_1 = 1-2\bu_1\bu_1'$ and $H_1X$ be partitioned as
+$$
+\left[\begin{array}{ccccccccccc}\alpha &amp;  v'\\0 &amp;  X_1
+\end{array}\right].
+$$
+Then we shall try to store  $\bu_1$ in place of the
+0's. But $\bu_1$ is an $n\times 1$ vector, while we
+have only $n-1$ zeroes. So the standard practice is to
+store $\alpha$ (which is the squared norm  of the first
+column) in a separate array, and store $\bu_1$ in place of
+the first column of $A.$
+
+The final output will be a $n\times p$ matrix and
+a $p$-dimensional vector (which is like an extra row
+in $A).$ The matrix is packed with the
+$u$'s and the strictly upper triangular part of $R:$
+<center>
+<table width="100%">
+<tr>
+<th><img width="" src="image/qrpack.png"></th>
+</tr>
+<tr>
+<th>Output of efficient $QR$
+  decomposition</th>
+</tr>
+</table>
+</center>
+The ``extra row'' stores the diagonal entries of $R.$
+It is possible to ``unpack'' $Q$ from the $u$'s. However, if we
+need $Q$ only to multiply some $x$ to get $Qx,$ then even
+this unpacking is not necessary. 
+
+<p>
+<b>EXERCISE:</b>&nbsp;
+Write a program that performs the above multiplication without explicitly
+computing $Q.$
+<img src="../image/box.png"></p>
+
+ 
+
+
+<h3><a
+name="Application to least squares">Application to least squares</a></h3>
+An important use of the $QR$ decomposition is in solving least squares problems. Here we are given a
+(possibly inconsistent) system
+$$
+A\bx = \bb,
+$$
+where $A$ is full column rank (need not be square.) Then we have the
+following theorem.
+
+<fieldset>
+<legend><b><i>Theorem</i></b></legend>
+The above system has unique least square solution $\bx$ given by
+$$
+\bx = (A'A)^{-1}A'\bb.
+$$
+Note that the full column rankness of $A$ guarantees the existence
+of the inverse.
+</fieldset>
+
+However, computing the inverse directly and then performing matrix
+multiplication is not an efficient algorithm. A better way (which is used
+in standard software packages) is to first form a $QR$ decomposition
+of $A$ as
+$A = QR.$
+The given system now looks like
+$$
+QR\bx = \bb.
+$$
+The lower part of $R$ is made of zeros:
+$$
+Q\left[\begin{array}{ccccccccccc}R_1\\O
+\end{array}\right]\bx = \bb,
+$$
+or
+$$
+\left[\begin{array}{ccccccccccc}R_1\\O
+\end{array}\right]\bx = Q'\bb,
+$$
+Partition $Q'\bb$ appropriately to get
+$$
+\left[\begin{array}{ccccccccccc}R_1\\O
+\end{array}\right]\bx = \left[\begin{array}{ccccccccccc}\bc_1\\\bc_2
+\end{array}\right],
+$$
+where $\bc_1$ is $p\times 1.$ This system is made of two systems:
+$$
+R_1 \bx = \bc_1
+$$
+and 
+$$
+O \bx = \bc_2.
+$$
+The first system is always consistent and can be solved by
+back-substitution. The second system is trivial and inconsistent unless
+$\bc_2={\mathbb Z}.$ 
+
+
+
+<p>
+<b>EXERCISE:</b>&nbsp;
+Show that $x=R_1^{-1}\bc_1$ is the least square solution of the original
+system. Notice that you use back-substituting to find this $\bx$ and not
+direct inversion of $R_1.$ 
+<img src="../image/box.png"></p>
+
+
+<p>
+<b>EXERCISE:</b>&nbsp;
+Find a use of $\bc_2$ to compute the residual sum of squares:
+$$
+\|\bb-A\bx\|^2.
+$$
+<img src="../image/box.png"></p>
+
+
+<p>
+<a name="qr"><b>
+<div id="qr">PROJECT:</div>
+</b></a>&nbsp;
+Write a program to find a least  squares solution to the
+system $A\bx=\bb$. Your program should first implement the above efficient version of $QR$
+decomposition of $A.$ Your program
+  should be able to detect if $A$ is not full column rank,
+  in which case it should stop with an error message. If $A$
+is full column rank, then the program should output the unique
+least squares solution. Your program must never compute any
+Householder matrix explicitly.
+<img src="../image/box.png"></p>
+
+
+
+<h2><a
+name="Eigenanalysis: power method">Eigenanalysis: power method</a></h2>
+Let us start with the definition of eigenvalues and eigenvectors:
+
+<fieldset>
+<legend><b>Definition: Eigenvalue and eigenvector</b></legend>
+Let $A_{n\times n}$ be any real/complex
+matrix. Then $\lambda\in{\mathbb C}$ is called an <b>eigenvalue</b>
+of $A$ with
+corresponding <b>eigenvector</b> $\bv\in{\mathbb C}^n$
+if $\bv\neq\bz$ and
+$$
+A \bv = \lambda \bv.
+$$
+</fieldset>
+The importance of these concepts is by no means  obvious from the
+definition. However,
+finding the eigenvalues and eigenvectors of matrices is a fundamental
+problem of numerical linear algebra. 
+
+The subject in its entirety is well
+beyond the scope of the present course. Here We shall try to find
+only a single eigenvector and a corresponding eigenvalue of a
+given square matrix.
+
+<p></p>
+Our algorithm is very simple:
+
+
+We start with a vector $\bv$ and constructs the sequence 
+$$
+unit(A\bv), unit(A^2\bv), unit(A^3\bv), unit(A^4\bv),... 
+$$
+<font color="#ff0000"><b>This red part was added after the lecture:</b> Here $unit(\bv)$ finds a unit vector along a nonzero
+vector $\bv$. Its definition is
+is $unit(\bv) = \bv/\|\bv\|.$ 
+Under some condition on $\bv,$ the sequence "converges" to an eigenvector
+corresponding to the eigenvalue with the maximum absolute value.
+Here "convergence" is taken in a slightly generalised sense: since
+the negative of an eigenvector is again another eigenvector,
+hence if all subsequences converge to some
+common unit vector (up to sign), we shall consider that vector as the limit. For
+example, if $A = \left[\begin{array}{ccccccccccc}-1&amp;0\\0&amp;-1
+\end{array}\right],$ then the sequence
+alternates with terms
+$$
+\left[\begin{array}{ccccccccccc}1/\sqrt2\\1/\sqrt2
+\end{array}\right]\mbox{ and } -\left[\begin{array}{ccccccccccc}1/\sqrt2\\1/\sqrt2
+\end{array}\right].
+$$
+Since these are multiples of each other, we consider this as a
+convergent sequence (with any of these two vectors being called a limit).
+<p></p>
+If, however, we work with $A = \left[\begin{array}{ccccccccccc}1&amp;0\\0&amp;-1
+\end{array}\right],$ then
+the sequence alternates with terms
+$$
+\left[\begin{array}{ccccccccccc}1/\sqrt2\\1/\sqrt2
+\end{array}\right]\mbox{ and } \left[\begin{array}{ccccccccccc}1/\sqrt2\\-1/\sqrt2
+\end{array}\right].
+$$
+Here we do not consider the sequence as being convergent.</font>
+
+<p></p>
+
+Let's take a computational  example:
+<span class="j">
+<pre>
+mp=: +/ . *
+d=: +/@:*    NB. Sum of products
+u=: %%:@d~   NB. Divide by square root of dot product with itself
+pow=: u@mp
+</pre>
+</span>
+
+<p>
+<a href="javascript:hideShow('pow');">[J Help]</a>
+<div id="pow" style="display:none;background-color:#ffcccc;">
+<ul>
+
+<li>Here <code>mp</code> performs matrix multiplication. It uses
+the rather complicated dot operation, which I cannot
+explain here. So just accept the fact that <code>mp</code>
+works. You may try out some examples to convince yourself that
+this is indeed so.</li>
+
+</ul>
+</div>
+</p>
+
+<span class="j">
+<pre>
+a=:? 5 5 $ 0
+a=: a + |: a
+
+v=.? 5#0
+   
+]w=: a pow^:_ v
+plot |: pow^:(i.100) v
+</pre>
+</span>
+
+<h3><a
+name="When does it work?">When does it work?</a></h3>
+The algorithm works for many types of matrices. Let's explore
+this using some simple examples.
+
+<p>
+<b>EXAMPLE:</b>&nbsp;
+Does it work for the diagonal matrix $A = diag(1,2,3,4)$ if
+we start from $\bv = (1,1,1,1)'?$
+<p></p>
+<b>SOLUTION:</b>
+Here
+$A^n\bv $ is $(1,2^n,3^n,4^n).$ As you
+can see, the last entry is going to dominate. So the power iterations will converge
+to $(0,0,0,1)$, which is an eigenvector corresponding to the
+eigenvalue $4.$
+<img src="../image/box.png"></p>
+
+The reason we converged to $4$ was that it was the largest
+eigenvalue. The next example will shed more light on it.
+
+<p>
+<b>EXERCISE:</b>&nbsp;
+Try out for $A = diag(1,2,3,-4).$ Start with $\bv =
+(1,1,1,1)'.$
+<img src="../image/box.png"></p>
+
+Thus, the power method is converging to the eigenvalue with the
+largest absolute eigenvalue. Now let's play with the initial
+vector. 
+
+<p>
+<b>EXAMPLE:</b>&nbsp;
+Again work with $A = diag(1,2,3,4).$ But start with $\bv
+= (1,1,1,0).$
+<p></p>
+<b>SOLUTION:</b> Now the entry corresponding to 4 gets killed. So we
+converge to $(0,0,1,0)$ instead, which corresponds to the
+next largest absolute eigenvalue, 3.
+<img src="../image/box.png"></p>
+
+
+<p>
+<b>EXERCISE:</b>&nbsp;
+What if we had started with $\bv  = (1,1,1,0.0001)$?
+<img src="../image/box.png"></p>
+
+Next we shall explore what happens if $A$ has more than one
+eigenvalue that has largest eigenvalue. 
+
+<p>
+<b>EXAMPLE:</b>&nbsp;
+Try with $A = diag(1,2,4,4),$ and $\bv = (1,1,1,1)'.$
+Also try with $\bv = (1,1,1,2)'$ and $\bv = (1,1,1,0)'.$
+<img src="../image/box.png"></p>
+
+Finally, let us see what happens if $A$ has
+multiple <i>distinct</i> eigenvalues with same maximum absolute
+value.
+
+<p>
+<b>EXAMPLE:</b>&nbsp;
+Try with $A = diag(1,2,4,-4)$ and $\bv = (1,1,1,1)'.$
+<img src="../image/box.png"></p>
+Now we have been able to screw up the power iterations!
+
+<p></p>
+The following definition is easily motivated from the above discussion.
+
+
+<fieldset>
+<legend><b>Definition: Dominant eigenvalue</b></legend>
+We say that $A$ has a <b>dominant
+eigenvalue</b> $\lambda$ if $\lambda$ is an eigenvalue
+and for all other eigenvalues $\mu$ of $A$ we have $|\lambda| &gt; |\mu|.$
+</fieldset>
+
+So far we have been working with only diagonal matrices. Of
+course, we do not need any numerical method to find the
+eigenvalues and eigenvectors of a diagonal matrix. However, there
+are many matrices that are not diagonal, but behave
+similarly. The following definition is about them.
+
+<fieldset>
+<legend><b>Definition: Diagonalisable</b></legend>
+A square matrix $A$ is called <b>diagonalisable</b> if it is
+of the form 
+$$
+A = P D P ^{-1},
+$$
+for some diagonal matrix $D$ and some nonsingular matrix $P.$
+</fieldset>
+The following theorem relates $D$ and $P$ to the
+eigenvalues and eigenvectors of $A.$
+<fieldset>
+<legend><b><i>Theorem</i></b></legend>
+If $A = P D P ^{-1},$ then the diagonal entries of $D$
+are the eigenvalues and the columns of $P$ are the
+corresponding eigenvectors.
+</fieldset>
+
+<p>
+<b><i>Proof:</i></b>
+$AP = DP,$ and so extracting the $j$-th columns of both
+sides, $A\bp_{*j} = d_{jj}\bp_{*j},$
+where $\bp_{*j}$ is the $j$-th column of $P$,
+and $d_{jj}$ is the $j$-th diagonal element of $D.$
+<b><i>[QED]</i></b>
+</p>
+
+It is easy to see that if $A = P D P ^{-1},$ then $A^n = P
+D^n P ^{-1}.$ Thus, the behaviour of the power iterations
+for $A$ starting with $\bv$ is similar to the
+behaviour for $D$ starting with $P ^{-1} \bv.$ This
+leads us to the following
+sufficient set of conditions
+for the power method to work for a square matrix $A$
+starting from some $\bv:$
+<ul>
+
+<li>Let $A$ have a nonzero dominant eigenvalue.</li>
+
+<li>Let $A$ be diagonalisable. Write $A = P D P
+^{-1},$ where the dominant eigenvalue is the first diagonal
+entry of $D.$</li>
+
+<li>Let the first entry of $P ^{-1} \bv$ be nonzero.</li>
+
+</ul>
+If all these conditions hold, then the power method must converge
+to an eigenvector corresponding to an eigenvector corresponding
+to the dominant eigenvalue.
+
+
+
+<fieldset>
+<legend><b><i>Theorem</i></b></legend>
+Let $A$ be a diagonalisable matrix with $A = P D P
+^{-1},$ with a nonzero dominant
+eigenvalue as the first diagonal entry of $D.$  Let $P
+^{-1} \bv$ have the first entry nonzero. Then the sequence 
+$$
+unit(A\bv),~~unit(A^2\bv),~~unit(A^3\bv),~~unit(A^4\bv),~~
+$$
+is well-defined and converges to the first column of $P$,
+which is an eigenvector corresponding to
+the dominant eigenvalue.
+</fieldset>
+
+<p>
+<b><i>Proof:</i></b>
+Let $D = diag(\lambda_1,...,\lambda_n)$
+with $\lambda_1$ being the
+nonzero dominant eigenvalue.
+<p></p>
+
+Let $P ^{-1} \bv = (b_1,...,b_n),$ where $b_1\neq 0.$
+<p></p>
+
+Then 
+
+$$A^k\bv = P D^k P ^{-1} \bv  = P\left[\begin{array}{ccccccccccc}\lambda_1^k
+b_1\\\vdots\\\lambda_n^k b_n
+\end{array}\right]
+= \sum_{j=1}^n \lambda_j^k b_j \bp_{*j} 
+= \lambda_1^k \sum_{i=1}^n \left(\frac{\lambda_j}{\lambda_1}\right)^k b_j \bp_{*j} 
+= \lambda_1^k \left(b_1\bp_{*1}+\sum_{j=2}^n
+\left(\frac{\lambda_j}{\lambda_1}\right)^k b_j \bp_{*j} \right)\neq \bz,$$
+since $\lambda_1,b_1\neq0$ and $\bp_{*j}$'s are linearly independent.
+<p></p>
+
+So we can indeed compute $unit(A^k\bv).$ 
+<p></p>
+Now, since $\lambda_1$ is dominant, 
+$$
+b_1\bp_{*1}+\sum_{j=2}^n
+\left(\frac{\lambda_j}{\lambda_1}\right)^k b_j \bp_{*j} \rightarrow b_1\bp_{*1}\neq\bz.
+$$
+It is easy to see that if $(\bq_k)$ is a sequence of nonzero
+vectors converging to a nonzero vector $\bq$,
+then $unit(\bq_k)\rightarrow unit(\bq).$
+<p></p>
+So 
+$$unit(A^k\bv) \stackrel{*}{=} unit\left(b_1\bp_{*1}+\sum_{j=2}^n
+\left(\frac{\lambda_j}{\lambda_1}\right)^k b_j \bp_{*j}\right)\rightarrow
+unit(b_1\bp_{*1}) = unit(\bp_{*1}),$$
+as required. 
+<p></p>
+Here $\stackrel{*}{=}$ means equality after possibly
+switching sign. 
+<b><i>[QED]</i></b>
+</p>
+
+
+<p>
+<b>EXERCISE:</b>&nbsp;
+It is instructive to think of examples violating the conditions
+of the theorem and check how/whether the power method fails. A
+good source of nondiagonalisable matrices is matrices of the form 
+$$
+\left[\begin{array}{ccccccccccc}
+\lambda\\
+1 &amp; \lambda\\
+ &amp; 1 &amp; \lambda\\
+ &amp;  &amp;\ddots &amp; \ddots\\
+ &amp;  &amp;  &amp; 1 &amp; \lambda
+
+\end{array}\right].
+$$
+These are lower triangular matrices with some
+number $\lambda$ repeated along the diagonal, and $1$'s
+in the subdiagonal. All other entries are 0.
+<img src="../image/box.png"></p>
+
+<h3>Comments</h3>
+To post an anonymous comment, click on the "Name" field. This
+will bring up an option saying "I'd rather post as a guest."
+<p></p><!--
+begin disqus code --> <div id="disqus_thread"></div>
+<script>
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+
+var disqus_config = function () {
+this.page.url = "https://www.isical.ac.in/~arnabc/numana/mat1.html"; // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = "mat1"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://txtbk.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript><!-- end disqus code --> 
+
+<hr/>
+<table width="100%" border="0">
+<tr>
+<td align="left"/>
+<td align="right"/>
+</tr>
+</table>
+<hr/>
+</body>
+</html>

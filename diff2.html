@@ -1,0 +1,311 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta content="text/html;charset=UTF-8" http-equiv="Content-Type"/>
+<link rel="stylesheet" type="text/css" href="../tools/ctut.css"/>
+<link type="text/css" rel="stylesheet" href="../tools/style.css"/>
+<style type="text/css">@font-face {font-family: SHREE_BAN_OTF_0592;src: local("../tools/SHREE_BAN_OTF_0592"),url(../tools/SHREE0592.woff) format("opentype");</style>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<script src="../tools/jquery-1.10.2.min.js"></script>
+
+<script>
+aha = function(code) {
+  window.open("https://rdrr.io/snippets/embed/?code="+code)
+}
+
+togglePhoto = function(photoId) {
+   var me = document.getElementById("pic_"+photoId)
+   if(me.style.display=="block"){
+     me.style.display="none";
+   }
+   else if (me.style.display=="none"){
+     me.style.display="block";
+   }
+}
+
+hideShow = function(lb) {
+   var me = document.getElementById(lb)
+   if(me.style.display=="block"){
+     me.style.display="none";
+   }
+   else if (me.style.display=="none"){
+     me.style.display="block";
+   }
+}
+
+grabData = function(data){
+  return "https://farm"+data.photo.farm+".staticflickr.com/"+data.photo.server+"/"+data.photo.id+"_"+
+            data.photo.secret+".jpg"
+}
+
+fromFlickr = function(photoId) {
+
+$.getJSON("https://api.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=23a138c73bdbe1e68601aa7866924e62&user_id=109924623@N07&photo_id="+photoId+"&lang=en-us&format=json&jsoncallback=?",
+  function(data) {
+    imgURL = grabData(data)
+    var l = document.getElementById("lnk_"+photoId)
+    l.href = "https://www.flickr.com/photos/109924623@N07/"+photoId
+    var i = document.getElementById("pic_"+photoId)
+    i.src=imgURL
+    i.onload = function() {
+      document.getElementById("status_"+photoId).innerHTML="[Image loaded. Click to show/hide.]"
+    }
+  })
+}
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js","color.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+    tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]},
+    TeX: {
+      Macros: {
+        h: ["{\\hat #1}",1],
+        b: ["{\\overline #1}", 1],
+        row: "{\\mathcal R}",
+        col: "{\\mathcal C}",
+        nul: "{\\mathcal N}"
+      }
+    }
+  });
+</script><script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script src="../tools/htmlwidgets.js"></script>
+<link href="../tools/rgl.css" rel="stylesheet"></link>
+<script src="../tools/rglClass.src.js"></script>
+<script src="../tools/CanvasMatrix.src.js"></script>
+<script src="../tools/rglWebGL.js"></script>
+</head>
+<body>
+<a href="http://www.isical.ac.in/~arnabc/">[Home]</a>
+<h3>Table of contents</h3>
+<ul>
+<li>
+<a href="#Differential equations (contd)">Differential equations (contd)</a>
+</li>
+<li>
+<a href="#Runge-Kutta method">Runge-Kutta method</a>
+</li>
+<li>
+<a href="#Applications">Applications</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;
+<a href="#Simple pendulum (revisited)">Simple pendulum (revisited)</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;
+<a href="#Gravity well">Gravity well</a>
+</li>
+</ul>
+<hr/>
+
+<title>Differential equations</title>
+
+<table width="100%">
+<tr>
+<td align="right"><i>Last
+updated on: FRI JAN 17 IST 2020</i></td>
+</tr>
+</table>
+
+<h1><a
+name="Differential equations (contd)">Differential equations (contd)</a></h1>
+In the first part we have dealt with differential equations 
+of the form
+$$
+y'(x) = f(x,y),
+$$
+where $y(x_0) = y_0.$ We were given the function
+$f(x,y)$ and the numbers $x_0,y_0.$ And we started to
+solve it. 
+<p></p>
+We had side-stepped the important question: does such an equation
+always possess a solution? And even if it does, is the solution unique?
+
+
+<p></p>
+
+
+The following theorem makes this problem
+meaningful.
+
+<fieldset>
+<legend><b><i>Theorem</i></b></legend>
+Let $(x_0, y_0)\in{\mathbb R}^2.$ Let $\alpha,\beta&gt;0$  be any two numbers. Let $f(x,y)$  be a
+ continuous function defined
+ over $[x_0-\alpha,x_0+\alpha]\times[y_0-\beta,y_0+\beta].$ We assume that $\frac{\partial f}{\partial y}$  is
+also continuous.  We
+ consider the differential equation 
+$$\frac{dy}{dx} = f(x,y),\quad\quad\quad y(x_0)=y_0.$$
+Then there exists $\delta&gt;0$  such that this differential equation has unique solution $y(x)$  
+defined over $[x_0-\delta,x_0+\delta].$
+</fieldset>
+We shall not prove this in this course.
+
+
+<h1><a
+name="Runge-Kutta method">Runge-Kutta method</a></h1>
+In the first part, we have discussed Taylor's method (including its first order
+version, Euler's method). To get a reasonable approximation with
+Taylor's method in most real life problems, we need to use a high order (say 4-th order).
+But then we  need to compute high order
+derivatives, which may be quite complicated. Runge-Kutta method aims to approximate Taylor's method
+without this complication. Instead, it needs to evaluate $f(x,y)$ at
+many points. 
+<p></p>
+Just like Taylor's method, we have different Runge-Kutta methods for
+ different orders. The general form is rather complicated. In this page we shall present only the
+ 2-nd and 4-th order methods. 
+<p></p>
+We start from the given point $(x_0,y_0).$  We are given a step size $h,$  and we want to approximate 
+$y(x)$  at the points $x_1,...,x_n,$  where $x_i = x_0+h\,i.$  Thus, the output of the Runge-Kutta methods
+consists of $(x_i,y_i)$  for $i=0,...,n.$
+<p></p>
+The 2-nd order
+ Runge-Kutta method is given by
+$$\begin{eqnarray*}
+k_1 &amp;  = &amp;  h\,f(x_i,y_i)\\
+k_2 &amp;  = &amp;  h\,f\left(x_i+\frac{h}{2},y_i+\frac{k_1}{2}\right)\\
+y_{i+1} &amp;  = &amp;  y_i + k_2.
+\end{eqnarray*}$$
+This method has the same order of precision as 2-nd order Taylor method.
+To see this use the 2-variable Taylor expansion:
+$$
+f(x+\delta x, y+\delta y) = f(x,y)+\delta x f_x(x,y)+ \delta y f_y(x,y) +\mbox{ 2-nd order terms}.
+$$ 
+where $f_x,f_y$ are partial derivatives of w.r.t. $x$ and
+$y,$ respectively.
+<p></p>
+Applying this to $f\left(x_i+\frac{h}{2},y_i+\frac{k_1}{2}\right)$ we see that
+$$\begin{eqnarray*}
+k_2 &amp; =&amp;  h\left[f(x_i,y_i) + \frac{h}{2} f_x(x_i,y_i) + \frac{k_1}{2} f_y(x_i,y_i) +
+h^2\mbox{-terms}\right]\\
+&amp; =&amp;  hf + \frac{h^2}{2} f_x + \frac{h\,k_1}{2}  f_y + h^3\mbox{-terms}\\
+&amp; =&amp;  hf + \frac{h^2}{2} f_x + \frac{h^2}{2} f f_y + h^3\mbox{-terms},
+\end{eqnarray*}$$
+since $k_1 = hf.$
+<p></p>
+So the second order Runge-Kutta method is
+$$
+y_{i+1}  =
+y_i + hf + \frac{h^2}{2} f_x + \frac{h^2}{2} f f_y + h^3\mbox{-terms}
+$$
+
+Let's compare this with the 2-nd order Taylor's method:
+$$\begin{eqnarray*}
+y_{i+1} = y_i + y_i'h + \frac{y_i''}{2}h^2
+&amp; =&amp;   y_i + hf + \frac{y_i''}{2}h^2.
+\end{eqnarray*}$$
+Now 
+$$
+y_i'' = f_x + f_yy_i' = f_x+ff_y.
+$$
+So the 2nd order Taylor's method becomes
+$$
+y_{i+1} = y_i + hf + \frac{h^2}{2}(f_x+ff_y),
+$$
+which coincides with the 2nd order Runge-Kutta method (ignoring $h^3$-terms).
+<p></p>
+The most popular Runge-Kutta method is
+the 4-th order version:
+$$\begin{eqnarray*}
+k_1 &amp;  = &amp;  hf(x_i,y_i)\\
+k_2 &amp;  = &amp;  hf\left(x_i+\frac{h}{2},y_i+\frac{k_1}{2}\right)\\
+k_3 &amp;  = &amp;  hf\left(x_i+\frac{h}{2},y_i+\frac{k_2}{2}\right)\\
+k_2 &amp;  = &amp;  hf(x_i+h,y_i+k_3)\\
+y_{i+1} &amp;  = &amp;  y_i + \frac{1}{6}(k_1 + 2k_2 + 2k_3 + k_4).
+\end{eqnarray*}$$
+This has the same order of precision as the fourth order Taylor method.
+The proof of this fact follows the same argument as above, but is rather messy.
+<span class="j">
+<pre>
+k1=:4 :'h* x f y'
+k2=:4 :'h*(x+h%2) f y+(x k1 y)%2'
+k3=:4 :'h*(x+h%2) f y+(x k2 y)%2'
+k4=:4 :'h*(x+h) f y+(x k3 y)'
+nx=:4 :'x+h'
+ny=:]+%&amp;6@(k1+(2:*k2+k3)+k4)
+rk=:({. nx  {:), ({. ny {:)
+
+f=:sin@+
+h=0.01
+rk^:(i.10) 4 5
+</pre>
+</span>
+
+<h1><a
+name="Applications">Applications</a></h1>
+
+<h2><a
+name="Simple pendulum (revisited)">Simple pendulum (revisited)</a></h2>
+In the first part, we had already arrived at the following system for a simple pendulum:
+$$\begin{eqnarray*}
+\theta ' &amp;  = &amp;  \omega ~~(\equiv f_1(t,\theta,\omega))\\
+\omega' &amp;  = &amp;  -\frac{L}{g} \theta  ~~(\equiv f_2(t,\theta,\omega)).
+\end{eqnarray*}$$
+The 4-th order Runge-Kutta method for this becomes
+$$\begin{eqnarray*}
+\theta_{i+1} &amp;  = \theta_i + \frac{1}{6}(k_1+2k_2+2k_3+k_4)\\
+\omega_{i+1} &amp;  = \omega_i + \frac{1}{6}(j_1+2j_2+2j_3+j_4),
+\end{eqnarray*}$$
+where
+$$\begin{eqnarray*}
+k_1 &amp;  = &amp;  hf_1(t,\theta_i,\omega_i) = h\omega_i\\
+j_1 &amp;  = &amp;  hf_2(t,\theta_i,\omega_i) = -\frac{Lh}{g} \theta_i\\
+k_2 &amp;  = &amp;  hf_1(t+\tfrac{h}{2},\theta_i+\tfrac{k_1}{2},\omega_i+\tfrac{j_1}{2}) = h[\omega_i+\tfrac{j_1}{2}]\\
+j_2 &amp;  = &amp;  hf_2(t+\tfrac{h}{2},\theta_i+\tfrac{k_1}{2},\omega_i+\tfrac{j_1}{2}) = -\tfrac{Lh}{g} [\theta_i+\tfrac{k_1}{2}]\\
+k_3 &amp;  = &amp;  hf_1(t+\tfrac{h}{2},\theta_i+\tfrac{k_2}{2},\omega_i+\tfrac{j_2}{2}) = h[\omega_i+\tfrac{j_2}{2}]\\
+j_3 &amp;  = &amp;  hf_2(t+\tfrac{h}{2},\theta_i+\tfrac{k_2}{2},\omega_i+\tfrac{j_2}{2}) = -\frac{Lh}{g} [\theta_i+\tfrac{k_2}{2}]\\
+k_4 &amp;  = &amp;  hf_1(t+h,\theta_i+k_3,\omega_i+j_3)=h[\omega_i+j_3]\\
+j_4 &amp;  = &amp; 
+hf_2(t+h,\theta_i+k_3,\omega_i+j_3)=-\frac{Lh}{g}
+[\theta_i+k_3].
+\end{eqnarray*}$$
+
+<p>
+<b>EXERCISE:</b>&nbsp;
+Also try with the extensible rod case discussed earlier.
+<img src="../image/box.png"></p>
+
+
+<h2><a
+name="Gravity well">Gravity well</a></h2>
+
+<p>
+<a name="gw2"><b>
+<div id="gw2">PROJECT:</div>
+</b></a>&nbsp;
+Simulate the gravity well for the first part using 4-th order Runge-Kutta method.
+<img src="../image/box.png"></p>
+
+<h3>Comments</h3>
+To post an anonymous comment, click on the "Name" field. This
+will bring up an option saying "I'd rather post as a guest."
+<p></p><!--
+begin disqus code --> <div id="disqus_thread"></div>
+<script>
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+
+var disqus_config = function () {
+this.page.url = "https://www.isical.ac.in/~arnabc/numana/diff2.html"; // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = "diff2"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://txtbk.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript><!-- end disqus code --> 
+
+<hr/>
+<table width="100%" border="0">
+<tr>
+<td align="left"/>
+<td align="right"/>
+</tr>
+</table>
+<hr/>
+</body>
+</html>

@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Creator: fig2dev Version 3.2 Patchlevel 5e -->
+
+<!-- CreationDate: Thu Dec 26 11:44:27 2019 -->
+
+<!-- Magnification: 1.000 -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="3.6in"
+   height="3.1in"
+   viewBox="1788 1438 4374 3669"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="qrflow5.svg">
+  <metadata
+     id="metadata68">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs66" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="640"
+     inkscape:window-height="480"
+     id="namedview64"
+     showgrid="false"
+     inkscape:zoom="0.84587816"
+     inkscape:cx="162"
+     inkscape:cy="139.5"
+     inkscape:window-x="53"
+     inkscape:window-y="34"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg2" />
+  <g
+     style="stroke-width:.025in; fill:none"
+     id="g4">
+    <!-- Ellipse -->
+    <ellipse
+       transform="translate(4200,4950) rotate(-0.00000000)"
+       rx="150"
+       ry="150"
+       style="stroke:#000000;stroke-width:7;"
+       id="ellipse6" />
+    <!-- Line -->
+    <polyline
+       points="4050,4950 1800,4950 1800,2550 2460,2550 "
+       style="stroke:#000000;stroke-width:7; stroke-linejoin:miter; stroke-linecap:butt; stroke-dasharray:64 64;"
+       id="polyline8" />
+    <!-- Arrowhead on XXXpoint 1800 2550 - 2715 2550-->
+    <polygon
+       points="2398 2622 2698 2550 2398 2478 2458 2550 2398 2622  "
+       style="stroke:#000000;stroke-width:7;stroke-miterlimit:8; fill:#000000;"
+       id="polygon10" />
+    <!-- Line -->
+    <polyline
+       points="4200,3900 4200,4560 "
+       style="stroke:#000000;stroke-width:7; stroke-linejoin:miter; stroke-linecap:butt; "
+       id="polyline12" />
+    <!-- Arrowhead on XXXpoint 4200 3900 - 4200 4815-->
+    <polygon
+       points="4128 4498 4200 4798 4272 4498 4200 4558 4128 4498  "
+       style="stroke:#000000;stroke-width:7;stroke-miterlimit:8; fill:#000000;"
+       id="polygon14" />
+    <!-- Line -->
+    <polyline
+       points="4200,2850 4200,3060 "
+       style="stroke:#000000;stroke-width:7; stroke-linejoin:miter; stroke-linecap:butt; "
+       id="polyline16" />
+    <!-- Arrowhead on XXXpoint 4200 2850 - 4200 3315-->
+    <polygon
+       points="4128 2998 4200 3298 4272 2998 4200 3058 4128 2998  "
+       style="stroke:#000000;stroke-width:7;stroke-miterlimit:8; fill:#000000;"
+       id="polygon18" />
+    <!-- Line -->
+    <polyline
+       points="4200,1950 4200,2010 "
+       style="stroke:#000000;stroke-width:7; stroke-linejoin:miter; stroke-linecap:butt; "
+       id="polyline20" />
+    <!-- Arrowhead on XXXpoint 4200 1950 - 4200 2265-->
+    <polygon
+       points="4128 1948 4200 2248 4272 1948 4200 2008 4128 1948  "
+       style="stroke:#000000;stroke-width:7;stroke-miterlimit:8; fill:#000000;"
+       id="polygon22" />
+    <!-- Line: box -->
+    <rect
+       x="2700"
+       y="2250"
+       width="3000"
+       height="600"
+       rx="180"
+       style="stroke:#000000;stroke-width:7; stroke-linejoin:miter; stroke-linecap:butt; "
+       id="rect24" />
+    <!-- Line: box -->
+    <rect
+       x="2400"
+       y="3300"
+       width="3750"
+       height="600"
+       rx="0"
+       style="stroke:#000000;stroke-width:7; stroke-linejoin:miter; stroke-linecap:butt; "
+       id="rect26" />
+    <!-- Line: box -->
+    <rect
+       x="2550"
+       y="1500"
+       width="3450"
+       height="450"
+       rx="0"
+       style="stroke:#000000;stroke-width:7; stroke-linejoin:miter; stroke-linecap:butt; "
+       id="rect28" />
+    <!-- Text -->
+    <text
+       xml:space="preserve"
+       x="4200"
+       y="3600"
+       fill="#000000"
+       font-family="Times"
+       font-style="normal"
+       font-weight="normal"
+       font-size="240"
+       text-anchor="middle"
+       id="text30">a<tspan
+   font-size="160"
+   dy="35"
+   id="tspan32">k j</tspan><tspan
+   dy="-35"
+   id="tspan34"> = a</tspan><tspan
+   font-size="160"
+   dy="35"
+   id="tspan36">k j</tspan><tspan
+   dy="-35"
+   id="tspan38"> - mult * a</tspan><tspan
+   font-size="160"
+   dy="35"
+   id="tspan40">k i</tspan><tspan
+   dy="-35"
+   id="tspan42" /></text>
+    <!-- Text -->
+    <text
+       xml:space="preserve"
+       x="4200"
+       y="2700"
+       fill="#000000"
+       font-family="Times"
+       font-style="normal"
+       font-weight="normal"
+       font-size="240"
+       text-anchor="middle"
+       id="text44">for k=i,...,n-1</text>
+    <!-- Text -->
+    <text
+       xml:space="preserve"
+       x="4200"
+       y="1800"
+       fill="#000000"
+       font-family="Times"
+       font-style="normal"
+       font-weight="normal"
+       font-size="240"
+       text-anchor="middle"
+       id="text46">mult = 2\sum<tspan
+   font-size="160"
+   dy="35"
+   id="tspan48">k=i</tspan><tspan
+   dy="-35"
+   id="tspan50" /><tspan
+   font-size="160"
+   dy="-85"
+   id="tspan52">n-1</tspan><tspan
+   dy="50"
+   id="tspan54"> a</tspan><tspan
+   font-size="160"
+   dy="35"
+   id="tspan56">k i</tspan><tspan
+   dy="-35"
+   id="tspan58"> a</tspan><tspan
+   font-size="160"
+   dy="35"
+   id="tspan60">k j</tspan><tspan
+   dy="-35"
+   id="tspan62" /></text>
+  </g>
+</svg>

@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Creator: fig2dev Version 3.2 Patchlevel 5e -->
+
+<!-- CreationDate: Thu Dec 26 11:40:12 2019 -->
+
+<!-- Magnification: 1.000 -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="2.5in"
+   height="3.5in"
+   viewBox="3288 738 3024 4224"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="qrflow2.svg">
+  <metadata
+     id="metadata40">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs38" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="640"
+     inkscape:window-height="480"
+     id="namedview36"
+     showgrid="false"
+     inkscape:zoom="0.74920635"
+     inkscape:cx="112.5"
+     inkscape:cy="157.5"
+     inkscape:window-x="53"
+     inkscape:window-y="34"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg2" />
+  <g
+     style="stroke-width:.025in; fill:none"
+     id="g4">
+    <!-- Line -->
+    <polyline
+       points="4800,1350 4800,1860 "
+       style="stroke:#000000;stroke-width:7; stroke-linejoin:miter; stroke-linecap:butt; "
+       id="polyline6" />
+    <!-- Arrowhead on XXXpoint 4800 1350 - 4800 2115-->
+    <polygon
+       points="4728 1798 4800 2098 4872 1798 4800 1858 4728 1798  "
+       style="stroke:#000000;stroke-width:7;stroke-miterlimit:8; fill:#000000;"
+       id="polygon8" />
+    <!-- Line -->
+    <polyline
+       points="4800,3000 4800,3210 "
+       style="stroke:#000000;stroke-width:7; stroke-linejoin:miter; stroke-linecap:butt; "
+       id="polyline10" />
+    <!-- Arrowhead on XXXpoint 4800 3000 - 4800 3465-->
+    <polygon
+       points="4728 3148 4800 3448 4872 3148 4800 3208 4728 3148  "
+       style="stroke:#000000;stroke-width:7;stroke-miterlimit:8; fill:#000000;"
+       id="polygon12" />
+    <!-- Line: box -->
+    <rect
+       x="3600"
+       y="3450"
+       width="2400"
+       height="1500"
+       rx="0"
+       style="stroke:#000000;stroke-width:7; stroke-linejoin:miter; stroke-linecap:butt; "
+       id="rect14" />
+    <!-- Line: box -->
+    <rect
+       x="3300"
+       y="2100"
+       width="3000"
+       height="900"
+       rx="0"
+       style="stroke:#000000;stroke-width:7; stroke-linejoin:miter; stroke-linecap:butt; "
+       id="rect16" />
+    <!-- Line: box -->
+    <rect
+       x="3900"
+       y="750"
+       width="1800"
+       height="600"
+       rx="0"
+       style="stroke:#000000;stroke-width:7; stroke-linejoin:miter; stroke-linecap:butt; "
+       id="rect18" />
+    <!-- Text -->
+    <text
+       xml:space="preserve"
+       x="4800"
+       y="4800"
+       fill="#000000"
+       font-family="Times"
+       font-style="normal"
+       font-weight="normal"
+       font-size="240"
+       text-anchor="middle"
+       id="text20">part</text>
+    <!-- Text -->
+    <text
+       xml:space="preserve"
+       x="4800"
+       y="4350"
+       fill="#000000"
+       font-family="Times"
+       font-style="normal"
+       font-weight="normal"
+       font-size="240"
+       text-anchor="middle"
+       id="text22">the top n\times p</text>
+    <!-- Text -->
+    <text
+       xml:space="preserve"
+       x="4800"
+       y="3900"
+       fill="#000000"
+       font-family="Times"
+       font-style="normal"
+       font-weight="normal"
+       font-size="240"
+       text-anchor="middle"
+       id="text24">Read A into</text>
+    <!-- Text -->
+    <text
+       xml:space="preserve"
+       x="4800"
+       y="2850"
+       fill="#000000"
+       font-family="Times"
+       font-style="normal"
+       font-weight="normal"
+       font-size="240"
+       text-anchor="middle"
+       id="text26">for A<tspan
+   font-size="160"
+   dy="35"
+   id="tspan28">n+1\times p</tspan><tspan
+   dy="-35"
+   id="tspan30" /></text>
+    <!-- Text -->
+    <text
+       xml:space="preserve"
+       x="4800"
+       y="2400"
+       fill="#000000"
+       font-family="Times"
+       font-style="normal"
+       font-weight="normal"
+       font-size="240"
+       text-anchor="middle"
+       id="text32">Allocate memory</text>
+    <!-- Text -->
+    <text
+       xml:space="preserve"
+       x="4800"
+       y="1200"
+       fill="#000000"
+       font-family="Times"
+       font-style="normal"
+       font-weight="normal"
+       font-size="240"
+       text-anchor="middle"
+       id="text34">Read n, p</text>
+  </g>
+</svg>

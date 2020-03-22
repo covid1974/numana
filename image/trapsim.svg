@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Creator: fig2dev Version 3.2 Patchlevel 5e -->
+
+<!-- CreationDate: Mon Jan  6 13:31:31 2020 -->
+
+<!-- Magnification: 1.050 -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="3.0in"
+   height="3.3in"
+   viewBox="1637 932 3598 3925"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="trapsim.svg">
+  <metadata
+     id="metadata46">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs44" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="640"
+     inkscape:window-height="480"
+     id="namedview42"
+     showgrid="false"
+     inkscape:zoom="0.79461281"
+     inkscape:cx="135"
+     inkscape:cy="148.5"
+     inkscape:window-x="53"
+     inkscape:window-y="34"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg2" />
+  <g
+     style="stroke-width:.025in; fill:none"
+     id="g4">
+    <!-- Line -->
+    <polyline
+       points="3086,4369 4472,4369 "
+       style="stroke:#00ff00;stroke-width:8; stroke-linejoin:miter; stroke-linecap:butt; fill:#b2b2b2; "
+       id="polyline6" />
+    <!-- Arrowhead on XXXpoint 2834 4369 - 4740 4369-->
+    <polygon
+       points="4473 4445 4725 4369 4473 4293 4473 4445  "
+       style="stroke:#00ff00;stroke-width:8;stroke-miterlimit:8; fill:#00ff00;"
+       id="polygon8" />
+    <!-- Arrowhead on XXXpoint 4724 4369 - 2818 4369-->
+    <polygon
+       points="3085 4293 2833 4369 3085 4445 3085 4293  "
+       style="stroke:#00ff00;stroke-width:8;stroke-miterlimit:8; fill:#00ff00;"
+       id="polygon10" />
+    <!-- Line -->
+    <polyline
+       points="2834,2362 2362,2362 "
+       style="stroke:#000000;stroke-width:8; stroke-linejoin:miter; stroke-linecap:butt; stroke-dasharray:67 67;fill:#b2b2b2; "
+       id="polyline12" />
+    <!-- Line -->
+    <polyline
+       points="2362,1417 4724,1417 "
+       style="stroke:#000000;stroke-width:8; stroke-linejoin:miter; stroke-linecap:butt; stroke-dasharray:67 67;fill:#b2b2b2; "
+       id="polyline14" />
+    <!-- Line -->
+    <polygon
+       points="2834,2362 4724,1417 4724,3779 2834,3779 2834,2362 "
+       style="stroke:#000000;stroke-width:0; stroke-linejoin:miter; stroke-linecap:butt; fill:#b2b2b2; "
+       id="polygon16" />
+    <!-- Text -->
+    <text
+       xml:space="preserve"
+       x="3660"
+       y="4841"
+       fill="#000000"
+       font-family="Times"
+       font-style="italic"
+       font-weight="bold"
+       font-size="252"
+       text-anchor="start"
+       id="text18">h</text>
+    <!-- Text -->
+    <text
+       xml:space="preserve"
+       x="3307"
+       y="4251"
+       fill="#000000"
+       font-family="Times"
+       font-style="italic"
+       font-weight="bold"
+       font-size="189"
+       text-anchor="start"
+       id="text20">0</text>
+    <!-- Text -->
+    <text
+       xml:space="preserve"
+       x="5078"
+       y="4251"
+       fill="#000000"
+       font-family="Times"
+       font-style="italic"
+       font-weight="bold"
+       font-size="189"
+       text-anchor="start"
+       id="text22">1</text>
+    <!-- Text -->
+    <text
+       xml:space="preserve"
+       x="4605"
+       y="4133"
+       fill="#000000"
+       font-family="Times"
+       font-style="italic"
+       font-weight="bold"
+       font-size="252"
+       text-anchor="start"
+       id="text24">b=x</text>
+    <!-- Text -->
+    <text
+       xml:space="preserve"
+       x="2834"
+       y="4133"
+       fill="#000000"
+       font-family="Times"
+       font-style="italic"
+       font-weight="bold"
+       font-size="252"
+       text-anchor="start"
+       id="text26">a=x</text>
+    <!-- Text -->
+    <text
+       xml:space="preserve"
+       x="1653"
+       y="1534"
+       fill="#000000"
+       font-family="Times"
+       font-style="italic"
+       font-weight="bold"
+       font-size="252"
+       text-anchor="start"
+       id="text28">f(b)</text>
+    <!-- Text -->
+    <text
+       xml:space="preserve"
+       x="1653"
+       y="2479"
+       fill="#000000"
+       font-family="Times"
+       font-style="italic"
+       font-weight="bold"
+       font-size="252"
+       text-anchor="start"
+       id="text30">f(a)</text>
+    <!-- Ellipse -->
+    <ellipse
+       transform="translate(4741,1392) rotate(-0.00000000)"
+       rx="52"
+       ry="52"
+       style="fill:#000000;stroke:#000000;stroke-width:8;"
+       id="ellipse32" />
+    <!-- Ellipse -->
+    <ellipse
+       transform="translate(2851,2337) rotate(-0.00000000)"
+       rx="52"
+       ry="52"
+       style="fill:#000000;stroke:#000000;stroke-width:8;"
+       id="ellipse34" />
+    <!-- Line -->
+    <polyline
+       points="2834,2362 4724,1417 "
+       style="stroke:#000000;stroke-width:8; stroke-linejoin:miter; stroke-linecap:butt; fill:#000000; "
+       id="polyline36" />
+    <!-- Line -->
+    <polyline
+       points="1889,3779 5196,3779 "
+       style="stroke:#00ff00;stroke-width:8; stroke-linejoin:miter; stroke-linecap:butt; "
+       id="polyline38" />
+    <!-- Line -->
+    <polyline
+       points="2362,944 2362,4251 "
+       style="stroke:#00ff00;stroke-width:8; stroke-linejoin:miter; stroke-linecap:butt; "
+       id="polyline40" />
+  </g>
+</svg>

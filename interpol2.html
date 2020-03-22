@@ -1,0 +1,445 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta content="text/html;charset=UTF-8" http-equiv="Content-Type"/>
+<link rel="stylesheet" type="text/css" href="../tools/ctut.css"/>
+<link type="text/css" rel="stylesheet" href="../tools/style.css"/>
+<style type="text/css">@font-face {font-family: SHREE_BAN_OTF_0592;src: local("../tools/SHREE_BAN_OTF_0592"),url(../tools/SHREE0592.woff) format("opentype");</style>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<script src="../tools/jquery-1.10.2.min.js"></script>
+
+<script>
+aha = function(code) {
+  window.open("https://rdrr.io/snippets/embed/?code="+code)
+}
+
+togglePhoto = function(photoId) {
+   var me = document.getElementById("pic_"+photoId)
+   if(me.style.display=="block"){
+     me.style.display="none";
+   }
+   else if (me.style.display=="none"){
+     me.style.display="block";
+   }
+}
+
+hideShow = function(lb) {
+   var me = document.getElementById(lb)
+   if(me.style.display=="block"){
+     me.style.display="none";
+   }
+   else if (me.style.display=="none"){
+     me.style.display="block";
+   }
+}
+
+grabData = function(data){
+  return "https://farm"+data.photo.farm+".staticflickr.com/"+data.photo.server+"/"+data.photo.id+"_"+
+            data.photo.secret+".jpg"
+}
+
+fromFlickr = function(photoId) {
+
+$.getJSON("https://api.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=23a138c73bdbe1e68601aa7866924e62&user_id=109924623@N07&photo_id="+photoId+"&lang=en-us&format=json&jsoncallback=?",
+  function(data) {
+    imgURL = grabData(data)
+    var l = document.getElementById("lnk_"+photoId)
+    l.href = "https://www.flickr.com/photos/109924623@N07/"+photoId
+    var i = document.getElementById("pic_"+photoId)
+    i.src=imgURL
+    i.onload = function() {
+      document.getElementById("status_"+photoId).innerHTML="[Image loaded. Click to show/hide.]"
+    }
+  })
+}
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js","color.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+    tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]},
+    TeX: {
+      Macros: {
+        h: ["{\\hat #1}",1],
+        b: ["{\\overline #1}", 1],
+        row: "{\\mathcal R}",
+        col: "{\\mathcal C}",
+        nul: "{\\mathcal N}"
+      }
+    }
+  });
+</script><script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script src="../tools/htmlwidgets.js"></script>
+<link href="../tools/rgl.css" rel="stylesheet"></link>
+<script src="../tools/rglClass.src.js"></script>
+<script src="../tools/CanvasMatrix.src.js"></script>
+<script src="../tools/rglWebGL.js"></script>
+</head>
+<body>
+<a href="http://www.isical.ac.in/~arnabc/">[Home]</a>
+<h3>Table of contents</h3>
+<ul>
+<li>
+<a href="#Different representations of polynomials">Different representations of polynomials</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;
+<a href="#Horner's form">Horner's form</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;
+<a href="#Bernstein form">Bernstein form</a>
+</li>
+<li>
+<a href="#Splines">Splines</a>
+</li>
+</ul>
+<hr/>
+
+$\newcommand{\y}{\mathbf y}
+\newcommand{\bb}{\mathbf b}
+\newcommand{\xx}{\mathbf x}
+\newcommand{\PP}{\mathbf P}
+\newcommand{\RR}{\mathbf R}$
+<title>Interpolation</title>
+
+<table width="100%">
+<tr>
+<td align="right"><i>Last
+updated on: FRI JAN 17 IST 2020</i></td>
+</tr>
+</table>
+
+
+
+<h1><a
+name="Different representations of polynomials">Different representations of polynomials</a></h1>
+A polynomial may be expressed in different forms. Some are useful for
+algebraic manipulation, while some are useful for efficient
+computation. We already know two forms: the coefficient form, and the
+leading-coefficient-and-roots form. In the coefficient form we express a
+polynomial as
+$$
+a_0 + a_1x + a_2x^2 + \cdots + a_nx^n.
+$$
+In the leading-coefficient-and-roots form we write it as
+$$
+a(x-\alpha_1)(x-\alpha_2)\times\cdots(x - \alpha_n),
+$$
+where $a$ is the leading coefficient (<i> <i>i.e.</i>,</i> the coefficient of
+the highest power of $x$) and the $\alpha _i$'s are the roots of
+the polynomial. Other than these we shall learn about two more
+representations of polynomials: <ol type="">
+
+<li></li>Horner's form (or nested multiplication form)
+<li></li>Bernstein's form (or Bezier form)
+</ol>
+
+<h2><a
+name="Horner's form">Horner's form</a></h2>
+Consider the polynomial
+$$
+a_0 + a_1x + a_2x^2 + a_3x^3 + a_4x^4.
+$$
+If you compute this naively by computing each power separately then it
+needs $O(n^2)$ multiplications (here $n=4.$) 
+However, this is wasteful since to
+compute $x^n$ by multiplying $x$ with itself $n$ times, you
+are already computing all the lower powers of $x$ as well. To avoid
+recomputing powers, rewrite the polynomial as
+$$
+a_0 + x(a_1+x(a_2+x(a_3 + xa_4))).
+$$
+This is called <i>Horner's form</i> or <i>nested multiplication form.</i>
+Horner's scheme to compute an $n$-degree polynomial is to start with 
+$b_n = a_n.$ and recursively compute
+$$
+b_i = a_i + b_{i+1}x.
+$$
+$b_0$ is the required value.
+This method uses only $O(n)$ multiplication.
+
+
+
+<h2><a
+name="Bernstein form">Bernstein form</a></h2>
+Consider the set $P_n$ of all polynomials of degree less than or equal to
+$n.$ This set is a vector space. 
+
+<p>
+<b>EXERCISE:</b>&nbsp;
+Show that the set $\{1,x,x^2,...,x^n\}$ is a basis of this vector space.
+<img src="../image/box.png"></p>
+
+
+<p>
+<b>EXERCISE:</b>&nbsp;
+Consider the polynomial
+$$
+B_{n,k} = {n \choose k} x^k(1-x)^{n-k},
+$$ 
+for $0\leq k \leq n.$ These are called <i>Bernstein polynomials.</i>
+Show that 
+$$
+\{B_{n,0},...,B_{n,n}\}
+$$
+is a basis for $P_n.$ [Hint: Use the fact that $x^i$ divides
+$B_{n,j}$ iff $i&lt; j.$]
+<img src="../image/box.png"></p>
+
+By virtue of this exercise any polynomial of degree less than or equal to
+$n$ can be uniquely expressed as
+$$
+\sum_{k=0}^n \beta_k B_{n,k}.
+$$
+This is called Bernstein's form. You may be wondering why one should be
+interested in this form. There are at least two reasons. Originally
+Bernstein had used this representation to prove the following famous
+theorem, called Weierstrass' approximation theorem:
+
+<fieldset>
+<legend><b><i>Theorem</i></b></legend>
+Let $f(x)$ be any continuous function defined on $[a,b].$ Let
+$\epsilon &gt; 0$ be any number. Then there is a polynomial $p(x)$
+such that 
+$$
+|p(x)-f(x)| &lt;  \epsilon ~~~\forall x\in[a,b].
+$$
+</fieldset>
+
+Thus, we can approximate any continuous function with a polynomial on a
+closed, bounded interval with as much  accuracy as we want.
+
+A second application of the Bernstein representation is in computer
+graphics. It was due to a French engineer caller Bezier. So sometimes
+a polynomial in Bernstein form is called a Bezier curve. The coefficients
+of a polynomial determine its shape, but the relation between the shape
+and the coefficients is not an intuitive one. However, the control points
+allow much more intuitive control on the shape of the curve. To show this
+we shall work with parametric cubic Bezier curves:
+$$
+\xx(t) = (1-t)^3 \PP_0 + 3t(1-t)^2\PP_1 + 3t^2(1-t)\PP_2 + t^3\PP_3,~~~t\in[0,1].
+$$
+Here $\xx(t) = (x(t),y(t)),$ and $\PP_i\in\RR^2$ are the control points.
+
+<p>
+<b>EXERCISE:</b>&nbsp;
+Show that the curve passes through the two extreme control points,
+$\PP_0$ and $\PP_3.$ Also show that the lines $\PP_0\PP_1$
+and $\PP_2\PP_3$ are tangents to the curve at $\PP_0$ and
+$\PP_3,$ respectively.
+<img src="../image/box.png"></p>
+
+Thus, as $t$ goes from 0 to 1, the curve starts from $\PP_0$ and
+goes in the direction of $\PP_1,$ and finally comes to $\PP_3$
+from the direction of $\PP_2.$ The length of $\PP_0\PP_1$
+controls how strongly $\PP_1$ ``attracts'' the curve toward
+itself. Similarly, the length of $\PP_2\PP_3$ determines the
+attraction of $\PP_2.$ In this way, $\PP_i$'s intuitively ``control'' the
+shape of the curve. Bezier had first used them to design automobile
+bodies. Now they are used in almost every computer graphics applications
+requiring smooth curves. All standard softwares have provision to draw
+parametric cubic Bezier curves.
+
+
+<h1><a
+name="Splines">Splines</a></h1>
+
+<fieldset>
+<legend><b>Definition: </b></legend>A <i>$k$-degree spline curve</i> is a piecewise polynomial
+function where <ol type="">
+
+<li></li>each piece is of degree at most $k,$
+<li></li>the curve is $k-1$ times continuously differentiable. 
+</ol>
+The most popular form of spline curve has degree 3. It is also called
+a <i>cubic spline.</i> 
+
+</fieldset>
+
+Splines have various uses that can be classified in two classes:
+interpolating and smoothing. We shall not discuss smoothing splines here. 
+Given $n+1$ points
+$$
+(x_0,y_0),...,(x_n,y_n),
+$$
+an <i>interpolating spline of degree $k$</i> is a spline function
+$f(x)$ such that 
+$f(x_i) = y_i$ for all $i.$ Between any two successive $x_i$'s
+$f(x)$ is a polynomial of degree (at most) $k.$ The polynomials
+need to be chosen so that 
+they ``smoothly match'' at the $x_i$'s making $f(x)$ have
+a continuous $(k-1)$-th derivative. The $x_i$'s are called the
+<i>knots</i> of the spline curve. In what follows we shall assume 
+that $x_i$'s are equispaced with 
+$$
+x_i = x_0 + i\delta
+$$
+
+First we shall parametrize the $x$-values between two successive
+knots by $t$ going from 0 to 1. There are $n$ intervals between 
+the $x_i$'s. We shall call $[x_i,x_{i+1}]$ the $i$-th
+interval. The polynomial over the $i$-th
+interval will be denoted by $f_i(x).$ Over the $i$-th
+interval define $t \equiv t(x) = (x-x_i)/\delta.$ 
+Then we can write $f_i(x)$ as a polynomial in $t$ as
+$$
+f_i(x) = a_i + b_i t + c_i t^2 + d_i t^3~~~\mbox{ for } t\in [0,1],
+$$
+where $i=0,...,n-1.$
+We have three sets of conditions on the coefficients: 
+<ol type="">
+
+<li>
+$f(x)$ must
+match $y_i$'s at the knots,
+</li>
+
+<li> $f'(x)$ must match at the knots,
+</li>
+<li>
+$f''(x)$ must match at the knots. 
+</li>
+</ol>
+Notice that 
+$$\begin{eqnarray*}
+f_i'(x) &amp; =&amp;  \frac{1}{\delta} (b_i + 2c_i t + 3d_i t^2)\\ 
+f_i''(x) &amp; =&amp;  \frac{1}{\delta^2} (2c_i + 6d_i t). 
+\end{eqnarray*}$$
+
+So for $i=0,...,n-1,$
+$$\begin{eqnarray*}
+f_i'(x_i) &amp; =&amp;  \frac{b_i}{\delta} \\
+f_i'(x_{i+1}) &amp; =&amp;  \frac{1}{\delta} (b_i + 2c_i + 3d_i)\\ 
+f_i''(x_i) &amp; =&amp;  \frac{2c_i}{\delta^2} \\ 
+f_i''(x_{i+1}) &amp; =&amp;  \frac{1}{\delta^2} (2c_i + 6d_i).
+\end{eqnarray*}$$
+
+The first set gives rise to the following
+equations:
+$$\begin{eqnarray*}
+y_i &amp;  = &amp;  a_i,\\
+y_{i+1} &amp;  = &amp;  a_i+b_i+c_i+d_i,
+\end{eqnarray*}$$
+for $i=0,...,n-1.$
+Let us denote $f'(x_i)$ by $D_i.$ Then the second set of
+conditions produce:
+$$\begin{eqnarray*}
+D_i &amp;  = &amp;  \frac{b_i}{\delta},\\
+D_{i+1} &amp;  = &amp;  \frac{b_i+2c_i+3d_i}{\delta},
+\end{eqnarray*}$$
+for $i=0,...,n-1.$
+Before we take a look at the third set of conditions, let us use the above
+equations to express $a_i,b_i,c_i$ and $d_i$ in terms of
+$y_i$'s and $D_i's:$
+$$\begin{eqnarray*}
+a_i &amp;  = &amp;  y_i\\
+b_i &amp;  = &amp;  \delta D_i\\
+c_i &amp;  = &amp;  3(y_{i+1}-y_i) + \delta(D_i-D_{i+1})\\
+d_i &amp;  = &amp;  \delta(D_{i+1}-D_i)+ 2(y_i-y_{i+1}). 
+\end{eqnarray*}$$
+for $i=0,...,n-1.$
+
+Thus, the problem of finding suitable $a_i,b_i,c_i$ and
+$d_i$'s is now reduced to finding suitable $D_i$'s. For this we
+turn to the third set of conditions (matching of second derivatives.) At
+the interior points (<i> <i>i.e.</i>,</i> $x_1,...,x_{n-1}$) we need
+$$
+f_{i-1}''(1) = f_i''(0)
+$$
+for $i=0,...,n-1.$
+This means 
+$$
+2c_{i-1}+6d_{i-1} = 2c_i
+$$
+for $i=0,...,n-1.$
+Writing $c$'s and $d$'s in terms of $D_i$'s and
+$y_i$'s we get
+$$
+D_{i-1} + 4 D_i + D_{i+1} = 3(y_{i+1}-y_{i-1})~~~\mbox{ for } i=1,...,n-1.
+$$
+This gives $n-1$ equations for the $n+1$ unknowns,
+$D_0,...,D_n.$ If we put the following two conditions at $x_0$
+and $x_n:$ 
+$$\begin{eqnarray*}
+f''(x_0)&amp;  =&amp;  0\\
+f''(x_n)&amp;  =&amp;  0, 
+\end{eqnarray*}$$
+then the resulting spline is called <i>natural spline.</i> Note that
+these two conditions translate into the following two equations involving
+$D_i$'s:
+$$\begin{eqnarray*}
+2D_0+D_1 &amp;  = &amp;  3(y_1-y_0)\\
+D_{n-1}+2D_n &amp;  = &amp;  3(y_n-y_{n-1}).
+\end{eqnarray*}$$
+So we get the following tridiagonal system:
+$$
+\left[\begin{array}{ccccccccccc}
+2 &amp;  1\\
+1&amp;  4 &amp;  1\\
+&amp; 1&amp;  4 &amp;  1\\
+&amp; &amp; 1&amp;  4 &amp;  1\\
+&amp; &amp; \ddots&amp;  \ddots &amp;  \ddots\\
+&amp; &amp; &amp; 1&amp;  4 &amp;  1\\
+&amp; &amp; &amp; &amp;  1 &amp;  2
+
+\end{array}\right]\left[\begin{array}{ccccccccccc}D_0\\D_1\\D_2\\D_3\\\vdots\\D_{n-1}\\D_n
+\end{array}\right]
+= 3\left[\begin{array}{ccccccccccc}y_1-y_0\\y_2-y_0\\y_3-y_1\\y_4-y_2\\
+\vdots\\y_n-y_{n-2}\\y_n-y_{n-1}
+\end{array}\right].
+$$
+
+<p>
+<b>EXERCISE:</b>&nbsp;
+Some authors derive cubic splines in a different way. They denote
+$f''(x_i)$ by $S_i,$ say, and express $a_i,b_i,c_i$ and
+$d_i$ in terms of $y_i$'s and $S_i$'s. Then they derive a
+system of equations for the $S_i$'s. Follow this process and check
+that you get a tridiagonal system for the $S_i$'s.
+<img src="../image/box.png"></p>
+
+
+<p>
+<b>EXERCISE:</b>&nbsp;
+While deriving the equations for $D_i$'s we first had only $n-1$
+equations for $n+1$ unknowns. To get $n+1$ equations We
+introduced two extra conditions: $f''(x_0) = 0$ and $f''(x_n) =
+0.$ Sometimes one uses other conditions like: $f(x_0) = f(x_n)$
+and $f'(x_0) = f'(x_n).$ Derive a system of equations for
+$D_i$'s in this case. Why should people be interested in
+these two conditions? 
+<img src="../image/box.png"></p>
+
+
+<h3>Comments</h3>
+To post an anonymous comment, click on the "Name" field. This
+will bring up an option saying "I'd rather post as a guest."
+<p></p><!--
+begin disqus code --> <div id="disqus_thread"></div>
+<script>
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+
+var disqus_config = function () {
+this.page.url = "https://www.isical.ac.in/~arnabc/numana/interpol2.html"; // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = "interpol2"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://txtbk.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript><!-- end disqus code --> 
+
+<hr/>
+<table width="100%" border="0">
+<tr>
+<td align="left"/>
+<td align="right"/>
+</tr>
+</table>
+<hr/>
+</body>
+</html>

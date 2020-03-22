@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Creator: fig2dev Version 3.2 Patchlevel 5e -->
+
+<!-- CreationDate: Tue Dec 17 09:39:36 2019 -->
+
+<!-- Magnification: 1.050 -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="6.7in"
+   height="3.0in"
+   viewBox="932 932 8056 3628"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="secant.svg">
+  <metadata
+     id="metadata74">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs72" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="640"
+     inkscape:window-height="480"
+     id="namedview70"
+     showgrid="false"
+     inkscape:zoom="0.4941957"
+     inkscape:cx="301.49999"
+     inkscape:cy="135"
+     inkscape:window-x="43"
+     inkscape:window-y="24"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg2" />
+  <g
+     style="stroke-width:.025in; fill:none"
+     id="g4">
+    <!-- Line -->
+    <polyline
+       points="7926,2284 7212,2375 "
+       style="stroke:#000000;stroke-width:8; stroke-linejoin:miter; stroke-linecap:butt; "
+       id="polyline6" />
+    <!-- Arrowhead on XXXpoint 7926 2284 - 6948 2408-->
+    <polygon
+       points="7203 2299 6962 2406 7222 2449 7203 2299  "
+       style="stroke:#000000;stroke-width:8;stroke-miterlimit:8; fill:#000000;"
+       id="polygon8" />
+    <!-- Line -->
+    <polyline
+       points="2711,2424 3148,2873 "
+       style="stroke:#000000;stroke-width:8; stroke-linejoin:miter; stroke-linecap:butt; "
+       id="polyline10" />
+    <!-- Arrowhead on XXXpoint 2711 2424 - 3334 3064-->
+    <polygon
+       points="3093 2925 3323 3054 3202 2819 3093 2925  "
+       style="stroke:#000000;stroke-width:8;stroke-miterlimit:8; fill:#000000;"
+       id="polygon12" />
+    <!-- Line -->
+    <polyline
+       points="7173,2774 7173,3788 "
+       style="stroke:#000000;stroke-width:8; stroke-linejoin:miter; stroke-linecap:butt; stroke-dasharray:67 67;"
+       id="polyline14" />
+    <!-- Line -->
+    <polyline
+       points="6614,1889 6614,3779 "
+       style="stroke:#000000;stroke-width:8; stroke-linejoin:miter; stroke-linecap:butt; stroke-dasharray:67 67;"
+       id="polyline16" />
+    <!-- Line -->
+    <polyline
+       points="4251,2598 4251,3779 "
+       style="stroke:#000000;stroke-width:8; stroke-linejoin:miter; stroke-linecap:butt; stroke-dasharray:67 67;"
+       id="polyline18" />
+    <!-- Line -->
+    <polyline
+       points="1653,4251 1653,3779 "
+       style="stroke:#000000;stroke-width:8; stroke-linejoin:miter; stroke-linecap:butt; stroke-dasharray:67 67;"
+       id="polyline20" />
+    <!-- Line -->
+    <polyline
+       points="6614,1889 7795,3779 "
+       style="stroke:#000000;stroke-width:8; stroke-linejoin:miter; stroke-linecap:butt; "
+       id="polyline22" />
+    <!-- Line -->
+    <polyline
+       points="4251,2598 1653,4251 "
+       style="stroke:#000000;stroke-width:8; stroke-linejoin:miter; stroke-linecap:butt; "
+       id="polyline24" />
+    <!-- Line -->
+    <polyline
+       points="6614,1889 6615,1892 6617,1901 6621,1914 6626,1934 6634,1960 6643,1991 6653,2025 6664,2059 6676,2095 6686,2130 6698,2162 6709,2193 6720,2221 6730,2247 6742,2272 6753,2296 6765,2318 6777,2340 6790,2362 6802,2380 6814,2398 6827,2416 6840,2435 6855,2454 6871,2474 6888,2494 6906,2515 6923,2536 6943,2557 6963,2579 6984,2601 7005,2622 7027,2644 7050,2666 7072,2688 7096,2709 7120,2731 7143,2752 7166,2772 7190,2793 7214,2813 7238,2833 7262,2854 7285,2871 7307,2889 7329,2907 7353,2925 7376,2944 7401,2963 7426,2983 7453,3003 7480,3023 7507,3044 7535,3065 7565,3086 7593,3108 7623,3129 7652,3150 7681,3172 7712,3193 7740,3214 7770,3235 7798,3255 7826,3275 7855,3295 7882,3314 7908,3333 7934,3352 7961,3370 7986,3387 8011,3404 8036,3422 8061,3439 8087,3457 8112,3475 8138,3492 8165,3510 8193,3529 8222,3549 8253,3570 8285,3591 8319,3614 8353,3637 8390,3662 8428,3688 8466,3713 8504,3739 8542,3764 8579,3790 8614,3813 8645,3833 8671,3851 8695,3866 8712,3878 8725,3887 8733,3892 8738,3896 8740,3897 "
+       style="stroke:#000000;stroke-width:32; stroke-linejoin:bevel; stroke-linecap:butt; "
+       id="polyline26" />
+    <!-- Line -->
+    <polyline
+       points="1653,4251 1655,4251 1660,4250 1669,4249 1683,4247 1702,4244 1729,4241 1759,4237 1795,4232 1835,4225 1878,4219 1924,4212 1970,4204 2017,4197 2065,4190 2111,4182 2156,4175 2199,4166 2240,4159 2279,4152 2317,4144 2352,4137 2386,4130 2418,4122 2450,4115 2481,4108 2511,4099 2540,4091 2569,4082 2598,4074 2627,4065 2656,4055 2685,4045 2714,4034 2745,4023 2775,4011 2806,3998 2837,3986 2869,3972 2901,3958 2934,3942 2966,3926 2999,3909 3033,3892 3065,3875 3098,3857 3130,3838 3163,3819 3194,3799 3225,3779 3256,3758 3286,3738 3315,3717 3344,3695 3372,3674 3399,3652 3426,3630 3453,3608 3478,3585 3504,3562 3526,3541 3548,3520 3570,3498 3592,3475 3614,3450 3637,3425 3660,3399 3683,3372 3708,3342 3733,3311 3759,3278 3786,3244 3815,3208 3843,3169 3874,3129 3904,3087 3935,3044 3968,3000 4001,2955 4032,2911 4064,2867 4094,2824 4122,2784 4149,2746 4173,2712 4193,2682 4211,2657 4224,2637 4236,2621 4243,2611 4247,2603 4250,2600 4251,2598 "
+       style="stroke:#000000;stroke-width:32; stroke-linejoin:bevel; stroke-linecap:butt; "
+       id="polyline28" />
+    <!-- Line -->
+    <polyline
+       points="5669,3779 8976,3779 "
+       style="stroke:#00ff00;stroke-width:8; stroke-linejoin:miter; stroke-linecap:butt; "
+       id="polyline30" />
+    <!-- Line -->
+    <polyline
+       points="6141,944 6141,4251 "
+       style="stroke:#00ff00;stroke-width:8; stroke-linejoin:miter; stroke-linecap:butt; "
+       id="polyline32" />
+    <!-- Line -->
+    <polyline
+       points="944,3779 4251,3779 "
+       style="stroke:#00ff00;stroke-width:8; stroke-linejoin:miter; stroke-linecap:butt; "
+       id="polyline34" />
+    <!-- Line -->
+    <polyline
+       points="1417,944 1417,4251 "
+       style="stroke:#00ff00;stroke-width:8; stroke-linejoin:miter; stroke-linecap:butt; "
+       id="polyline36" />
+    <!-- Text -->
+    <text
+       xml:space="preserve"
+       x="2380"
+       y="3736"
+       fill="#000000"
+       font-family="Times"
+       font-style="italic"
+       font-weight="bold"
+       font-size="189"
+       text-anchor="start"
+       id="text38">2</text>
+    <!-- Text -->
+    <text
+       xml:space="preserve"
+       x="2240"
+       y="3631"
+       fill="#000000"
+       font-family="Times"
+       font-style="italic"
+       font-weight="bold"
+       font-size="189"
+       text-anchor="start"
+       id="text40">x</text>
+    <!-- Text -->
+    <text
+       xml:space="preserve"
+       x="7647"
+       y="4033"
+       fill="#000000"
+       font-family="Times"
+       font-style="italic"
+       font-weight="bold"
+       font-size="189"
+       text-anchor="start"
+       id="text42">x</text>
+    <!-- Text -->
+    <text
+       xml:space="preserve"
+       x="7786"
+       y="4138"
+       fill="#000000"
+       font-family="Times"
+       font-style="italic"
+       font-weight="bold"
+       font-size="189"
+       text-anchor="start"
+       id="text44">2</text>
+    <!-- Text -->
+    <text
+       xml:space="preserve"
+       x="6666"
+       y="4174"
+       fill="#000000"
+       font-family="Times"
+       font-style="italic"
+       font-weight="bold"
+       font-size="189"
+       text-anchor="start"
+       id="text46">0</text>
+    <!-- Text -->
+    <text
+       xml:space="preserve"
+       x="7278"
+       y="4174"
+       fill="#000000"
+       font-family="Times"
+       font-style="italic"
+       font-weight="bold"
+       font-size="189"
+       text-anchor="start"
+       id="text48">1</text>
+    <!-- Text -->
+    <text
+       xml:space="preserve"
+       x="4356"
+       y="4156"
+       fill="#000000"
+       font-family="Times"
+       font-style="italic"
+       font-weight="bold"
+       font-size="189"
+       text-anchor="start"
+       id="text50">1</text>
+    <!-- Text -->
+    <text
+       xml:space="preserve"
+       x="1784"
+       y="3841"
+       fill="#000000"
+       font-family="Times"
+       font-style="italic"
+       font-weight="bold"
+       font-size="189"
+       text-anchor="start"
+       id="text52">0</text>
+    <!-- Text -->
+    <text
+       xml:space="preserve"
+       x="7139"
+       y="4034"
+       fill="#000000"
+       font-family="Times"
+       font-style="italic"
+       font-weight="bold"
+       font-size="189"
+       text-anchor="start"
+       id="text54">x</text>
+    <!-- Text -->
+    <text
+       xml:space="preserve"
+       x="6543"
+       y="4034"
+       fill="#000000"
+       font-family="Times"
+       font-style="italic"
+       font-weight="bold"
+       font-size="189"
+       text-anchor="start"
+       id="text56">x</text>
+    <!-- Text -->
+    <text
+       xml:space="preserve"
+       x="4199"
+       y="4034"
+       fill="#000000"
+       font-family="Times"
+       font-style="italic"
+       font-weight="bold"
+       font-size="189"
+       text-anchor="start"
+       id="text58">x</text>
+    <!-- Text -->
+    <text
+       xml:space="preserve"
+       x="1609"
+       y="3701"
+       fill="#000000"
+       font-family="Times"
+       font-style="italic"
+       font-weight="bold"
+       font-size="189"
+       text-anchor="start"
+       id="text60">x</text>
+    <!-- Text -->
+    <text
+       xml:space="preserve"
+       x="7676"
+       y="2125"
+       fill="#000000"
+       font-family="Times"
+       font-style="italic"
+       font-weight="bold"
+       font-size="252"
+       text-anchor="start"
+       id="text62">secant</text>
+    <!-- Text -->
+    <text
+       xml:space="preserve"
+       x="8385"
+       y="3424"
+       fill="#000000"
+       font-family="Times"
+       font-style="italic"
+       font-weight="bold"
+       font-size="252"
+       text-anchor="start"
+       id="text64">f(x)</text>
+    <!-- Text -->
+    <text
+       xml:space="preserve"
+       x="2125"
+       y="2243"
+       fill="#000000"
+       font-family="Times"
+       font-style="italic"
+       font-weight="bold"
+       font-size="252"
+       text-anchor="start"
+       id="text66">secant</text>
+    <!-- Text -->
+    <text
+       xml:space="preserve"
+       x="2970"
+       y="4409"
+       fill="#000000"
+       font-family="Times"
+       font-style="italic"
+       font-weight="bold"
+       font-size="252"
+       text-anchor="start"
+       id="text68">f(x)</text>
+  </g>
+</svg>

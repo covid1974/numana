@@ -1,0 +1,353 @@
+<NOTE>
+@{
+<M>
+\newcommand{\ff}{{\bf f}}
+\newcommand{\xx}{{\bf x}}
+\newcommand{\yy}{{\bf y}}
+\newcommand{\z}{{\bf 0}}</M>
+<TITLE>Nonlinear equations</TITLE>
+<UPDT>MON FEB 03 IST 2020</UPDT>
+<HEAD1>Nonlinear equations</HEAD1>
+It often happens that we have to solve a nonlinear  equation,
+<D>
+f(x)=0
+</D>
+that we cannot easily solve analytically. A simple such example is <M>x = \cos x.</M>  Here <M>f(x) = x-\cos x.</M>
+<P/>
+Any solution to <M>f(x)=0</M> is
+called a <I>root</I> or <I>zero</I> of <M>f(x).</M> In this page we
+shall learn two methods to approximately compute zeros of nonlinear functions.
+<P/>
+All the methods will be iterative in nature, i.e., we shall generate
+a sequence <M>x_0,x_1,x_2,...</M> that (hopefully) converges to the
+required root. 
+
+<HEAD2>Newton-Raphson method</HEAD2>
+This is a very popular method that usually converges rapidly. It solves
+the equation <M>f(x) = 0,</M>
+assuming that we can compute <M>f'(x).</M> The iterations start with an
+initial guess <M>x_0</M> and proceeds as
+<D>
+x_{k+1} = x_k - \frac{f(x_k)}{f'(x_k)}.
+</D>
+There are two equivalent ways to think about the Newton-Raphson
+iterations. The first is using the following diagram:
+<CIMG web="nr.png">Approximating <M>f(x)</M> by the tangent at <M>x_k</M></CIMG>
+Here we draw the tangent through <M>(x_k,f(x_k))</M> and use this as a
+local approximation of <M>f(x).</M> The point where the tangent hits the
+<M>x</M>-axis is taken <M>x_{k+1}.</M> 
+<P/>
+The second way to look at the same thing is to approximate <M>f(x)</M> using
+Taylor approximation:
+<D>f(x) \approx f(x_k)+f'(x_k)(x-x_k).</D>
+Now if we want <M>f(x)=0</M> then we need <M>f(x_k)+f'(x_k)(x-x_k) = 0,</M>
+or
+<D>
+x = x_k -\frac{f(x_k)}{f'(x_k)}.
+</D>
+This motivates defining 
+<D>
+x_{k+1} = x_k+h = x_k -\frac{f(x_k)}{f'(x_k)}.
+</D>
+
+<EXM>
+Let us solve <M>\cos(x)=x</M> using Newton-Raphson method starting with
+<M>x_0=1.</M> Here <M>f(x) = \cos(x)-x,</M> and hence <M>f'(x) =
+-\sin(x)-1.</M> So the Newton-Raphson iteration is
+<D>
+x_{k+1} = x_k + \frac{\cos(x_k)-x_k}{\sin(x_k)+1}.
+</D>
+A few iterations are as follows. 
+<PRE>
+k      x
+-------------
+1   0.7503639
+2   0.7391129
+3   0.7390851
+4   0.7390851
+</PRE>
+We already see convergence.
+</EXM>
+The following J code lets you explore this.
+<J>
+f=:-cos
+nr=:- (f % (1+sin))
+nr^:(i.10) 1
+</J>
+<HIDE lab="j1"><MSG>J help</MSG><HIDDEN>
+<UL>
+<LI><CODE>f g</CODE> means the function <M>y\mapsto
+f(y,g(y)).</M> For example, <CODE>-cos</CODE> means <M>y\mapsto y-\cos y.</M></LI>
+</UL>
+</HIDDEN></HIDE>
+
+<EXR>
+Solve using the Newton-Raphson method:
+<OL>
+<LI><M>e^x = \cos x</M> for <M>x\in(*(-[[\pi2]],0)*).</M></LI>
+<COMMENT>
+plot (]; cos - ^) _1.5 * (%~i.) 100
+plot (]; 1 _2 0 3 5 _1&p.) i:100
+</COMMENT>
+<LI><M>1-2x+3x^3+5x^4-x^5 = 0.</M></LI>
+</OL>
+
+</EXR>
+<HEAD2>Nonlinear systems</HEAD2>
+It is possible to use Newton-Raphson method to solve a <I>system</I> of
+nonlinear equations:
+<MULTILINE>
+f_1(x_1,...,x_n)&  = & 0\\
+&  \vdots & \\
+f_n(x_1,...,x_n) & =&  0
+</MULTILINE>
+Note that the number of unknowns equals the number of equations. We can
+write this using vector notation as
+<D>
+\ff(\xx) = \z,
+</D>
+where <M>\xx = (x_1,...,x_n)'</M> and <M>\ff(\xx) =(f_1(\xx),...,f_n(\xx))'.</M> 
+The Newton-Raphson iteration for this system is
+<D>
+\xx_{n+1} = \xx_n - (D\ff(\xx_n))^{-1}\ff(\xx_n),
+</D>
+where <M>D\ff(\xx)</M> is the Jacobian matrix with <M>(i,j)</M>-th entry
+given by 
+<D>
+\frac{\partial f_i(\xx)}{\partial x_j}.
+</D>
+
+<EXM>
+Let us solve the system 
+<MULTILINE>
+xy+x^2-y^3-1 = 0\\
+x+2y-xy^2 -2 =0
+</MULTILINE>
+Here <M>f_1(x,y) = xy+x^2-y^3-1</M> and <M>f_2(x,y) = x+2y-xy^2 -2.</M> So
+the Jacobian matrix is 
+<D>
+D\ff(\xx) = <MAT>y+2x  &  x-3y^2 \\
+              1-y^2 &  2-2xy  </MAT>
+</D>
+This has inverse given by 
+<D>
+(D\ff(\xx))^{-1} = \frac{1}{(y+2x)(2-2xy)-(x-3y^2)(1-y^2)}
+<MAT>2-2xy &  3y^2-x\\ 
+     y^2-1      &  2-2xy</MAT>
+</D>
+The following table shows a few sample iterations.
+<PRE>
+n    x             y
+-------------------------------------
+0   0.34         0.5
+1   1.0896157    0.6101134
+2   0.8689638    0.9595518
+3   0.9842601    0.9682277
+4   0.9902055    0.9854784
+5   0.9951545    0.9927297
+6   0.9975793    0.9963689
+7   0.9987903    0.9981854
+8   0.9993953    0.9990929
+9   0.9996977    0.9995465
+10  0.9998489    0.9997733
+11  0.9999244    0.9998866
+12  0.9999622    0.9999433
+13  0.9999811    0.9999717
+14  0.9999906    0.9999858
+15  0.9999953    0.9999929
+16  0.9999976    0.9999965
+17  0.9999988    0.9999982
+18  0.9999994    0.9999991
+19  0.9999997    0.9999996
+20  0.9999999    0.9999998
+</PRE>
+Obviously we are converging to the solution <M>x=1,y=1.</M>
+</EXM>
+
+<J>
+f=: 3 : '( ((r*s) + (r^2) - (s^3) + 1), (r+(2*s)-(r*s^2)+2) ) [ ''r s''=:y'
+d=: 3 : '(2 2 $ (s+2*r), (r-3*s^2), (1-s^2), (2 * 1-r*s)) [''r s''=:y'
+nr2=:  - f %. d
+nr2^:(i.20) 0.34 0.5
+</J>
+<HIDE lab="j2"><MSG>J help</MSG><HIDDEN>
+<UL>
+<LI><CODE>f=:3 :'...'</CODE> creates  a
+fnction <M>f(y).</M> The explicit formula for <M>f</M> is
+written in place of the <CODE>...</CODE>.</LI>
+<LI><CODE>'r s'=:y</CODE> will split <M>y\equiv(y_0,y_1)</M> into
+two components, and make <CODE>r</CODE> equal to <M>y_0</M>
+and <CODE>s</CODE> equal to <M>y_1.</M></LI>
+<LI>To write single quotes inside single quotes use two single
+quotes <CODE>''</CODE>.</LI>
+<LI><CODE>[</CODE> is the function <M>(x,y)\mapsto x.</M> It
+evaluates  <M>y</M> and then <M>x</M> and then
+returns <M>x.</M></LI>
+<LI><CODE>b %. A</CODE> solves the system <M>A\vec x = \vec
+b</M> in the least squares sense assuming <M>A</M> to be full
+column rank.</LI>
+</UL>
+</HIDDEN></HIDE>
+<P/>
+
+
+For <M>n=2</M> it was easy to invert the matrix analytically. For higher
+dimensions we should not explicitly invert the Jacobian matrix. Instead,
+we should solve the system 
+<D>
+(D\ff(\xx_n)) \yy= \ff(\xx_n)
+</D>
+for <M>\yy</M> at each step. We shall learn such solution techniques in the next page.
+
+<EXR>
+Solve using the Newton-Raphson method:
+<MULTILINE>
+\sin xy + e^y & = & 7.10964\\
+(x+y)^2 - \cos(xy^2) & = & 24.1561
+</MULTILINE>
+
+<COMMENT>
+Ans: 3, 2
+3((sin@*) + ^@]) 2
+3 ((*:@+) - (cos@ (**:))  ) 2 
+3(**:)2
+</COMMENT>
+</EXR>
+<HEAD1>Bisection method</HEAD1>
+While the Newton-Raphson method is very efficient, it requires us to compute the derivative of <M>f.</M>  Thus, it is unsuitable
+ in cases where <M>f</M>  is not differentiable or where the derivative is too difficult to be computed. Now we shall learn
+ a method that may be used to solve the (nonlinear) equation 
+<D>
+f(x)=0,
+</D>
+where <M>f(x)</M> is continuous, but not necessarily differentiable. 
+<P/>
+The method is conceptually much simpler than the Newton-Raphson method. To understand it
+suppose that the graph of <M>f(x)</M> is as shown below.
+<CIMG web="bisec.png"><M>f(x)</M> has a zero at <M>a</M></CIMG>
+Notice that here the graph of <M>f(x)</M>  cuts the <M>x</M>-axis. This is a requirement for the bisection method.
+<P/>
+Suppose also that we know two numbers <M>l_0</M> and <M>r_0</M> such that 
+<M>f(x)</M> has different signs at <M>x=l_0</M> and <M>x=r_0.</M>
+<P/>
+Then, by intermediate value theorem for continuous functions, we know that
+<M>f(x)</M> must have at least one zero in the interval <M>(l_0,r_0).</M>
+To find such a zero, we proceed by stepwise guessing. Our first guess is
+the midpoint of <M>(l_0,r_0),</M> i.e.,
+ <D>m_0 = [[l_0+r_0][2]].</D> 
+If <M>f(m_0)=0</M>
+then we are done! Otherwise, we look at the two halves <M>[l_0,m_0]</M>  and <M>[m_0,r_0].</M>  Exactly one of them must
+ have opposite signs of <M>f</M>  at the two ends. Call this half <M>[l_1,r_1].</M>
+For instance, if <M>sign(f(m_0))\neq sign(f(l_0))</M> then we take 
+<M>l_1=l_0</M> and <M>r_1=m_0.</M> 
+<P/>
+By the intermediate value theorem, we know that <M>f</M>  must have a zero in <M>(l_1,r_1).</M>
+Now repeat the process, i.e., take <M>m_1</M> as the midpoint of <M>(l_1,r_1),</M> and take the 
+the appropriate half as <M>(l_2,r_2).</M>. Proceeding in this
+ way we get <M>(l_k,r_k)</M> for
+<M>k=1,2,3,...</M> until the length of the interval is small enough.
+
+<EXM>
+Let us apply the bisection method to solve the equation <M>\cos(x)=x.</M>
+This is same as finding  the zero of 
+<D>
+f(x) = \cos(x)-x.
+</D>
+It is easy to see that <M>f(0) = 1</M> and <M>f(\frac{\pi}{2}) =
+-\frac{\pi}{2}.</M> Since these have opposite signs we can start the
+bisection method with 
+<D>
+l_0=0~~~\mbox{ and }~~~ r_0 = \frac{\pi}{2} = 1.5708.
+</D>
+Our first guess is
+<D>
+m_0 = \frac{l_0+r_0}{2} =  0.7854.
+</D>
+Proceeding like this we get the following table.
+<PRE>
+k left         right       mid
+------------------------------
+0    0         1.5708   0.7854
+1    0         0.7854   0.3927
+2    0.3927    0.7854   0.5890
+3    0.5890    0.7854   0.6872
+4    0.6872    0.7854   0.7363
+5    0.7363    0.7854   0.7609
+6    0.7363    0.7609   0.7486
+7    0.7363    0.7486   0.7424
+8    0.7363    0.7424   0.7394
+9    0.7363    0.7394   0.7378
+</PRE>
+We proceed until the interval is short enough, i.e.,
+<M>(r_k-l_k)<  \epsilon</M> for some specified <M>\epsilon.</M> In the
+above table we have stopped once the <M>l_k</M> and <M>r_k</M> are equal
+up to the first two decimal places. Thus, we see that the answer is 0.74
+up to the first two decimal places.
+</EXM>
+
+The following J code explores this. 
+<J>
+f=:-cos
+m=:0.5 *  +/ 
+n=:{.,m
+p=:m,{:
+c=:0&> @f @ m
+bis=: (c * p) + (-.@c * n)
+bis^:(i.20) 0 1
+</J>
+<HIDE lab="j3"><MSG>J help</MSG><HIDDEN>
+<UL>
+<LI><CODE>0&></CODE> is "less than 0". If <M>f(x,y)</M> is some
+function, then <CODE>5&f</CODE> is the function <M>y\mapsto
+f(5,y)</M> and <CODE>f&5</CODE> is <M>y\mapsto f(y,5).</M>
+Here <CODE>></CODE> is the greater than function, which returns 0
+or 1.
+</LI>
+<LI><CODE>-.</CODE> is negation. It turns 0 into 1 and <I>vice versa</I>.</LI>
+<LI><CODE>(c * n) + (-.@c * p)</CODE> is a mathematical way to specify
+if-else.  </LI>
+</UL>
+</HIDDEN></HIDE>
+<P/>
+
+<EXR>
+Use the bisection method to solve <M>2e^x-2x-3 = 0</M> for <M>x\in(0,2).</M>
+</EXR>
+<PROJ id="rabbit">
+A certain trait in rabbits is controlled by a pair of alleles, <M>a</M>  and <M>A.</M>  Each rabbit receives one of these
+ from the father and another from the mother. Thus, the possible pairs are <M>aa,</M>  <M>aA</M>  and <M>AA</M>  (order is
+ immaterial). The probability that a parent gives an <M>a</M>  to the offspring is <M>p</M>  (unknown). So the probability
+ of an <M>A</M>  is <M>q = 1-p.</M>  The father's contribution is independent of the mother's, and so the probabilities of
+ <M>aa,</M>  <M>aA</M>  and <M>AA</M>  in the offspring are, respectively, <M>p^2,</M>  <M>2pq</M>  and <M>q^2.</M>  Our
+ aim is to estimate <M>p.</M>  Unfortunately, it is impossible to detect the pair an offspring has. It is only possible to
+ detect if an offspring has at least one <M>A</M>, i.e., whether <M>aa</M>  or <M>\{aA, AA\}.</M>  The probabilities are,
+ respectively, <M>p^2</M>  and <M>q^2+2pq.</M>  In a random sample of 100 offsprings, only 23 are without any <M>A.</M> 
+The probability of this is 
+<D>L(p)=p^{46}(#(q^2 +2pq)#)^{77}.</D>
+The value of <M>p\in(0,1)</M>  for which this is the maximum is called the <B>maximum likelihood estimator</B>  of <M>p.</M>  Find
+ it. 
+</PROJ>
+
+<COMMENT>
+x = rgamma(1000, 2, 3)
+sink('data.txt')
+x
+sink()
+hist(x,prob=T)
+xx = seq(0,3,len=100)
+lines(xx,dgamma(xx,2,3))
+</COMMENT>
+<PROJ id="fit">
+The file <FILE>data.txt</FILE>  has <M>n=996</M> random numbers that are generated from the density 
+<D>f(x; p, a) = [[ p^a][\Gamma(p)]] e^{-a x},\quad x>0</D>
+for unknown constants <M>p, a > 0.</M>  The principle of maximum likelihood estimation suggests estimating 
+<M>p,a </M> by maximising
+<D>L(p,a) = \prod_{i=1}^n f(x_i; p,a),</D>
+where <M>x_1,...,x_n</M>  are the data in the file. Perform this estimation, and check your answer
+graphically by overlaying the graph of <M>f(x;p,a)</M>  on the histogram of the data. 
+<P/>
+<RED>[Hint: You might find the R functions <CODE>gamma</CODE>, <CODE>dgamma</CODE>  and 
+ <CODE>digamma</CODE>   useful here.]</RED>
+</PROJ>
+<DISQUSE id="nonlin1" url="http://www.isical.ac.in/~arnabc/numana/nonlin1.html"/>
+</NOTE>

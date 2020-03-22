@@ -1,0 +1,831 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta content="text/html;charset=UTF-8" http-equiv="Content-Type"/>
+<link rel="stylesheet" type="text/css" href="../tools/ctut.css"/>
+<link type="text/css" rel="stylesheet" href="../tools/style.css"/>
+<style type="text/css">@font-face {font-family: SHREE_BAN_OTF_0592;src: local("../tools/SHREE_BAN_OTF_0592"),url(../tools/SHREE0592.woff) format("opentype");</style>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<script src="../tools/jquery-1.10.2.min.js"></script>
+
+<script>
+aha = function(code) {
+  window.open("https://rdrr.io/snippets/embed/?code="+code)
+}
+
+togglePhoto = function(photoId) {
+   var me = document.getElementById("pic_"+photoId)
+   if(me.style.display=="block"){
+     me.style.display="none";
+   }
+   else if (me.style.display=="none"){
+     me.style.display="block";
+   }
+}
+
+hideShow = function(lb) {
+   var me = document.getElementById(lb)
+   if(me.style.display=="block"){
+     me.style.display="none";
+   }
+   else if (me.style.display=="none"){
+     me.style.display="block";
+   }
+}
+
+grabData = function(data){
+  return "https://farm"+data.photo.farm+".staticflickr.com/"+data.photo.server+"/"+data.photo.id+"_"+
+            data.photo.secret+".jpg"
+}
+
+fromFlickr = function(photoId) {
+
+$.getJSON("https://api.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=23a138c73bdbe1e68601aa7866924e62&user_id=109924623@N07&photo_id="+photoId+"&lang=en-us&format=json&jsoncallback=?",
+  function(data) {
+    imgURL = grabData(data)
+    var l = document.getElementById("lnk_"+photoId)
+    l.href = "https://www.flickr.com/photos/109924623@N07/"+photoId
+    var i = document.getElementById("pic_"+photoId)
+    i.src=imgURL
+    i.onload = function() {
+      document.getElementById("status_"+photoId).innerHTML="[Image loaded. Click to show/hide.]"
+    }
+  })
+}
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js","color.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+    tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]},
+    TeX: {
+      Macros: {
+        h: ["{\\hat #1}",1],
+        b: ["{\\overline #1}", 1],
+        row: "{\\mathcal R}",
+        col: "{\\mathcal C}",
+        nul: "{\\mathcal N}"
+      }
+    }
+  });
+</script><script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script src="../tools/htmlwidgets.js"></script>
+<link href="../tools/rgl.css" rel="stylesheet"></link>
+<script src="../tools/rglClass.src.js"></script>
+<script src="../tools/CanvasMatrix.src.js"></script>
+<script src="../tools/rglWebGL.js"></script>
+</head>
+<body>
+<a href="http://www.isical.ac.in/~arnabc/">[Home]</a>
+<h3>Table of contents</h3>
+<ul>
+<li>
+<a href="#Numerical Integration">Numerical Integration</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;
+<a href="#Newton-Cotes quadrature">Newton-Cotes quadrature</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="#Quick derivation">Quick derivation</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="#Error analysis for Newton-Cotes formulae">Error analysis for Newton-Cotes formulae</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="#Special case of even $n$">Special case of even $n$</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;
+<a href="#Gaussian quadrature">Gaussian quadrature</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="#Orthogonal polynomials">Orthogonal polynomials</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="#More general Gaussian quadrature">More general Gaussian quadrature</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="#Standard weights">Standard weights</a>
+</li>
+</ul>
+<hr/>
+
+$\newcommand{\ip}[1]{\langle #1 \rangle}$
+<title>Numerical Integration</title>
+
+<table width="100%">
+<tr>
+<td align="right"><i>Last
+updated on: FRI JAN 17 IST 2020</i></td>
+</tr>
+</table>
+
+<h1><a
+name="Numerical Integration">Numerical Integration</a></h1>
+
+
+
+<h2><a
+name="Newton-Cotes quadrature">Newton-Cotes quadrature</a></h2>
+Quadrature means numerical integration. We have aleady learned
+two quadrature techniques: trapezium rule and Simpson's rule. We
+have also mentioned that both of these are special cases of
+Newton-Cotes quadrature. Here we shall learn about Newton-Cotes
+quadrature in general.
+<p></p>
+Newton-Cotes quadrature of
+order $n$ to
+approximate $\int_a^b f(x)\, dx$ starts with a
+regularly spaced grid 
+$$
+a = x_0,~~x_1,~~...,x_n = b,
+$$
+where 
+$$
+x_i = a + i\times\frac{b-a}{n}.
+$$
+Then it interpolates the $n+1$
+points $\big(x_i,f(x_i)\big)$ with a polynomial, $p_n(x),$
+of degree $\leq n.$ Then it approximates $\int_a^b f(x)\,
+dx$ with $\int_a^b p_n(x)\, dx.$
+<p></p>
+To be precise, this is called <b>simple</b> Newton-Cotes quadrature.
+There is a more popular version called <b>composite</b>
+Newton-Cotes quadrature. Here we first split $[a,b]$ into a
+number of equal subintervals, and apply simple Newton-Cotes
+quadrature to each subinterval spearately. In particular, the 1-st
+order composite Newton-Cotes quadrature is the same as trapezium
+rule, and the 2-nd order composite Newton-Cotes quadrature is the
+same as Simpson's rule.
+
+<h3><a
+name="Quick derivation">Quick derivation</a></h3>
+In practice there is a short cut method for finding the
+(simple) Newton-Cotes quadrature formula for any given $n,$
+that doe not require any interpolation.  It is based on the
+following two observations.
+<fieldset>
+<legend><b><i>Observation 1</i></b></legend>
+The $n$-th order simple Newton-Cotes quadrature must give
+exact result if $f(x)$ is a polynomial of degree $\leq n.$
+</fieldset>
+The proof of this is obvious. The second observation is:
+
+<fieldset>
+<legend><b><i>Observation 2</i></b></legend>The $n$-th order simple Newton-Cotes formula 
+is of the form
+$$
+\int_a^b f(x)\, dx\approx \alpha _0 f(x_0) + \cdots + \alpha_n f(x_n),
+$$
+where the numbers $\alpha_0,...,\alpha_n$ may depend on $a,b,n$ but not on
+$f.$ 
+</fieldset>
+
+<p>
+<b>EXERCISE:</b>&nbsp;
+Show that this is true by observing that $f[x_0,...,x_k]$'s are
+linear combinations of $f(x_i)$'s. 
+<img src="../image/box.png"></p>
+
+Once we know that $\alpha_i$'s are free of $f,$ we can take special
+simple polynomials of $f$ to compute them. For instance, to derive
+the 1-st order Newton-Cotes formula we shall take
+$f(x)=1$ and $f(x)=x.$ The first choice will give:
+$$
+b-a = \alpha_0  + \alpha_1,
+$$
+while the second choice gives
+$$
+(b^2-a^2)/2 =  \alpha_0 a + \alpha_1 b
+$$
+Solving these two equations we get 
+$$
+\alpha_0 = \alpha_1 = \frac h 2,
+$$
+which gives the trapezium rule.
+
+
+
+Similarly, we can take $f(x)=1,x$ and $x^2$ for Simpson's rule
+to get 3 equations:
+$$\begin{eqnarray*}
+\alpha_0+\alpha_1+\alpha_2 &amp;  = &amp;  b-a\\
+x_0\alpha_0+x_1\alpha_1+x_2\alpha_2 &amp;  = &amp;  (b^2-a^2)/2\\
+x_0^2\alpha_0+x_1^2\alpha_1+x_2^2\alpha_2 &amp;  = &amp;  (b^3-a^3)/3
+\end{eqnarray*}$$
+Notice that this system can be written as 
+$$
+\left[\begin{array}{ccccccccccc}1&amp; 1&amp; 1\\x_0&amp; x_1&amp; x_2\\x_0^2&amp; x_1^2&amp; x_2^2
+\end{array}\right]
+\left[\begin{array}{ccccccccccc}\alpha_0\\\alpha_1\\\alpha_2
+\end{array}\right] = 
+\left[\begin{array}{ccccccccccc}(b-a)\\(b^2-a^2)/2\\(b^3-a^3)/3
+\end{array}\right].
+$$
+The coefficient matrix is a Vandermonde matrix, and hence is
+nonsingular. It should not be difficult to check that the unique solution
+is given by 
+$$
+\alpha_0 = h/3,~~~\alpha_1 = 4h/3,~~~\alpha_2 = h/3.
+$$ 
+Passing from simple to composite Newton-Cotes quadrature formulae
+is simple. If the coefficients are $\alpha_0,...,\alpha_n,$
+and we are using $3$ subintervals, then the coefficients
+will be 
+$$
+\alpha_0, \alpha_1,...,\alpha_{n-1},\fbox{$\alpha_n+\alpha_0$},\alpha_1,...,\alpha_{n-1},\fbox{$\alpha_n+\alpha_0$},\alpha_1,...,\alpha_{n-1},\alpha_n.
+$$
+Note the boxed terms, where two consecutive subintervals meet.
+
+<h3><a
+name="Error analysis for Newton-Cotes formulae">Error analysis for Newton-Cotes formulae</a></h3>
+By construction the Newton-Cotes formula of degree $n$ is exact ({\em
+<i>i.e.</i>,} involves no error) if
+$f(x)$ is a polynomial of degree $\leq n.$ In particular, the
+trapezium rule is exact if $f(x)$ is linear. However, it may not be
+exact for higher degree polynomials.
+
+<p>
+<b>EXAMPLE:</b>&nbsp;
+Let us apply the trapezium rule to $f(x) = x^2$ for $x_0 = 0$
+and $x_1 = 1.$ The actual integral is
+$$
+\int_0^1 x^2 dx = \frac13.
+$$
+Using trapezium rule we get 
+$$
+\frac12(0+1) = \frac12 \neq \frac13.
+$$
+<img src="../image/box.png"></p>
+ 
+However, something different happens for Simpson's rule. Since it is
+the Newton-Cotes formula for $n=2,$ it is exact for polynomials of
+degree $\leq 2.$ However, it turns out that it is also exact for
+polynomials of degree 3.
+
+<p>
+<b>EXAMPLE:</b>&nbsp;
+Let us apply Simpson's rule to $f(x) = x^3$ for <i>general</i>
+$a,b.$ 
+The actual answer is
+$$
+\int_a^b x^3 dx = \frac{(b^4-a^4)}{4}.
+$$
+To apply Simpson's rule we notice that $x_0=a,x_1=(a+b)/2,x_2=b$ and
+$h=(b-a)/2.$ So Simpson's rule gives
+$$
+\frac{h}{3}(x_0^3 + 4x_1^3 + x_2^3),
+$$
+which is same as the exact integral (check!)
+<img src="../image/box.png"></p>
+
+
+<h3><a
+name="Special case of even $n$">Special case of even $n$</a></h3>
+The reason behind the exactness of Simpson's rule for cubic polynomials
+is shown in the diagram below.  
+
+<center>
+<table width="100%">
+<tr>
+<th><img width="" src="image/simpcub.png"></th>
+</tr>
+<tr>
+<th>Why Simpson's rule works for cubic
+polynomials</th>
+</tr>
+</table>
+</center>
+The two areas marked $+$ and $-$ are equal, and hence cancel
+each other out.
+
+This is actually a general phenomenon for Newton-Cotes formulae for
+<i>even</i> $n.$ They are exact if $f(x)$ is a polynomial of
+degree $\leq n+1. $ However, if $n$ is odd then it is guaranteed
+to be exact only if $f(x)$ is a polynomial of
+degree $\leq n.$ To prove this let $f(x)$ be a polynomial of
+degree $n+1.$ Then it coincides with the (n+1)-th degree
+interpolating polynomial, and hence
+$$
+f(x) = f[x_0]+(x-x_0)f[x_0,x_1]+\cdots+f[x_0,...x_n](x-x_0)\cdots(x-x_n).
+$$
+If we use $n$-point Newton-Cotes formula, then we integrate only the
+  first $n$ terms. So we miss the last term, whose integral is
+$$
+f[x_0,...x_n] \int_{x_0}^{x_n} (x-x_0)\cdots(x-x_n)dx.
+$$
+Since the $x_i$'s are regularly spaced, the polynomial 
+$$
+(x-x_0)\cdots(x-x_n)
+$$
+has a graph like the following. 
+ For even $n$ there are exactly $n/2$ humps above and below
+the $x$-axis. So by symmetry (care!) the sum of the (signed)
+ areas is zero.
+
+<center>
+<table width="100%">
+<tr>
+<th><img width="" src="image/evennc.png"></th>
+</tr>
+<tr>
+<th>The shaded areas cancel out for even $n$</th>
+</tr>
+</table>
+</center>
+
+Hence the result.
+
+
+<h2><a
+name="Gaussian quadrature">Gaussian quadrature</a></h2>
+So far we have been using $f(x)$ only via its values at some
+regularly spaced points $x_i$'s. In some cases, it may be impossible
+to know $f(x)$ at other points, <i>e.g.</i>, if $f(x)$ is
+not known analytically but only measured by some experiment. However, in
+many other cases, it may be possible to compute $f(x)$ at any value
+of $x$ of our choice. Then one may like to choose the values
+$x_i$'s carefully to improve the accuracy of the quadrature in stead
+of using regularly spaced $x_i$'s. This is the main idea behind
+<i>Gaussian quadrature.</i> Here we try to approximate the integral as
+$$
+\int_a^b f(x) dx \approx \alpha_0 f(x_0)+\cdots+\alpha_n f(x_n),
+$$
+where <i>both</i> $\alpha_i$'s and  $x_i$'s are to be chosen to
+increase the accuracy of the approximation. Since we are choosing
+$2(n+1)$ numbers here, (as compared to only $(n+1)$ in
+Newton-Cotes) we would expect that Gaussian quadrature is more accurate
+(<i>i.e.</i>, exact for higher degree polynomials) than Newton-Cotes
+quadrature with the same $n.$ Indeed, it will be accurate
+for all polynomials of degree $\leq 2n+1.$ 
+
+<p></p>
+Gaussian quadrature depends on the following theorem.
+
+<fieldset>
+<legend><b><i>Theorem</i></b></legend>
+Let $x_0,...,x_n$ be $n+1$ distinct numbers. Let $m\geq
+1$ be any integer. Then the following two statements are equivalent.
+<ol type="">
+
+<li>There are coefficients $\alpha_0,...,\alpha_n$ such that for any polynomial
+     $f(x)$ of degree $\leq 2n+1,$ 
+$$
+\int_a^b f(x) dx = \sum_{i=0}^n \alpha_i f(x_i).
+\hspace{1in} \mbox{(*)}$$ </li>
+
+<li>The polynomial 
+$
+p(x) = (x-x_0)(x-x_1)\cdots(x-x_n)
+$
+satisfies
+$$
+\int_a^b x^kp(x)dx = 0~~~\forall k=0,1,...,n.
+\hspace{1in} \mbox{(**)}$$</li>
+
+</ol>
+
+</fieldset>
+First notice why this theorem is useful: (*) involves
+both $x_i$'s and $\alpha_i$'s. But (**) involves only
+the $x_i$'s. Yet they are equivalent. Thus, this theorem
+allows us to find $x_i$'s first, without worrying about $\alpha_i$'s.
+<p>
+<b><i>Proof:</i></b>
+($1\Rightarrow2$): Let $\alpha_0,...,\alpha_n$
+satisfy (*) for all polynomials of degree $\leq
+    2n+1.$ To show (**) fix any 
+$k \leq n.$ 
+
+<p></p>
+
+Then the polynomial $x^kp(x)$ is of degree
+$\leq n+(n+1)=2n+1,$ 
+since degree of $p(x)$ is $n+1.$ 
+
+<p></p>
+
+Taking $f(x) = x^k p(x)$ in (*) we get
+$$
+\int_a^b x^kp(x)dx = \sum_{i=0}^n \alpha_i x_i^k p(x_i) = 0,
+$$
+ since $p(x_i) = 0$ for all $i=0,...,n.$
+<p></p>
+ So (**) holds.
+
+<p></p>
+
+($2\Rightarrow1$): We are given $x_0,...,x_n$ such that 
+(**) holds. We are to get $\alpha_0,...,\alpha_n$ such
+that (*) holds for any $f(x)$ of degree $\leq 2n+1.$
+ 
+First observe that for any $k=0,...,n$
+$$
+\int_a^b x^k p(x)dx = \sum_{i=0}^n \alpha_i x^k p(x_i),
+$$
+since the l.h.s. vanishes by (**) and the
+r.h.s. vanishes by definition of $p(x).$ Thus, for the
+polynomials $x^kp(x)$ we get (*) without even
+worring about the $\alpha_i$'s! 
+
+<p></p>
+
+Also we need (*) to hold also for $f(x)=x^k$
+for $k=0,...,n.$ So as in the 
+Newton-Cotes approach we get then following Vandermonde system.
+$$
+\left[\begin{array}{ccccccccccc}1&amp; 1&amp; \cdots &amp;  1\\
+     x_0&amp; x_1&amp; \cdots&amp; x_n\\
+     x_0^2&amp; x_1^2&amp; \cdots&amp; x_n^2\\
+     \vdots &amp;  \vdots &amp;   &amp;  \vdots\\
+     x_0^n&amp; x_1^n&amp; \cdots&amp; x_n^n
+
+\end{array}\right]\left[\begin{array}{ccccccccccc}\alpha_0\\\alpha_1\\\alpha_2\\\vdots\\ \alpha_n
+\end{array}\right] = 
+\left[\begin{array}{ccccccccccc}c_0\\c_1\\c_2\\\vdots\\c_n
+\end{array}\right],
+$$
+where 
+$$
+c_k = \int_a^b x^k dx = (b^{k+1}-a^{k+1})/(k+1).
+$$
+The $x_i$'s being distinct, the coefficient matrix is nonsingular,
+and hence this system uniquely fixes the $\alpha_i$'s.
+
+<p></p>
+
+Thus, by construction, (*) holds for degrees $\leq
+  n,$ and also for the polynomials $x^k p(x)$ for $k=0,...,n.$ 
+
+<p></p>
+
+This immediately implies (how?) that (*) holds for all
+polynomials of degree $\leq 2n+1.$<b><i>[QED]</i></b>
+</p>
+
+
+
+
+
+<h3><a
+name="Orthogonal polynomials">Orthogonal polynomials</a></h3>
+The above theorem provides a useful approach to Gaussian
+quadrature. Consider the set of all polynomials $f(x)$ defined on
+$[a,b].$
+Clearly, it is a vector space over ${\bf R}$ under usual addition and
+scalar multiplication. Define the inner product 
+$$
+\langle f,g \rangle = \int_a^b f(x)g(x) dx.
+$$
+Then (**) says that $p(x)$ is orthogonal to all
+polynomials of degree $\leq m-1.$ In other words, if $q(x)$ is
+any polynomial with degree $\leq m-1,$ then
+$$
+\langle p,q \rangle = 0.
+$$
+Now, we can apply Gram-Schmidt orthogonalization to the basis 
+$$
+\{1,x,x^2,x^3,...\}
+$$
+w.r.t. the above inner product to get an orthogonal basis:
+$$
+\{p_0(x),p_1(x),p_2(x),...\}
+$$
+It is easy to see that each $p_k(x)$ has degree $k.$
+The following theorem is an important property of these orthogonal
+polynomials. 
+<fieldset>
+<legend><b><i>Theorem</i></b></legend>
+Each $p_k(x)$ has $k$ distinct, real zeros inside the open
+interval $(a,b).$ 
+</fieldset>
+
+<p>
+<b><i>Proof:</i></b>We shall not prove this in this course.<b><i>[QED]</i></b>
+</p>
+
+Let $z_{k,0},...,z_{k,k-1}$ be the zeros of $p_k(x).$ Then
+Gaussian quadrature with $n+1$ points uses the following approximation:
+$$
+\int_a^b f(x) dx \approx \sum_{i=0}^n \alpha_{n+1,i} f(z_{n+1,i}),
+$$
+where the $\alpha_{n+1,i}$'s are obtained from the Vandermonde system
+with $x_i = z_{n+1,i}.$
+This is exact if $f(x)$ is a polynomial of degree $\leq 2n.$
+
+<p>
+<b>EXAMPLE:</b>&nbsp;
+Let us explicitly compute $p_0(x),p_1(x)$ and $p_2(x)$
+using $a=-1$ and $b=1.$ 
+Notice that we care only about the roots of the polynomials, so we shall
+save ourselves the trouble of normalizing the polynomials. 
+
+We start with 
+the usual basis $$
+u_0(x) = 1,~~~u_1(x)=x,~~~u_2(x)=x^2,\ldots.
+$$
+We take
+$$p_0(x) = u_0(x) = 1.$$
+Taking out the $p_0$-component from $u_1$ we are left with 
+$$
+p_1 = u_1 - \frac{\ip{u_1,p_0}}{\ip{p_0,p_0}} p_0 = u_1 = x,
+$$
+since
+$$
+\ip{u_1,p_0} =  \int_{-1}^1 x dx = 0.
+$$
+To find $p_2$ we similarly take out the $p_0$ and
+$p_1$-components from $u_2$ to get
+$$
+p_2 = u_2 - 
+      \frac{\ip{u_2,p_0}}{\ip{p_0,p_0}} p_0 -
+      \frac{\ip{u_2,p_1}}{\ip{p_1,p_1}} p_1.
+$$
+After some computation this turns out to be 
+$$
+p_2(x) = x^2-\frac13.
+$$
+<img src="../image/box.png"></p>
+
+
+<p>
+<b>EXERCISE:</b>&nbsp;
+Check that $p_3(x) = x^3-3x/5$ and $p_4(x) = x^4-6x^2/7 + 3/35.$
+<img src="../image/box.png"></p>
+
+
+<span class="j">
+<pre>
+pm=:+//. @ (*/)
+ip=: (p.&amp;1-p.&amp;_1) @ (0&amp;p.. @ pm )
+comp=: [ * ip % (ip~@[) 
+sb=:-/@,:
+ad=:+/@,:
+
+u0=: ,1
+u1=: 0 1
+u2=: 0 0 1
+
+]p0=: u0
+]p1=:  (] sb p0&amp;comp) u1
+]p2=:  (] sb p0&amp;comp ad p1&amp;comp) u2
+
+p. p0
+p. p1
+p. p2
+</pre>
+</span>
+
+<p>
+<b>EXAMPLE:</b>&nbsp;
+People have computed the zeros of $p_k(x)$'s and the corresponding
+$\alpha_i$'s and published the values as tables. Here are the values
+for $k=5.$ 
+<pre>
+i   z_{5,i}   alpha_{5,i}
+---------------------------
+0   0.00000000   0.56888889
+1   0.53846931   0.47862867
+2   -0.53846931   0.47862867
+3   0.90617985   0.23692689
+4   -0.90617985   0.23692689
+</pre>
+Thus, if we want to integrate $f(x)=1/(x+3),$ we shall compute as
+follows.
+<pre>
+i   f(z_{5,i})   alpha_{5,i} f(z_{5,i})
+---------------------------------------
+0   0.33333333   0.18962962
+1   0.28260808   0.13526433
+2   0.40625128   0.19444351
+3   0.25600460   0.06065437
+4   0.47759593   0.11315529
+----------------------------
+Total   =        0.69314712
+</pre>
+Thus, we estimate
+$$
+\int_{-1}^1 \frac{dx}{x+3} \approx 0.69314712.
+$$
+<img src="../image/box.png"></p>
+
+
+<h3><a
+name="More general Gaussian quadrature">More general Gaussian quadrature</a></h3> 
+In fact, Gaussian quadrature is even more ambitious. It tries to choose
+$\alpha_i$'s and $x_i$'s in a way that the formula is exact for
+functions of the form 
+$$
+f(x) = w(x) p(x),
+$$
+where $w(x)$ is some given positive function (called the <i>weight
+function</i>) and $p(x)$ is a polynomial of some suitable degree. The
+optimal choice of $\alpha_i$'s and $x_i$'s will depend on the
+particular weight function used. Depending on the choice of the weight
+function we have different forms of Gaussian quadrature, <i>e.g.</i>,
+Gauss-Legendre, Gauss-Laguerre etc. So far we have been working with the
+weight function $w(x)\equiv 1.$ If we further choose (without loss of
+generality) $a=-1$ and $b=1$ then the resulting orthogonal
+polynomials are called Legendre polynomials, and the corresponding Gaussian
+quadrature formula is called Gauss-Legendre formula. 
+
+We can choose $w(x),a$ and $b$ to suit particular needs. The
+choice can be quite general (including $a=-\infty$ and/or
+$b=\infty.$) The only restrictions are: 
+<ol type="">
+
+<li>$w(x) &gt;0~~~\forall x\in (a,b)$ (In fact, we can allow
+$w(x)$ to be zero at finitely many points.)</li>
+
+<li>The integral 
+$$
+c_k := \int_a^b w(x) x^k dx
+$$
+must be finite for all $k.$</li>
+
+</ol>
+
+These two conditions guarantee that we can define the inner product
+$$
+\langle f,g \rangle = \int_a^b w(x) f(x)g(x) dx.
+$$
+
+As before we can apply Gram-Schmidt orthogonalization to the basis 
+$$
+\{1,x,x^2,x^3,...\}
+$$
+w.r.t. the above inner product to get an orthogonal basis:
+$$
+\{p_0(x),p_1(x),p_2(x),...\}
+$$
+It is easy to see that each $p_k(x)$ has degree $k.$
+The following theorem is a generalization of the last theorem.
+
+<fieldset>
+<legend><b><i>Theorem</i></b></legend>
+Each $p_k(x)$ has $k$ distinct, real zeros inside the open
+interval $(a,b).$ 
+</fieldset>
+
+<p>
+<b><i>Proof:</i></b>We shall not prove this in this course.<b><i>[QED]</i></b>
+</p>
+
+Once we choose $w(x), a$ and $b,$ we have the corresponding
+Gaussian quadrature formula:
+$$
+\int_a^b w(x) f(x) dx \approx \sum_{i=0}^n \alpha_{n+1,i} f(z_{n+1,i}), 
+$$
+where $z_{n+1,0},...,z_{n+1,n}$ are the zeros of $p_{n+1}(x)$ and the
+$\alpha_{n+1,i}$'s are obtained from
+$$
+\left[\begin{array}{ccccccccccc}1&amp; 1&amp; \cdots &amp;  1\\
+     x_0&amp; x_1&amp; \cdots&amp; x_n\\
+     x_0^2&amp; x_1^2&amp; \cdots&amp; x_n^2\\
+     \vdots &amp;  \vdots &amp;   &amp;  \vdots\\
+     x_0^n&amp; x_1^n&amp; \cdots&amp; x_n^n
+
+\end{array}\right]\left[\begin{array}{ccccccccccc}\alpha_{n+1,0}\\\alpha_{n+1,1}\\\alpha_{n+1,2}\\\vdots\\ \alpha_{n+1,n}
+\end{array}\right] = 
+\left[\begin{array}{ccccccccccc}c_0\\c_1\\c_2\\\cdots\\c_n
+\end{array}\right],
+$$
+where 
+$$
+c_k = \int_a^b x^k w(x) dx.
+$$
+This formula is exact if $f(x)$ is a polynomial of degree $\leq
+2n.$
+
+<h3><a
+name="Standard weights">Standard weights</a></h3>
+Certain choices of weights are more popular than others. Here is an
+incomplete list.
+
+<center>
+<table style="" border="1">
+
+<tr>
+<th colspan="" rowspan="">Name</th>   <th colspan="" rowspan="">$w(x)$</th>   <th colspan="" rowspan="">$(a,b)$</th>
+</tr>
+
+<tr>
+<td colspan="" rowspan="">Gauss-Legendre </td><td colspan="" rowspan="">  $1$ </td><td colspan="" rowspan="">  $(-1,1)$ </td>
+</tr>
+
+<tr>
+<td colspan="" rowspan="">Gauss-Laguerre </td><td colspan="" rowspan="">  $e^{-x}$ </td><td colspan="" rowspan="">  $(0,\infty)$</td>
+</tr>
+
+<tr>
+<td colspan="" rowspan="">Gauss-Hermite </td><td colspan="" rowspan="">  $e^{-x^2}$ </td><td colspan="" rowspan="">  $(-\infty,\infty)$</td>
+</tr>
+
+<tr>
+<td colspan="" rowspan="">Gauss-Chebyshev </td><td colspan="" rowspan="">  $1/\sqrt{1-x^2}$ </td><td colspan="" rowspan="">  $(-1,1)$ </td>
+</tr>
+
+</table>
+</center>
+
+Standard tables are available for $z_{k,i}$'s and
+$\alpha_{n,i}$'s for these cases. Here are some of these.
+
+<center>
+<table style="" border="1">
+<tr>
+<td colspan="3">Gauss-Laguerre</td>
+</tr>
+
+<tr>
+<th colspan="" rowspan="">$i$ </th><th colspan="" rowspan="">  $z_{5,i}$ </th><th colspan="" rowspan="">  $\alpha_{5,i}$</th>
+</tr>
+
+<tr>
+<td colspan="" rowspan="">$0$ </td><td colspan="" rowspan="">  $0.263560319718$ </td><td colspan="" rowspan="">  $0.521755610583$</td>
+</tr>
+
+<tr>
+<td colspan="" rowspan="">$1$ </td><td colspan="" rowspan="">  $1.413403059107$ </td><td colspan="" rowspan="">  $0.398666811083$</td>
+</tr>
+
+<tr>
+<td colspan="" rowspan="">$2$ </td><td colspan="" rowspan="">  $3.596425771041$ </td><td colspan="" rowspan="">  $0.759424496817e-1$</td>
+</tr>
+
+<tr>
+<td colspan="" rowspan="">$3$ </td><td colspan="" rowspan="">  $7.085810005859$ </td><td colspan="" rowspan="">  $0.361175867992e-2$</td>
+</tr>
+
+<tr>
+<td colspan="" rowspan="">$4$ </td><td colspan="" rowspan="">  $12.640800844276$ </td><td colspan="" rowspan="">  $0.233699723858e-4$</td>
+</tr>
+
+</table>
+</center>
+
+For Gauss-Chebyshev there are simple closed-form formulae for
+$z_{k,i}$'s and $\alpha_{k,i}$'s:
+$$
+z_{k,i} = \cos\frac{(2i+1)\pi}{2k},~~~\alpha_{k,i} = \frac{\pi}{k}. 
+$$
+
+Here is the table for Gauss-Hermite.
+
+<center>
+<table style="" border="1">
+<tr>
+<td colspan="3">Gauss-Hermite</td>
+</tr>
+
+<tr>
+<td colspan="" rowspan="">$i$ </td><td colspan="" rowspan="">  $z_{5,i}$ </td><td colspan="" rowspan="">  $\alpha_{5,i}$</td>
+</tr>
+
+<tr>
+<td colspan="" rowspan="">$0,1$ </td><td colspan="" rowspan="">  $\pm2.0201828705$ </td><td colspan="" rowspan="">  $0.0199532421$</td>
+</tr>
+
+<tr>
+<td colspan="" rowspan="">$2,3$ </td><td colspan="" rowspan="">  $\pm0.9585724646$ </td><td colspan="" rowspan="">  $0.3936193232$</td>
+</tr>
+
+<tr>
+<td colspan="" rowspan="">$4$ </td><td colspan="" rowspan="">  $     0.0000000000$ </td><td colspan="" rowspan="">  $0.9453087205$</td>
+</tr>
+
+</table>
+</center>
+
+<h3>Comments</h3>
+To post an anonymous comment, click on the "Name" field. This
+will bring up an option saying "I'd rather post as a guest."
+<p></p><!--
+begin disqus code --> <div id="disqus_thread"></div>
+<script>
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+
+var disqus_config = function () {
+this.page.url = "https://www.isical.ac.in/~arnabc/numana/numint2.html"; // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = "numint2"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://txtbk.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript><!-- end disqus code --> 
+
+<hr/>
+<table width="100%" border="0">
+<tr>
+<td align="left"/>
+<td align="right"/>
+</tr>
+</table>
+<hr/>
+</body>
+</html>

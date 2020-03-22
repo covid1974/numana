@@ -1,0 +1,1208 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta content="text/html;charset=UTF-8" http-equiv="Content-Type"/>
+<link rel="stylesheet" type="text/css" href="../tools/ctut.css"/>
+<link type="text/css" rel="stylesheet" href="../tools/style.css"/>
+<style type="text/css">@font-face {font-family: SHREE_BAN_OTF_0592;src: local("../tools/SHREE_BAN_OTF_0592"),url(../tools/SHREE0592.woff) format("opentype");</style>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<script src="../tools/jquery-1.10.2.min.js"></script>
+
+<script>
+aha = function(code) {
+  window.open("https://rdrr.io/snippets/embed/?code="+code)
+}
+
+togglePhoto = function(photoId) {
+   var me = document.getElementById("pic_"+photoId)
+   if(me.style.display=="block"){
+     me.style.display="none";
+   }
+   else if (me.style.display=="none"){
+     me.style.display="block";
+   }
+}
+
+hideShow = function(lb) {
+   var me = document.getElementById(lb)
+   if(me.style.display=="block"){
+     me.style.display="none";
+   }
+   else if (me.style.display=="none"){
+     me.style.display="block";
+   }
+}
+
+grabData = function(data){
+  return "https://farm"+data.photo.farm+".staticflickr.com/"+data.photo.server+"/"+data.photo.id+"_"+
+            data.photo.secret+".jpg"
+}
+
+fromFlickr = function(photoId) {
+
+$.getJSON("https://api.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=23a138c73bdbe1e68601aa7866924e62&user_id=109924623@N07&photo_id="+photoId+"&lang=en-us&format=json&jsoncallback=?",
+  function(data) {
+    imgURL = grabData(data)
+    var l = document.getElementById("lnk_"+photoId)
+    l.href = "https://www.flickr.com/photos/109924623@N07/"+photoId
+    var i = document.getElementById("pic_"+photoId)
+    i.src=imgURL
+    i.onload = function() {
+      document.getElementById("status_"+photoId).innerHTML="[Image loaded. Click to show/hide.]"
+    }
+  })
+}
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js","color.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+    tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]},
+    TeX: {
+      Macros: {
+        h: ["{\\hat #1}",1],
+        b: ["{\\overline #1}", 1],
+        row: "{\\mathcal R}",
+        col: "{\\mathcal C}",
+        nul: "{\\mathcal N}"
+      }
+    }
+  });
+</script><script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script src="../tools/htmlwidgets.js"></script>
+<link href="../tools/rgl.css" rel="stylesheet"></link>
+<script src="../tools/rglClass.src.js"></script>
+<script src="../tools/CanvasMatrix.src.js"></script>
+<script src="../tools/rglWebGL.js"></script>
+</head>
+<body>
+<a href="http://www.isical.ac.in/~arnabc/">[Home]</a>
+<h3>Table of contents</h3>
+<ul>
+<li>
+<a href="#Matrix algorithms">Matrix algorithms</a>
+</li>
+<li>
+<a href="#Linear equations behind a soap film!">Linear equations behind a soap film!</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;
+<a href="#Coordinate system">Coordinate system</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;
+<a href="#Numerical solution">Numerical solution</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;
+<a href="#Solving">Solving</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;
+<a href="#Practical problem">Practical problem</a>
+</li>
+<li>
+<a href="#Iterative methods for linear systems">Iterative methods for linear systems</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;
+<a href="#Gauss-Jacobi method">Gauss-Jacobi method</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;
+<a href="#Gauss-Seidel method">Gauss-Seidel method</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;
+<a href="#Convergence issues">Convergence issues</a>
+</li>
+<li>
+<a href="#$LU$ decompositions">$LU$ decompositions</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;
+<a href="#Application">Application</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;
+<a href="#Algorithm">Algorithm</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;
+<a href="#Efficient implementation">Efficient implementation</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;
+<a href="#Some theory">Some theory</a>
+</li>
+<li>
+<a href="#Eigenanalysis">Eigenanalysis</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;
+<a href="#Given's rotation matrix">Given's rotation matrix</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;
+<a href="#Jacobi method">Jacobi method</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="#Proof">Proof</a>
+</li>
+</ul>
+<hr/>
+
+$\newcommand{\bx}{{\bf x}}
+\newcommand{\by}{{\bf y}}
+\newcommand{\bb}{{\bf b}}
+\newcommand{\be}{{\bf e}}
+\newcommand{\bv}{{\bf v}}
+\newcommand{\bz}{{\bf 0}}
+\newcommand{\bxi}{{\bf \xi}}
+\newcommand{\bc}{{\bf c}}
+$
+
+<title>Matrix algorithms</title> 
+
+<table width="100%">
+<tr>
+<td align="right"><i>Last
+updated on:
+WED MAR 04 IST 2020</i></td>
+</tr>
+</table>
+
+<h1><a
+name="Matrix algorithms">Matrix algorithms</a></h1> 
+
+
+
+<h1><a
+name="Linear equations behind a soap film!">Linear equations behind a soap film!</a></h1>
+If you dip a wire frame in a soap solution, then a thin film of soap water
+will cling to it.
+<center>
+<table width="100%">
+<tr>
+<th><img width="" src="image/soap12.png"></th>
+</tr>
+<tr>
+<th></th>
+</tr>
+</table>
+</center>
+Given the shape of the frame, we want to find the natural shape of the film. This is an important
+question in architecture, where a structure must be given the most
+natural shape to reduce stress. 
+<p></p>
+It is known that a soap film will always occupy the position that
+minimises its elastic potential energy. In the next section we
+shall see how to express this mathematically.
+
+<h2><a
+name="Coordinate system">Coordinate system</a></h2>
+We imagine an $xy$-plane under the frame:
+<center>
+<table width="100%">
+<tr>
+<th><img width="" src="image/soap3.png"></th>
+</tr>
+<tr>
+<th>Coordinate system</th>
+</tr>
+</table>
+</center>
+If the surface is given by a function $u(x,y),$ then its
+elastic potential energy is given by
+$$
+E(u) = \iint_R (u_x)^2 + (u_y)^2\, dxdy.
+$$
+This is to be minimised subject to the boundary condition that
+the $u(x,y)$ must match the frame height at the boundary.
+<p></p>
+In general, this is a difficult/impossible problem to solve
+analytically. 
+
+<h2><a
+name="Numerical solution">Numerical solution</a></h2>
+To proceed numerically, one starts with a
+triangulation of the base. 
+<center>
+<table width="100%">
+<tr>
+<th><img width="" src="image/basis0.png"></th>
+</tr>
+<tr>
+<th>Triangulation</th>
+</tr>
+</table>
+</center>
+Then the aim is to find the value of $u(x,y)$ at the
+vertices. Let $c_j$ denote the value of $u(x,y)$ at the
+$j$-th vertex. 
+<p></p>
+Since the target function involves $u_x$
+and $u_y$, we need to somehow approximate them using only
+the values at the vertices. For this we choose a set of <b>basis
+function</b>s, one for each vertex. It is constructed by "pulling
+up" the vertex to a height 1, while leaving all the other
+vertices at height 0. Here are two examples:
+<center>
+<table width="100%">
+<tr>
+<th><img width="" src="image/basis12.png"></th>
+</tr>
+<tr>
+<th>Two basis functions</th>
+</tr>
+</table>
+</center>
+Notice that the graph of each basis function ($\phi_j$) is a plane over 
+each triangle ($T_i$).  and hence we may write a basis
+function $\phi_j(x,y)$ as
+$$
+\phi_j(x,y) = \alpha_{ij} + \beta_{ij}x + \gamma_{ij} y \quad\mbox{
+for } (x,y)\in T_i.
+$$
+for suitable numbers $\alpha_{ij},$ $\beta_{ij}$
+and $\gamma_{ij}$.
+Also, notice that $\alpha_{ij}, \beta_{ij},
+\gamma_{ij}$'s are zero if the $j$-th vertex is not part
+of $T_i$. Thus, most of these numbers are actually zero.
+
+<p></p>
+Then we cap approximate $u(x,y)$ by
+$$
+u(x,y) = \sum_j c_j \phi_j(x,y).
+$$
+Thus, the problem of finding $u(x,y)$ reduces to finding the
+finitely many numbers $c_j$'s.
+<p></p>
+Now 
+$$
+u_x(x,y) = \sum_j c_j\beta_{ij} \mbox{ for } (x,y)\in T_i^\circ,
+$$
+where $T_j^\circ$ denotes the interior of $T_j.$
+<p></p>
+
+Similarly for $u_y(x,y).$
+<p></p>
+Hence we have
+$$
+E(u) = \sum_i \iint_{T_i^\circ} (\sum_j c_j \beta_{ij})^2 + (\sum_j c_j\gamma_{ij})^2 
+  = \sum_i |T_i| \{ (\sum_j c_j \beta_{ij})^2 + (\sum_j c_j\gamma_{ij})^2 \},
+$$
+where $|T_i|$ denotes the area of $T_i$ (same as the
+area of $T_i^\circ$).
+<p></p>
+
+Thus, 
+$$
+E(u) = \bc' M\bc,
+$$
+where $M$ is the NND matrix with $(j,j')$-th entry given
+by 
+$$
+m_{jj'} = \sum_i |T_i| (\beta_{ij}\beta_{ij'} + \gamma_{ij} \gamma_{ij'}).
+$$
+
+<h2><a
+name="Solving">Solving</a></h2>
+Suppose that the last $k$ of the $c_j$'s are
+known frame heights. Partition $\bc$
+as $(\bc_1,\bc_2).$ Then $\bc_2$ is known,
+and $\bc_1$ is to be chosen to minimise $E(u).$
+<p></p>
+Let us partition $M$ accordingly as
+$$
+M = \left[\begin{array}{ccccccccccc}M_{11} &amp; M_{12}\\M_{21} &amp; M_{22}
+\end{array}\right].
+$$
+Then 
+$$
+\bc' M\bc = \left[\begin{array}{ccccccccccc}\bc_1' &amp; \bc_2'
+\end{array}\right]\left[\begin{array}{ccccccccccc}M_{11} &amp;
+M_{12}\\M_{21} &amp; M_{22}
+\end{array}\right] \left[\begin{array}{ccccccccccc}\bc_1\\\bc_2
+\end{array}\right] = 
+\bc_1' M_{11}\bc_1 + 2\bc_1' M_{12}\bc_2 + \bc_2' M_{11}\bc_2.
+$$
+Differentiating w.r.t. $\bc_1$, and equating to zero, we get
+$$
+M_{11}\bc_1 + M_{12}\bc_2 = \bz,
+$$
+or
+$$
+M_{11}\bc_1 = - M_{12} \bc_2.
+$$
+It is a simple linear algebra exercise to show that this is
+always consistent. In fact, $M_{11}$ will also be
+nonsingular (not easy to prove). So the problem always has unique solution. 
+
+
+<h2><a
+name="Practical problem">Practical problem</a></h2>
+However,
+there is a practical difficulty. To get a reasonable
+approximation we need the number of vertices to be pretty
+large. In our example, the vertices are in a rectangular array formed
+by subdividing the sides of the base. If we use 100 subdivisions
+in both directions, then the number of vertices is $101^2,$
+of which $99^2=9801$ are interior vertices. Thus, we need to
+solve $9801$ equations in as many unknowns! For many real
+life problem we need even more vertices:
+<center>
+<table width="100%">
+<tr>
+<th><img width="" src="image/camgrid.png"></th>
+</tr>
+<tr>
+<th>Many vertices are needed to capture the
+nooks and corners.</th>
+</tr>
+</table>
+</center>
+
+<p></p>
+However, notice that $M_{11}$ is an extremely sparse
+matrix. Each row contains just 6 nonzero entries. Using
+Gauss-Jordan elimination is not a good idea in such a case, as it
+destroys the sparseness of the system. There are special
+algorithms for such cases that we shall learn now.
+
+
+
+<h1><a
+name="Iterative methods for linear systems">Iterative methods for linear systems</a></h1>
+Gauss and Gauss-Jordan elimination suffer from one problem:
+accumulation of errors. If the system is large then the solution obtained
+by these methods is usually not as precise as can be desired. Remember
+that due to finite precision of the computer <i>some</i> error is always
+inevitable. But the the solution obtained by Gauss or Gauss-Jordan
+eliminations often produce error larger than the minimum error possible
+with the machine. In such situation one may try to improve the precision of
+the solution by applying iterative methods like the one discussed
+below. However, this is not the most popular reason for the using
+iterative methods.
+
+A more compelling reason to use these methods is when the system is
+<i>sparse.</i> A sparse system is where many of the entries of the
+coefficient matrix are <i>known to be zero.</i> Such matrices occur in
+different applications. Gauss and Gauss-Jordan eliminations cannot take
+advantage of the zeros. The iterative methods on the other hand work faster
+for sparse matrices.
+
+
+<h2><a
+name="Gauss-Jacobi method">Gauss-Jacobi method</a></h2>
+Consider  a linear system of equations
+$$
+A\bx={\bf b},
+$$
+where $A$ is a square matrix.
+<p>
+<b>EXAMPLE:</b>&nbsp;
+Suppose that you are to solve
+$$\begin{eqnarray*}
+20x+3y-4z &amp; =&amp;  19\\
+x-4y+z &amp; =&amp;  -3\\
+x-4y+10z &amp; =&amp;  7.
+\end{eqnarray*}$$
+The system has three equations in three unknowns. To solve it by
+Gauss-Jacobi method we solve for $x$ in the first equation, for
+$y$ in the second equation and so on. Solving for $x$ in the
+first equation means keeping $x$ in the left hand side and taking
+everything else to the right hand side:
+$$
+x = (19-3y+4z)/20.
+$$
+Similarly, we get three equations by solving for $x,y,$ and $z$
+from the three equations:
+$$\begin{eqnarray*}
+x &amp; =&amp;  (19-3y+4z)/20\\
+y &amp; =&amp;  (3+x+z)/4\\
+z &amp; =&amp;  (7-x+4y)/10.
+\end{eqnarray*}$$
+Now take any three numbers
+$x_0,y_0$ and $z_0$
+as initial guesses for $x,y$and $z.$ Suppose that we take
+$$
+\left[\begin{array}{ccccccccccc}x_0\\y_0\\z_0
+\end{array}\right] = \left[\begin{array}{ccccccccccc}0\\0\\0
+\end{array}\right].
+$$
+Use these in the right hand sides of the three equations, to compute 
+$x_1,y_1,z_1.$ Thus,
+ $$
+\left[\begin{array}{ccccccccccc}x_1\\y_1\\z_1
+\end{array}\right] = \left[\begin{array}{ccccccccccc}(19-3y_0+4z)/20\\
+(-3+x_0+z_0)/4\\
+(7-x_0+4y_0)/10
+
+\end{array}\right] = \left[\begin{array}{ccccccccccc}0.9500\\0.7500\\0.7000 
+\end{array}\right].
+$$
+Similarly, we get $x_2,y_2,z_2$ from $x_1,y_1,z_1,$ and so
+on. We show the values of $x_i,y_i,z_i$ for $i=0,1,...,5:$
+
+<pre>
+i      x_i        y_i        z_i
+----------------------------------
+0   0          0          0
+1   0.980356   1.255969   1.092588
+2   0.980122   1.268236   1.104352
+3   0.980635   1.271119   1.109282
+4   0.981189   1.272479   1.110384
+5   0.981205   1.272893   1.110873
+6   0.981241   1.273019   1.111037
+7   0.981254   1.273069   1.111084
+8   0.981256   1.273085   1.111102
+9   0.981258   1.273090   1.111108
+10   0.981258   1.273091   1.111110
+</pre>
+Thus, after 10 iterations our answer is 
+$$
+\left[\begin{array}{ccccccccccc}x\\y\\z
+\end{array}\right] = \left[\begin{array}{ccccccccccc}0.981258 \\ 1.273091\\ 1.111110
+\end{array}\right].
+$$
+This is called the Gauss-Jacobi method.
+How accurate is this answer? To check this let us compute 
+$$
+A\bx-{\bf b}.
+$$
+Ideally, it should be the zero vector. For our answer it turns out to be
+$$
+\left[\begin{array}{ccccccccccc}-0.000002\\0.000002\\-0.000007
+\end{array}\right],
+$$
+which is quite close to zero.
+<img src="../image/box.png"></p>
+
+
+<h2><a
+name="Gauss-Seidel method">Gauss-Seidel method</a></h2>
+This is a method very similar to the above. 
+
+<p>
+<b>EXAMPLE:</b>&nbsp;
+Let us consider the same system of
+equation once again. As before, we shall solve for $x$ from the first
+equation, for $y$ from the second equation, and so on. Thus, we
+arrive at the three equations (as before):
+$$\begin{eqnarray*}
+x &amp; =&amp;  (19-3y+4z)/20\\
+y &amp; =&amp;  (3+x+z)/4\\
+z &amp; =&amp;  (7-x+4y)/10.
+\end{eqnarray*}$$
+Again, start with, say, 
+$$
+\left[\begin{array}{ccccccccccc}x_0\\y_0\\z_0
+\end{array}\right] = \left[\begin{array}{ccccccccccc}0\\0\\0
+\end{array}\right].
+$$
+But this time, apply the equations <i> one by one.</i> Thus, we first
+compute $x_1$ as
+$$
+x_1 =  (19-3y_0+4z_0)/20 = 0.95.
+$$
+Then we compute $y_1$ using this $x_1$
+$$
+y_1 = (3+x_1+z_0)/4 = 0.9875.
+$$
+Observe that we are using $x_1$ and $z_0$ in the right hand side.
+This is the only difference between between the Gauss-Seidel and
+Gauss-Jacobi method. In Gauss-Seidel method we always use the most recent
+value available. Thus, to compute $z_1$ we shall use the most recent
+values of $x$ and $y,$ namely, $x_1$ and $y_1:$
+$$
+z_1 = (7-x_1+4y_1)/10.
+$$ 
+Then we shall compute $x_2$ from $y_1,z_1.$ After that we shall
+compute $y_2$ from $x_2,z_1,$ and so on. We show the values of
+$x_i,y_i,z_i$ in the following table for $i=0,1,...,10.$
+<pre>
+i      x_i        y_i       z_i
+----------------------------------
+0   0          0          0
+1   0.950000   0.987500   1.000000
+2   1.001875   1.250469   1.100000
+3   0.982430   1.270607   1.110000
+4   0.981409   1.272852   1.111000
+5   0.981272   1.273068   1.111100
+6   0.981260   1.273090   1.111110
+7   0.981259   1.273092   1.111111
+8   0.981258   1.273092   1.111111
+9   0.981258   1.273092   1.111111
+10   0.981258   1.273092   1.111111
+</pre>
+
+<img src="../image/box.png"></p>
+
+
+<h2><a
+name="Convergence issues">Convergence issues</a></h2>
+
+<fieldset>
+<legend><b>Definition: </b></legend>A matrix $A_{n\times n}$ is said to have <i>strict diagonal dominance
+property</i> if for all $i=1,...,n,$
+$$
+|a_{ii}| &gt; \sum_{j\neq i} |a_{ij}|.
+$$</fieldset>
+
+It is easy to see that a matrix with strict diagonal dominance
+must be nonsingular.
+
+<p>
+<b>EXAMPLE:</b>&nbsp;
+The following matrix has strict diagonal dominance property:
+$$
+\left[\begin{array}{ccccccccccc}10&amp; 1&amp; -5\\-1&amp; 3&amp; 1\\1&amp; 3&amp; 20
+\end{array}\right].
+$$
+However the matrix below does not have the property.
+$$
+\left[\begin{array}{ccccccccccc}1&amp; 2&amp; -3\\2&amp; 14&amp; 3\\3&amp; 4&amp; 10
+\end{array}\right],
+$$
+since in the first row
+$$
+1 \not &gt; 2+|-3|. 
+$$
+<img src="../image/box.png"></p>
+
+Both these methods are special cases of splitting methods, where
+a nonsingular system 
+$$
+A\bx = \bb
+$$
+is written as 
+$$
+M\bx = N\bx + \bb.
+$$
+Here $A$ is split as $M-N$ with $M$ nonsingular. Then 
+$$
+\bx = M^{-1} N \bx + M^{-1}\bb.
+$$ 
+We use the iteration
+$$
+\bx_{n+1} = M^{-1} N \bx_n + M^{-1}\bb.
+$$
+<p>
+<b>EXAMPLE:</b>&nbsp;
+In Gauss-Seidel $M$ consists of the diagonal elements
+of $A.$ 
+<img src="../image/box.png"></p>
+
+
+<p>
+<b>EXERCISE:</b>&nbsp;
+What is $M$ in the Gauss-Jacobi method?
+<img src="../image/box.png"></p>
+
+Let the actual solution be $\bxi = A^{-1}\bb.$ Then 
+$$
+\bxi = M^{-1} N \bxi + M^{-1}\bb.
+$$
+Then the
+error committed in step $n$ is
+$$
+\be_n = \bx_n-\bxi.
+$$
+
+So 
+$$\begin{eqnarray*}
+\be_{n+1} 
+&amp; =&amp;  \bx_{n+1}-\bxi\\
+&amp; =&amp;  M^{-1} N \bx_n + M^{-1}\bb-M^{-1} N \bxi - M^{-1}\bb\\
+&amp; =&amp;  M^{-1} N (\bx_n -\bxi)\\
+&amp; =&amp;  M^{-1} N \be_n.
+\end{eqnarray*}$$
+
+So a sufficient condition for $\be_n\rightarrow \bz$ is that 
+the spectral radius of $M^{-1}N$ is $&lt;  1.$
+
+<p>
+<b>EXERCISE:</b>&nbsp;
+ Show that this condition is also necessary 
+for the iteration to converge for all $\bb.$
+<img src="../image/box.png"></p>
+
+
+
+
+<fieldset>
+<legend><b><i>Theorem</i></b></legend>
+Let $A$ be a matrix with strict diagonal dominance. Then
+the Gauss-Seidel method must converge.
+</fieldset>
+
+<p>
+<b><i>Proof:</i></b>
+Here the $(i,j)$-th element of $C=M^{-1}N$ is 
+$$
+c_{ij} = \left\{\begin{array}{ll}
+    \frac{a_{ij}}{a_{ii}} &\text{if }$i\neq j$\\
+0 &\text{otherwise.}
+\end{array}\right.
+$$
+
+Thus $\forall i~~\sum_j |c_{ij}| &lt;  1.$
+
+This implies that all the eigen values of $C$ must
+have moduli $&lt;  1.$
+<blockquote>
+<b>Because:</b>
+Let $\lambda$ be an eigen value
+of $C,$ and let $\bv$ be a corresponding
+eigen vector.
+
+
+Let the $k$-th entry of $\bv$ have max modulus:
+$$
+\forall i~~|v_k| \geq |v_i|.
+$$
+
+Then consider the $k$-th row of $\lambda\bv = C\bv$
+to have
+$$
+\lambda v_k= \sum_j c_{kj} v_j, 
+$$ 
+or,
+$$
+|\lambda| |v_k|\leq \sum_j |c_{kj}| |v_j|  \leq |v_k|\sum_j
+|c_{kj}|, 
+$$ 
+or
+$$
+|\lambda| \leq \sum_j|c_{kj}| &lt;  1. 
+$$ 
+</blockquote>
+
+<b><i>[QED]</i></b>
+</p>
+
+
+
+<fieldset>
+<legend><b><i>Theorem</i></b></legend>
+Let $A$ be a nonsingular matrix with strict diagonal dominance. Then
+the Gauss-Jacobi and Gauss-Seidel methods must converge. The convergence rate is at least
+geometric of order 
+$$
+\max_i\sum_{j\neq i} \left|\frac{a_{ij}}{a_{ii}}\right|.
+$$ 
+</fieldset>
+
+
+<fieldset>
+<legend><b><i>Theorem</i></b></legend>
+The Gauss-Jacobi method converges if the coefficient matrix is
+positive definite.
+</fieldset>
+
+<p>
+<b><i>Proof:</i></b>
+Here the coefficient matrix can be written as
+$$
+A = L + D + L',
+$$
+where $L$ is the strict lower triangular half, $D$ is
+the diagonal part (and so $L'$ is the strict upper
+triangular half). Then the Gauss-Jacobi iteration
+for $A\bx=\bb$ is
+$$
+(L+D) \bx_{n+1} = -L'\bx_n + \bb,
+$$ 
+or
+$$
+\bx_{n+1} = -(L+D)^{-1}L'\bx_n + (L+D)^{-1}\bb.
+$$
+
+So enough to show that all eigen values of $C =
+  (L+D)^{-1}L'$ 
+has moduli $&lt;  1.$
+
+Now eigen values of $C$ are the same as the eigen values of 
+$$\begin{eqnarray*}
+C_1 
+&amp; =&amp;  D^{-1/2}CD^{1/2} \\
+&amp; =&amp;  D^{-1/2}(L+D)^{-1}L'D^{-1/2}\\
+&amp;  = &amp;  
+D^{-1/2}(L+D)^{-1}D^{-1/2}D^{1/2}L'D^{-1/2}\\
+&amp;  = &amp; 
+(I + L_1)^{-1} L_1', 
+\end{eqnarray*}$$
+where $L_1=D^{1/2}LD^{-1/2}.$
+
+
+Now let $\lambda$ be any eigen
+value of $C_1.$ Take any eigen vector $\bx$ with 
+$\bx^*\bx=1.$
+
+Then 
+$$
+-L_1'\bx = \lambda(I+L_1)\bx,
+$$
+and so
+$$
+-\bx^*L_1'\bx = \lambda\bx^*(I+L_1)\bx = \lambda(1+\bx^*L_1\bx).
+$$
+\newcommand{\bz}{\overline{z}}
+Let $z=\bx^*L_1\bx.$ Then $\bx^*L_1'\bx=\bz.$
+So we have 
+$$
+-\bz = \lambda(1+z).
+$$
+
+Hence 
+$$
+|\lambda| = \frac{|z|}{|1+z|}
+$$
+Now notice that 
+$$
+I + L_1+L_1' = D^{-1/2} A D^{1/2}
+$$
+is a p.d. matrix. So 
+$$
+\bx^*(I + L_1+L_1')\bx = 1+z+\bz &gt; 0.
+$$
+So $Re(z) &gt; -\frac12,$ or $z$ is closer to 0 than
+to $-1,$ completing the proof. 
+<b><i>[QED]</i></b>
+</p>
+
+The Gauss-Seidel and Gauss-Jacobi methods are special cases of a
+class of methods called <b>successive over relaxation (SOR)</b>
+method. Here we choose some $w&gt;0$ and then write the
+system $A\bx=\bb$ as $wA\bx=w\bb,$ and then
+split $A$ into its diagonal and strict triangular halves
+$$
+A = L+D+U
+$$ 
+to get
+$$
+w(L+D+U)\bx = w\bb.
+$$
+We rearrange this to get the iterative scheme
+$$
+(D+wL)\bx_{n+1} = w\bb - (wU-(w-1)D)\bx_n.
+$$
+This system is easily solved by forward substitution
+since $D+wL$ is lower triangular. Suitable choice
+for $w$ (not always easy to obtain) speeds up convergence. 
+
+<p>
+<a name="soap"><b>
+<div id="soap">PROJECT:</div>
+</b></a>&nbsp;
+Find the natural shape of the soap film where
+the base is the unit square, and  the boundaries are the
+graphs of the functions $0, $ $x,$ $1$
+and $x^3.$ Use 50 subdivisions for each side.
+[Hint: Don't worry. The final algorithm is <i>very</i> simple and intuitive!]
+<img src="../image/box.png"></p>
+
+<h1><a
+name="$LU$ decompositions">$LU$ decompositions</a></h1>
+We say that a nonsingular matrix has $LU$ decomposition if it can be
+written as
+$$
+A = LU,
+$$
+where $L$ is a lower triangular and $U$ is an upper triangular
+matrix. 
+
+<p>
+<b>EXERCISE:</b>&nbsp;
+Show that such a factorization need not be unique even if one exists.
+<img src="../image/box.png"></p>
+
+If $L$ has 1's on its diagonals then it is called Doolittle
+decomposition and if $U$ has 1's on its diagonals, it is called
+Crout's factorization. If $L = U'$ then we call it Cholesky
+decomposition (read Cholesky as Kolesky.)
+
+We shall work with Crout's decomposition as a representative $LU$
+decomposition. The others are similar. 
+
+<h2><a
+name="Application">Application</a></h2>
+$LU$ decomposition is mainly used as a substitute for
+matrix inversion. If $A=LU$ then you can
+solve $A\bx=\bb$ as follows.
+
+First write the system as two triangular systems
+$$
+L\by = \bb, \text{ where } \by = U\bx.
+$$ 
+Being triangular, the systems can be solved by forward or
+backward substitution.
+Apply forward substitution to solve for $\by$ from the first
+equation, and then apply backward substitution to solve
+for $\bx$ from the second equation.
+ 
+Notice that, unlike Gaussian/Gauss-Jordan elimination, we do not
+need to know $\bb$ while computing the $LU$
+decomposition. This is useful when we want to solve many systems
+of the form $A\bx=\bb$ where $A$ is always the same,
+but $\bb$ will change later depending on the situation. 
+Then the $LU$ decomposition needs to be computed once and
+for all. Only the two substitutions are to be done afresh for
+each new $\bb.$ 
+<h2><a
+name="Algorithm">Algorithm</a></h2>
+From definition of matrix
+multiplication we have
+$$
+a_{ij} = \sum_{k=1}^n l_{ik} u_{kj}.
+$$ 
+Now, $l_{ik}=0$ if $k&gt;i,$ and $u_{kj}=0$ if $k&lt;  j.$
+So the above sum is effectively
+$$
+a_{ij} = \sum_{k=1}^{\min\{i,j\}} l_{ik} u_{kj}.
+$$ 
+You can compute $l_{i1}$ 's for $i\geq
+1$ by considering 
+$$
+a_{i1} = l_{i1}u_{11} = l_{i1},
+$$
+since diagonal entries of $U$ are 1. Once $l_{11}$ has been
+computed you can compute $u_{1i}$'s for $i\geq
+2$ by considering
+$$
+u_{1i} = a_{1i}/l_{11}.
+$$
+Next you will compute $l_{i2}$'s and after that $u_{2i}$'s, and
+so on. The order in which you compute the $l_{ij}$'s and
+$u_{ij}$'s is shown in the diagram below.
+
+<center>
+<table width="100%">
+<tr>
+<th><img width="" src="image/lu.png"></th>
+</tr>
+<tr>
+<th>$LU$ decomposition computation order</th>
+</tr>
+</table>
+</center>
+ 
+The general formulas to compute $l_{ij}$ and $u_{ij}$ are
+$$\begin{eqnarray*}
+l_{ij} &amp;  = a_{ij} - \sum_{k=1}^{j-1}l_{ik} u_{kj}&amp; ~~~(i\geq j)\\
+u_{ij}&amp;  = \frac{1}{l_{ii}}\left(a_{ij} - \sum_{k=1}^{i-1}l_{ik}
+u_{kj}\right)&amp; ~~~(i&lt;  j). 
+\end{eqnarray*}$$
+The following diagram might help here:
+<center>
+<table width="100%">
+<tr>
+<th><img width="" src="image/lucomp.png"></th>
+</tr>
+<tr>
+<th></th>
+</tr>
+</table>
+</center>
+In order to compute the yellow part of $L,$ subtract a
+linear combination from the yellow part of $A.$ The linear
+combination is made of the corresponding parts of $L$
+computed earlier, and the coefficients come from $U.$
+<span class="j">
+<pre>
+r=:(&lt;:@[){]
+c=:(&lt;:@[){"1 ]
+]a=:?. 4 4 $ 0
+]l1=:1 c a
+]u1=:({. l1) %~ 1 r 2 3 4 c a
+]l2=: (2 3 4 r 2 c a) - ({.u1) * }. l1
+]u2=:({. l2) %~ 2 r  3 4 c a
+</pre>
+</span>
+
+<p>
+<b>EXERCISE:</b>&nbsp;
+What should we do if for some $i$ we have $l_{ii}=0?$ Does this
+necessarily mean that $LU$ decomposition does not exist in this case?
+<img src="../image/box.png"></p>
+
+
+
+<h2><a
+name="Efficient implementation">Efficient implementation</a></h2>
+Notice that $L$ and $U$ have nonzero elements at different
+locations. The only place where both has nonzero elements is the diagonal,
+where $U$ has only 1's. So we do not need to explicitly store the
+diagonal entries of $U.$ This lets us store $L$ and $U$ in
+a single $n\times n$ matrix. 
+
+Also, observe that $a_{ij}$ for $i&lt; j$ is required to compute
+only $u_{ij}.$ Similarly $a_{ij}$ for $i\geq j$ is required to compute
+only $l_{ij}.$ Thus, once $u_{ij}$ is computed (for
+$i&lt; j$) we can throw away $a_{ij}.$ Similarly, for the case 
+$i\geq j.$ This suggests that we overwrite $A$ with $L$ and
+$R.$ Here is how the algorithm overwrites $A:$
+<center>
+<table width="100%">
+<tr>
+<th><img width="" src="image/croutpack.png"></th>
+</tr>
+<tr>
+<th>Snapshot of $A$ during Crout's decomposition</th>
+</tr>
+</table>
+</center>
+
+
+<p>
+<a name="lu"><b>
+<div id="lu">PROJECT:</div>
+</b></a>&nbsp;Implement the efficient version of Crout's decomposition
+  discussed above. Your software should also be able to solve a
+  system $A\bx = \bb$ by forward and backward substitution.<img src="../image/box.png"></p> 
+
+
+<h2><a
+name="Some theory">Some theory</a></h2>
+
+
+<p>
+<b>EXERCISE:</b>&nbsp;
+Show that if all the leading principal minors are nonzero then all the
+$l_{ii}$'s will be nonzero. In fact, if $i$ is the smallest
+number such that the $i$-th leading principal minor is zero, then
+$i$ is also the smallest number with $l_{ii}=0.$ [Hint: If 
+$A = LU$ and you partition $A$ as
+$$
+A = \left[\begin{array}{ccccccccccc}A_{ii} &amp;  B\\ C &amp;  D
+\end{array}\right],
+$$
+where $A_{ii}$ is $i\times i,$ then what is the $LU$ decomposition of
+$A_{ii}?$ Now apply the formula for determinant of partitioned matrix
+to show that 
+$$
+l_{ii} = |A_{ii}|/|A_{i-1,i-1}|.
+$$
+<img src="../image/box.png"></p>
+
+
+<p>
+<b>EXERCISE:</b>&nbsp;
+Use the above exercises to characterize all square matrices having
+$LU$ decomposition. 
+<img src="../image/box.png"></p>
+
+
+<h1><a
+name="Eigenanalysis">Eigenanalysis</a></h1>
+
+<h2><a
+name="Given's rotation matrix">Given's rotation matrix</a></h2>
+If we rotate a vector $\left[\begin{array}{ccccccccccc}x\\y
+\end{array}\right]$ by an angle $\theta$ in
+the clockwise direction we arrive at the vector
+$$
+\left[\begin{array}{ccccccccccc}\cos(\theta)x-\sin(\theta)y\\\sin(\theta)x+\cos(\theta)y
+\end{array}\right]
+ =
+ \left[\begin{array}{ccccccccccc}\cos(\theta)&amp; -\sin(\theta)\\\sin(\theta)&amp; \cos(\theta)
+\end{array}\right]
+\left[\begin{array}{ccccccccccc}x\\y
+\end{array}\right].
+$$
+The matrix
+$$
+\left[\begin{array}{ccccccccccc}\cos(\theta)&amp; -\sin(\theta)\\\sin(\theta)&amp; \cos(\theta)
+\end{array}\right]
+$$
+is called the Given's matrix for rotation by angle $\theta.$ It is
+ trivial to check that it is an orthogonal matrix, and the Given's matrix
+ for rotation by $-\theta $ is its transpose (as well as inverse.)
+
+<p>
+<b>EXERCISE:</b>&nbsp;
+ For any 2-dimensional vector 
+$$
+\left[\begin{array}{ccccccccccc}x_1\\x_2
+\end{array}\right]
+$$ 
+we can find a Given's rotation matrix $G(a,b)$ such that
+$$
+G(a,b)\left[\begin{array}{ccccccccccc}a\\b
+\end{array}\right] = \left[\begin{array}{ccccccccccc}\sqrt{a^2+b^2}\\0
+\end{array}\right].
+$$
+<img src="../image/box.png"></p>
+
+Then for any two vectors ${\mathbf u}_{m\times 1}$ and 
+${\mathbf v}_{k\times 1},$ we have
+$$
+\left[\begin{array}{ccccccccccc}I_m&amp; 0&amp; 0\\0&amp; G(a,b)&amp; 0\\0&amp; 0&amp; I_k
+\end{array}\right]
+\left[\begin{array}{ccccccccccc}{\mathbf u}\\a\\b\\{\mathbf v}
+\end{array}\right] = 
+\left[\begin{array}{ccccccccccc}{\mathbf u}\\\sqrt{a^2+b^2}\\0\\{\mathbf v}
+\end{array}\right].
+$$
+
+We shall denote the matrix 
+$$
+\left[\begin{array}{ccccccccccc}I_m&amp; 0&amp; 0\\0&amp; G(a,b)&amp; 0\\0&amp; 0&amp; I_k
+\end{array}\right]
+$$
+by $R(m,k;a,b).$
+Notice that premultiplication by $R(m,k;a,b)$ changes only two rows
+of a matrix. 
+
+<h2><a
+name="Jacobi method">Jacobi method</a></h2>
+Here we shall learn a method to find all eigenvalues and
+eigenvectors of a given
+real symmetric matrix. The main reason why real symmetric
+matrices are easier to deal with 
+than  general square matrices is the following theorem.
+
+<fieldset>
+<legend><b><i>Theorem</i></b></legend>A real symmetric matrix is guaranteed to have real eigenvalues and a
+full set of eigenvectors (<i> <i>i.e.</i>,</i> if the matrix is $n\times n$
+then there are $n$ independent eigenvectors. In fact, the eigen
+vectors can be chosen to be mutually orthogonal.</fieldset>
+
+<p>
+<b><i>Proof:</i></b>You should know the proof from your linear algebra course.<b><i>[QED]</i></b>
+</p>
+
+
+<p></p>
+The idea is to keep on applying orthogonal similarity
+transformations to the matrix until the matrix converges to a
+diagonal matrix.
+
+<p></p>
+We first locate the off-diagonal entry that is farthest away
+from $0$, <i>i.e.</i>, has the maximum absolute value. Say, it is
+the $(i,j)$-th entry. Then we construct the Given's matrix 
+$G(i,j,\theta),$ which is the identity matrix, except that
+the $\{i,j\}\times\{i,j\}$ submatrix is $G(\theta).$
+For example, 
+$$
+G(2,4,\theta) = \left[\begin{array}{ccccccccccc}
+1 &amp; 0 &amp; 0 &amp; 0\\
+0 &amp; \cos \theta &amp; 0 &amp; -\sin \theta\\
+0 &amp; 0 &amp; 1 &amp; 0\\
+0 &amp; \sin \theta &amp; 0 &amp; \cos \theta
+
+\end{array}\right],
+$$
+where $\tan(2 \theta ) = \frac{2a_{ij}}{a_{jj}-a_{^{-1}}}.$
+<p></p>
+Then it may be easily checked
+that $G(i,j,\theta)AG(i,j,\theta)'$ has the $(i,j)$-th
+(and $(j,i)$-th) entries equal to $0.$
+<p></p>
+If we keep on applying this transformation repeatedly, the
+resulting matrix converges to a diagonal matrix.
+<font color="red">
+<pre>
+f = function(A) {
+  n = nrow(A)
+  mmx = A[1,1]
+  for(i in 1:n) {
+    for(j in 1:n) {
+      if(i==j) next
+      if(mmx &lt; A[i,j]) {
+        mi = i; mj = j; mmx = A[i,j];
+      }
+    }
+  }
+  theta = atan2(2*A[mi,mj], A[mj,mj]-A[mi,mi])/2
+  sn = sin(theta); cs = cos(theta)
+  gv = diag(n); gv[c(mi,mj),c(mi,mj)] = c(cs,sn,-sn,cs)
+  gv %*% A %*% t(gv)
+}
+
+A = matrix(sample(100,25),5,5)
+A = A%*% t(A)
+val = numeric(100)
+for(i in 1:100) {
+  A = f(A)
+  val[i] = sum(A*A) - sum(diag(A)^2)
+}
+</pre>
+</font>
+
+<span class="j">
+<pre>
+mp=.+/ . *
+A=: 0.5 -~? 5 5 $ 0
+]A=.A mp |:A
+]index=:,/(i.5),"0/i.5
+off=:(~:/"1 # ]) index
+
+f=: monad define
+  amax=.(&gt;./ i.~ ])(;/off){|y
+  'i j'=.w=.,amax { off
+  d1=. y{~ &lt;i, i
+  d2=. y{~ &lt;j ,j
+  o=. y{~ &lt;i, j
+  theta=.0.5 * _3 o. (2*o) % d2 - d1
+  's c'=. (sin, cos) theta
+  G=.(c,(-s),s, c) (;/,/w,"0/ w)} e. i.5
+  G mp y mp |: G
+)
+</pre>
+</span>
+
+
+<h3><a
+name="Proof">Proof</a></h3>
+We shall present the proof as a sequence of exercises.
+
+<p>
+<b>EXERCISE:</b>&nbsp;Find $\theta$ such that the off-diagonal entries
+of $G(\theta) A G(\theta)'$ is zero, where $A
+= \left[\begin{array}{ccccccccccc}a_{11} &amp; a_{12}\\a_{21}&amp;a_{22}
+\end{array}\right].$
+<img src="../image/box.png"></p>
+
+
+<p>
+<b>EXERCISE:</b>&nbsp;Show that the sum of squares of all entries in a matrix
+does not change if the matrix is pre- or post-multiplied by an
+orthogonal matrix.<img src="../image/box.png"></p>
+
+
+<p>
+<b>EXERCISE:</b>&nbsp;Let $f(A)$ denote the sum of squares of all the
+off-diagonal entries in a symmetric matrix $A.$ Show that
+if $\theta$ is chosen so that the $(i,j)$-th entry
+of $B=G(\theta) A G(\theta)'$ is zero, then $f(B) =
+\left(1-\frac 1N\right) f(A)$, where $N$ is the number of
+off-diagonal entries in $A.$<img src="../image/box.png"></p>
+
+
+<p>
+<b>EXERCISE:</b>&nbsp;Use the above exercises to argue that the Jacobi iterations
+converge to a diagonal matrix.<img src="../image/box.png"></p>
+
+<h3>Comments</h3>
+To post an anonymous comment, click on the "Name" field. This
+will bring up an option saying "I'd rather post as a guest."
+<p></p><!--
+begin disqus code --> <div id="disqus_thread"></div>
+<script>
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+
+var disqus_config = function () {
+this.page.url = "https://www.isical.ac.in/~arnabc/numana/mat2.html"; // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = "mat2"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://txtbk.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript><!-- end disqus code --> 
+
+<hr/>
+<table width="100%" border="0">
+<tr>
+<td align="left"/>
+<td align="right"/>
+</tr>
+</table>
+<hr/>
+</body>
+</html>

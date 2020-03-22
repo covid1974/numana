@@ -1,0 +1,107 @@
+<html>
+<body>
+<table border="1">
+<tr>
+<th>Mar 12:</th><td> Added some J code and plot to 
+                     the <a target="naya"
+                     href="nonlin2.html">nonlinear equations
+                     (part 2)</a> page.
+                     </td>
+</tr>
+<tr>
+<th>Mar 04:</th><td> Major update to 
+                     the <a target="naya"
+                     href="nonlin2.html">nonlinear equations
+                     (part 2)</a> page.
+                     </td>
+</tr>
+<tr>
+<th>Feb 27:</th><td> Minor corrections and updates to 
+                     the <a target="naya"
+                     href="diff1.html">differential equations (part 1)</a>, <a target="naya"
+                     href="nonlin1.html">nonlinear equations (part 1)</a> and <a target="naya"
+                     href="interpol1.html">interpolation (part 1)</a> pages.
+                     </td>
+</tr>
+<tr>
+<th>Feb 24:</th><td> Added a picture and some J help to
+                     the <a target="naya"
+                     href="interpol1.html">interpolation (part 1)</a> page.
+                     </td>
+</tr>
+<tr>
+<th>Feb 20:</th><td> Explanation added to the derivation of Simpson's rule
+                     in
+                     the <a target="naya"
+                     href="numint1.html">integration (part 1)</a> page.
+                     </td>
+</tr>
+<tr>
+<th>Feb 17:</th><td> <ul>
+<li>Some correction (shown in red) done after the class to the discussion of power method in
+                     the <a target="naya"
+                     href="mat1.html">matrix algorithms (part 1)</a>
+                     page.</li>
+<li>Major update to discussion of power method in
+                     the <a target="naya"
+                     href="mat1.html">matrix algorithms (part 1)</a>
+                     page.</li>
+                     <LI>Added the topic Monte Carlo integration
+                     to the <a target="naya"
+                     href="numint1.html">numerical integration (part 1)</a>
+                     page.</LI></ul>
+                     </td>
+</tr>
+<tr>
+<th>Feb 13:</th><td> Minor updates to QR decomposition and
+                     major correction to power method in
+                     the <a target="naya"
+                     href="mat1.html">matrix algorithms (part 1)</a> page.
+                     </td>
+</tr>
+<tr>
+<th>Feb 10:</th><td> Updated the discussions of matrix inversion
+                     and QR decomposition in
+                     the <a target="naya"
+                     href="mat1.html">matrix algorithms (part 1)</a> page.
+                     </td>
+</tr>
+<tr>
+<th>Feb 07:</th><td> Updated the "Pivoting" section in
+                     the <a target="naya"
+                     href="mat1.html">matrix algorithms (part 1)</a> page.
+                     </td>
+</tr>
+<tr>
+<th>Feb 06:</th><td> Added some J help
+                     to the <a target="naya"
+                     href="mat1.html">matrix algorithms (part 1)</a> page.
+                     </td>
+</tr>
+<tr>
+<th>Feb 03:</th><td> Added some exercises and J help
+                     to the <a target="naya"
+                     href="nonlin1.html">nonlinear 
+                     equations (part 1)</a> page.
+                     </td>
+</tr>
+<tr>
+<th>Jan 27:</th><td> Added some J help
+                     to the <a target="naya"
+                     href="nonlin1.html">nonlinear 
+                     equations (part 1)</a> page.
+                     </td>
+</tr>
+<tr>
+<th>Jan 23:</th><td> Added some J help
+                     to the <a target="naya" href="diff1.html">differential
+                     equations (part 1)</a> page.
+                     </td>
+</tr>
+<tr>
+<th>Jan 20:</th><td> Extra class during 12:05--12:55.<br/>
+                     Bring your smart phones to class.</td>
+</tr>
+</table>
+</body>
+</html>

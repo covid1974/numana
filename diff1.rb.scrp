@@ -1,0 +1,57 @@
+over time. These are 
+-------EOD-------
+-------EOD-------
+<P/>
+ So the equations of motion will be 
+<MULTILINE>
+mx'' &  = &  -\gamma\sqrt{x^2+y^2}\sin(\theta)\\
+my'' &  = &  \gamma\sqrt{x^2+y^2}\cos(\theta)-mg.
+</MULTILINE>
+-------EOD-------
+Many other physics examples are
+discussed in the weppage <LINK to="http://www.myphysicslab.com">www.myphysicslab.com</LINK>. That page
+has many interactive animations. However, they use a method more
+sophisticated than what we have used. We shall learn that method
+later in this course.
+-------EOD-------
+Euler's method works by making local linear
+approximations to the unknown <M>y(t).</M> 
+<P/>
+-------EOD-------
+<P/>
+The following example
+illustrates this. 
+-------EOD-------
+
+-------EOD-------
+Thus the 2-nd degree Taylor polynomial for <M>y(t)</M> at
+any <M>t_{k-1}</M> is 
+<D>
+y(t_{k-1}) + y'(a)(t-t_{k-1}) + [[y''(t_{k-1})][2]] (t-t_{k-1})^2.
+</D>
+-------EOD-------
+Proceeding as above we get, for any <M>t_{k-1},</M>
+-------EOD-------
+So we start
+-------EOD-------
+The general Taylor method is very similar. Let us develop the <M>k</M>-th
+order Taylor method to solve <M>y'(t) = f(t,y),</M> with <M>y(a) =
+A,</M> where <M>f,a,A</M> are given and we can differentiate
+<M>f</M> as many times as we want w.r.t. both <M>t</M> and <M>y.</M> We
+want to obtain <M>y(t)</M> over an interval <M>[a,b].</M> Actually we
+shall compute <M>y(t)</M> for a finite set of <M>t</M>-values:
+<M>t_0,...,t_n</M> where 
+<D>
+t_i = a+ih,
+</D>
+and <M>\delta t=(b-a)/n.</M>
+First express <M>y^{(j)}(t)</M> in terms of <M>y(t)</M> for
+<M>j=0,...,k.</M> Then use the formula
+<MULTILINE>
+y_{k} &  = &   \sum_{j=0}^k y^{(j)}(t_{k-1})\frac{\delta t^j}{j!},
+</MULTILINE>
+for <M>i=1,...,n.</M>
+
+-------EOD-------
+<HEAD1>Comments</HEAD1>
+-------EOD-------

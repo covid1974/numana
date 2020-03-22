@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Creator: fig2dev Version 3.2 Patchlevel 5e -->
+
+<!-- CreationDate: Tue Dec 17 09:35:26 2019 -->
+
+<!-- Magnification: 1.050 -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="2.9in"
+   height="2.4in"
+   viewBox="1404 1404 3521 2881"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="regfal.svg">
+  <metadata
+     id="metadata34">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs32" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="640"
+     inkscape:window-height="480"
+     id="namedview30"
+     showgrid="false"
+     inkscape:zoom="1.0925925"
+     inkscape:cx="130.5"
+     inkscape:cy="108"
+     inkscape:window-x="43"
+     inkscape:window-y="24"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg2" />
+  <g
+     style="stroke-width:.025in; fill:none"
+     id="g4">
+    <!-- Line -->
+    <polyline
+       points="2125,4251 2125,3779 "
+       style="stroke:#000000;stroke-width:8; stroke-linejoin:miter; stroke-linecap:butt; stroke-dasharray:67 67;"
+       id="polyline6" />
+    <!-- Line -->
+    <polyline
+       points="4724,1889 4724,3779 "
+       style="stroke:#000000;stroke-width:8; stroke-linejoin:miter; stroke-linecap:butt; stroke-dasharray:67 67;"
+       id="polyline8" />
+    <!-- Line -->
+    <polyline
+       points="2125,4251 4724,1889 "
+       style="stroke:#000000;stroke-width:8; stroke-linejoin:miter; stroke-linecap:butt; "
+       id="polyline10" />
+    <!-- Line -->
+    <polyline
+       points="4724,1889 4723,1891 4721,1898 4718,1908 4711,1923 4704,1945 4695,1972 4683,2004 4669,2040 4655,2079 4640,2121 4623,2163 4607,2205 4592,2246 4576,2286 4560,2324 4544,2361 4530,2395 4515,2429 4500,2460 4486,2492 4471,2521 4456,2551 4441,2579 4426,2608 4409,2638 4394,2663 4380,2688 4363,2714 4347,2742 4329,2768 4312,2796 4293,2825 4275,2853 4255,2882 4234,2913 4213,2942 4191,2973 4169,3003 4145,3035 4122,3065 4099,3096 4075,3126 4052,3155 4028,3185 4005,3214 3981,3243 3958,3270 3934,3297 3911,3323 3889,3349 3866,3373 3844,3397 3822,3420 3801,3442 3779,3464 3756,3487 3733,3509 3709,3532 3685,3553 3660,3575 3635,3597 3610,3618 3584,3640 3558,3661 3531,3682 3503,3702 3476,3723 3447,3743 3419,3762 3391,3782 3362,3800 3334,3818 3306,3836 3277,3853 3249,3868 3220,3884 3193,3899 3166,3912 3139,3926 3111,3940 3085,3952 3058,3964 3032,3976 3005,3987 2980,3997 2954,4008 2927,4017 2898,4028 2870,4038 2839,4049 2807,4059 2773,4070 2738,4081 2700,4093 2660,4104 2619,4116 2576,4129 2531,4141 2485,4155 2438,4167 2392,4180 2347,4193 2305,4204 2265,4215 2230,4224 2200,4232 2175,4239 2156,4244 2141,4247 2133,4249 2128,4250 2125,4251 "
+       style="stroke:#000000;stroke-width:32; stroke-linejoin:bevel; stroke-linecap:butt; "
+       id="polyline12" />
+    <!-- Line -->
+    <polyline
+       points="1417,3779 4724,3779 "
+       style="stroke:#00ff00;stroke-width:8; stroke-linejoin:miter; stroke-linecap:butt; "
+       id="polyline14" />
+    <!-- Line -->
+    <polyline
+       points="1889,1417 1889,4251 "
+       style="stroke:#00ff00;stroke-width:8; stroke-linejoin:miter; stroke-linecap:butt; "
+       id="polyline16" />
+    <!-- Text -->
+    <text
+       xml:space="preserve"
+       x="2773"
+       y="4007"
+       fill="#000000"
+       font-family="Times"
+       font-style="italic"
+       font-weight="bold"
+       font-size="152"
+       text-anchor="start"
+       id="text18">k</text>
+    <!-- Text -->
+    <text
+       xml:space="preserve"
+       x="2545"
+       y="3963"
+       fill="#000000"
+       font-family="Times"
+       font-style="italic"
+       font-weight="bold"
+       font-size="189"
+       text-anchor="start"
+       id="text20">m</text>
+    <!-- Text -->
+    <text
+       xml:space="preserve"
+       x="4803"
+       y="4216"
+       fill="#000000"
+       font-family="Times"
+       font-style="italic"
+       font-weight="bold"
+       font-size="152"
+       text-anchor="start"
+       id="text22">k</text>
+    <!-- Text -->
+    <text
+       xml:space="preserve"
+       x="2213"
+       y="3727"
+       fill="#000000"
+       font-family="Times"
+       font-style="italic"
+       font-weight="bold"
+       font-size="152"
+       text-anchor="start"
+       id="text24">k</text>
+    <!-- Text -->
+    <text
+       xml:space="preserve"
+       x="4680"
+       y="4120"
+       fill="#000000"
+       font-family="Times"
+       font-style="italic"
+       font-weight="bold"
+       font-size="189"
+       text-anchor="start"
+       id="text26">r</text>
+    <!-- Text -->
+    <text
+       xml:space="preserve"
+       x="2108"
+       y="3630"
+       fill="#000000"
+       font-family="Times"
+       font-style="italic"
+       font-weight="bold"
+       font-size="189"
+       text-anchor="start"
+       id="text28">l</text>
+  </g>
+</svg>

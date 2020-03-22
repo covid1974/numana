@@ -1,0 +1,56 @@
+         January 2020            February 2020              March 2020     
+     Su Mo Tu We Th Fr Sa     Su Mo Tu We Th Fr Sa     Su Mo Tu We Th Fr Sa 
+               1  2  3  4                        1      1  2  3  4  5  6  7 
+      5  6  7  8  9 10 11      2  3  4  5  6  7  8      8  9 10 11 12 13 14 
+     12 13 14 15 16 17 18      9 10 11 12 13 14 15     15 16 17 18 19 20 21 
+     19 20 21 22 23 24 25     16 17 18 19 20 21 22     22 23 24 25 26 27 28 
+     26 27 28 29 30 31        23 24 25 26 27 28 29     29 30 31
+
+
+          April 2020      
+     Su Mo Tu We Th Fr Sa 
+               1  2  3  4 
+      5  6  7  8  9 10 11 
+     12 13 14 15 16 17 18 
+     19 20 21 22 23 24 25 
+     26 27 28 29 30       
+
+
+Jan: 
+20 intro, diff1 
+23 convo 
+27 diff1 & nonlin1
+30 saraswati
+
+Feb:
+03 nonlin1
+06 mat1 GJ
+10 mat1 GJ & QR
+13 mat1 QR
+17 mat1 Power
+20 numint1
+24 numint1 and interpol1
+27 interpol1
+
+Mar:
+02 midsem
+05 midsem
+09 Dol
+12 nonlin2: conv, rates, regula falsi, secant,               
+16 nonlin2: polynomial root, mueller, real root isolation    
+19 mat2: iter                                                
+23 mat2: iter + LU                                           
+26 mat2: LU                                                  
+30 mat2: eigen                                               
+
+Apr:
+02 diff2
+06 diff2     
+09 numint2   
+13 numint2   
+16 tour      
+20 interpol2 
+23 interpol2 
+27 error     
+30 error     
+

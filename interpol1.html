@@ -1,0 +1,1112 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta content="text/html;charset=UTF-8" http-equiv="Content-Type"/>
+<link rel="stylesheet" type="text/css" href="../tools/ctut.css"/>
+<link type="text/css" rel="stylesheet" href="../tools/style.css"/>
+<style type="text/css">@font-face {font-family: SHREE_BAN_OTF_0592;src: local("../tools/SHREE_BAN_OTF_0592"),url(../tools/SHREE0592.woff) format("opentype");</style>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<script src="../tools/jquery-1.10.2.min.js"></script>
+
+<script>
+aha = function(code) {
+  window.open("https://rdrr.io/snippets/embed/?code="+code)
+}
+
+togglePhoto = function(photoId) {
+   var me = document.getElementById("pic_"+photoId)
+   if(me.style.display=="block"){
+     me.style.display="none";
+   }
+   else if (me.style.display=="none"){
+     me.style.display="block";
+   }
+}
+
+hideShow = function(lb) {
+   var me = document.getElementById(lb)
+   if(me.style.display=="block"){
+     me.style.display="none";
+   }
+   else if (me.style.display=="none"){
+     me.style.display="block";
+   }
+}
+
+grabData = function(data){
+  return "https://farm"+data.photo.farm+".staticflickr.com/"+data.photo.server+"/"+data.photo.id+"_"+
+            data.photo.secret+".jpg"
+}
+
+fromFlickr = function(photoId) {
+
+$.getJSON("https://api.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=23a138c73bdbe1e68601aa7866924e62&user_id=109924623@N07&photo_id="+photoId+"&lang=en-us&format=json&jsoncallback=?",
+  function(data) {
+    imgURL = grabData(data)
+    var l = document.getElementById("lnk_"+photoId)
+    l.href = "https://www.flickr.com/photos/109924623@N07/"+photoId
+    var i = document.getElementById("pic_"+photoId)
+    i.src=imgURL
+    i.onload = function() {
+      document.getElementById("status_"+photoId).innerHTML="[Image loaded. Click to show/hide.]"
+    }
+  })
+}
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js","color.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+    tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]},
+    TeX: {
+      Macros: {
+        h: ["{\\hat #1}",1],
+        b: ["{\\overline #1}", 1],
+        row: "{\\mathcal R}",
+        col: "{\\mathcal C}",
+        nul: "{\\mathcal N}"
+      }
+    }
+  });
+</script><script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script src="../tools/htmlwidgets.js"></script>
+<link href="../tools/rgl.css" rel="stylesheet"></link>
+<script src="../tools/rglClass.src.js"></script>
+<script src="../tools/CanvasMatrix.src.js"></script>
+<script src="../tools/rglWebGL.js"></script>
+</head>
+<body>
+<a href="http://www.isical.ac.in/~arnabc/">[Home]</a>
+<h3>Table of contents</h3>
+<ul>
+<li>
+<a href="#Polynomial interpolation">Polynomial interpolation</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;
+<a href="#Lagrange's formula">Lagrange's formula</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;
+<a href="#Newton's divided difference method">Newton's divided difference method</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="#Divided difference table">Divided difference table</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="#Using the table">Using the table</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;
+<a href="#A strange observation">A strange observation</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="#Some properties of divided differences">Some properties of divided differences</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;
+<a href="#Who cares and why?">Who cares and why?</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="#Polynomials as paintbrush">Polynomials as paintbrush</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="#Polynomials for approximation">Polynomials for approximation</a>
+</li>
+</ul>
+<hr/>
+
+$\newcommand{\y}{\mathbf y}
+\newcommand{\bb}{\mathbf b}
+\newcommand{\xx}{\mathbf x}
+\newcommand{\PP}{\mathbf P}
+\newcommand{\RR}{\mathbb R}$
+<title>Polynomial Interpolation</title>
+
+<table width="100%">
+<tr>
+<td align="right"><i>Last
+updated on:
+THU FEB 27 IST 2020</i></td>
+</tr>
+</table>
+
+
+<h1><a
+name="Polynomial interpolation">Polynomial interpolation</a></h1>
+Here we shall work with <b>polynomial</b>s.  These are functions with  the
+following form:
+$$f(x) = a_0 + a_1 x + \cdots + a_n x^n,$$
+where $n$ is any nonnegative integer, $a_0,...,a_n$ are any fixed numbers,
+with $a_n\neq 0.$ Here are some terminology related to polynomials:
+<ol type="">
+
+<li> $n$ is called the <i> degree</i>,
+</li>
+<li> $a_0,...,a_n$ are called the <i> coefficients</i>
+
+</li>
+<li> $a_0$ is called the <i> constant term</i>
+
+</li>
+</ol>
+Polynomials have many uses in mathematics. Here we shall learn about 
+<b>polynomial interpolation</b>. The following example introduces this.
+
+<p>
+<b>EXAMPLE:</b>&nbsp;
+Suppose that $f(x)$ is a polynomial of degree 2 with $f(1) = 2,$
+$f(2) = 5,$ 
+and $f(4) = 2.$ Find the formula of $f(x).$<p></p>
+<b>SOLUTION:</b>
+ Since $f(x)$ has  degree 2, it must be of the form
+$$f(x) = a + b x + c x^2,$$
+where the coefficient $a,b,c$ are to be determined. Since $f(1)=2,$
+$$2 = a + b\times 1 + c\times 1^2 = a+b+c.$$
+Similarly, we get two other equations:
+$$\begin{eqnarray*}
+5 &amp; =&amp;  a+2b+4c\\
+2 &amp; =&amp;  a+4b+16c
+\end{eqnarray*}$$
+Solving all the three equations together we get $a=-4,b=15/2,c=-3/2.$
+<img src="../image/box.png"></p>
+
+In this example we say that $f$ <b>interpolates</b> the three points 
+$$(1,2), (2,5) \mbox{ and }(4,2).$$
+We also call $f$  an <b>interpolating polynomial</b>  for this set of 3 points.
+<p></p>
+Here we see that there is exactly one polynomial of degree 2 that
+interpolates these 3 points. A polynomial of degree 2 has 2+1=3 unknown
+coefficients, $a,b$ and $c.$ We solved for these from the 3 equations. 
+This can be generalized to the following
+result. 
+
+<fieldset>
+<legend><b><i>Theorem</i></b></legend>
+Suppose that we have $n+1$ points:
+$$(x_0,y_0),(x_1,y_1),...,(x_n,y_n),$$
+where 
+$x_0,...,x_n$ are <i> distinct</i> numbers (no such condition on the $y_i$'s).
+Then there is exactly one polynomial $f$  of degree $\leq n$ that interpolates these
+$n+1$ points,  <i>i.e.</i>,
+$$f(x_i) = y_i \mbox{ for }0\leq i\leq n.$$
+</fieldset>
+
+<p>
+<b><i>Proof:</i></b>
+The conditions 
+$$f(x_i) = y_i \mbox{ for }0\leq i\leq n$$
+can be written as a linear system in terms of the
+coefficients of the polynomial:
+$$
+V \bb = \y, 
+$$
+where $\bb = (b_0, b_1,...,b_n)'$ is the vector of coefficients to be determined, $\y = (y_0,...,y_n)$ and
+$$
+V = \left[\begin{array}{ccccccccccc}
+1 &amp;  x_0 &amp;  x_0^2 &amp;  \cdots &amp;  x_0^n\\
+1 &amp;  x_1 &amp;  x_1^2 &amp;  \cdots &amp;  x_1^n\\
+\vdots &amp;  \vdots &amp;  \vdots &amp;  \vdots &amp;  \vdots\\
+1 &amp;  x_n &amp;  x_n^2 &amp;  \cdots &amp;  x_n^n
+
+\end{array}\right].
+$$
+One may check by induction that $V$ has determinant 
+$$|V| = \prod_{i&gt; j} (x_i-x_j).$$
+Since the $x_i$'s are all distinct, this implies that $V$ is
+nonsingular, completing the proof. By the way, $V$ is an important
+matrix that is useful  elsewhere also. It is called a <b>Vandermonde matrix</b>. 
+<b><i>[QED]</i></b>
+</p>
+
+In this page we shall learn to solve the following problem:
+<blockquote>Given $(n+1)$ points $(x_0,y_0),...,(x_n,y_n),$
+how to find the unique interpolating polynomial $f(x)$  with degree $\leq n?$</blockquote>
+ We shall always
+assume that the $x_i$'s are distinct. (Why is this a natural assumption?)
+<p></p>
+One possible way is to imitate the proof of the above theorem, and solve a linear system of
+ $n+1$  equations in $n+1 $ unknowns. 
+But this is not efficient, because it
+fails to take into account the Vandermonde structure of the coefficient
+matrix. We shall now
+learn some simpler ways of finding $f(x).$
+
+<h2><a
+name="Lagrange's formula">Lagrange's formula</a></h2>
+Lagrange devised a technique by which one may immediately write down the interpolating polynomial. 
+We shall explore his intuitive approach through a few examples.
+
+<p>
+<b>EXAMPLE:</b>&nbsp;Can you quickly write down a nonzero polynomial that vanishes at $1$, $3$  and $100?$<p></p>
+<b>SOLUTION:</b>
+Typically the simplest  answer to flash across our minds, is $(x-1)(x-3)(x-100).$   You can
+ also multiply this with any other polynomial to get another answer. Indeed, all answers may be obtained in this way.<img src="../image/box.png"></p>
+
+Lagrange started with this simple idea, and extended it to the following problem.
+
+<p>
+<b>EXAMPLE:</b>&nbsp;Same problem as before, but now with the two extra conditions: $f$  must have degree
+ $\leq 3$  and also $f(50)=1.$<p></p>
+<b>SOLUTION:</b>
+Since we still need $f$  to vanish at $1,$  $3$  and $100,$  we must start building from $(x-1)(x-3)(x-100).$ 
+This already has degree $3.$  So no further growth is allowed. We can only multiply it with some constant. At $x=50$ 
+ this has value $(50-1)(50-3)(50-100).$  To bring it down to $1,$  we have to divide it by this to get the unique
+ answer:
+$$f(x) = \frac{(x-1)(x-3)(x-100)}{(50-1)(50-3)(50-100)}.$$
+<img src="../image/box.png"></p>
+This motivates the definition of <i>Lagrangian polynomial</i> s. If $x_0,...,x_n$  are any $n+1$  distinct numbers,
+ then for $i=0,1,...,n,$  the $i$-th Lagrangian polynomial is 
+defined as
+$$L_i(x) =
+\frac{(x-x_0)\times\cdots\times(x-x_{i-1})\times(x-x_{i+1})\times\cdots\times(x-x_n)}
+{(x_i-x_0)\times\cdots\times(x_i-x_{i-1})\times(x_i-x_{i+1})\times\cdots\times(x-x_n)}.$$
+Here the numerator is the product of all terms of the form $(x-x_j)$ for
+$j\neq i.$ The denominator is the same as the numerator, except that $x$ is
+replaced by $x_i.$
+<p>
+<b>EXERCISE:</b>&nbsp;
+  Show that $L_i(x)$  is the unique $\leq n$  degree polynomial with $L_i(x_i) = 1$
+ and $L_i(x_j) = 0$
+ for all $j\neq i.$ 
+<img src="../image/box.png"></p>
+
+Let us compute the $L_i$'s explicitly in an example.
+
+<p>
+<b>EXAMPLE:</b>&nbsp;
+Consider the following $x_i$'s: $x_0=1$, $x_1=3$
+and $x_2=-2.$
+Find the Lagrangian polynomials.
+<p></p>
+<b>SOLUTION:</b>
+Here 
+$$\begin{eqnarray*}
+  L_0(x) &amp; =&amp;  \frac{(x-3)\times(x-(-2))}
+  {(1-3)\times(1-(-2))}\\
+&amp; =&amp;  (6+x - x^2)/6.
+\end{eqnarray*}$$
+Similarly, check that
+$$L_1(x) = (x^2+x-2)/10,$$ 
+and 
+$$L_2(x)= (x^2-4x+3)/15.$$ 
+Observe that this example does not
+mention the $y_i$'s at all, since they are not required to compute the
+$L_i$'s.  
+<img src="../image/box.png"></p>
+
+
+<fieldset>
+<legend><b><i>Lagrange's interpolation</i></b></legend>
+  Consider the original problem of interpolating $(x_0,y_0),...,(x_n,y_n).$ The unique interpolating polynomial of
+  degree $\leq n$ is given by
+$$f(x) = y_0 L_0(x) + y_1 L_1(x) +\cdots+ y_n L_n(x).$$
+This is called the  <b>Lagrangian interpolating polynomial</b>.
+</fieldset>
+
+<p>
+<b><i>Proof:</i></b>
+It is easy to see why this $f(x)$ answers our need. At $x=x_i$
+$$\begin{eqnarray*}
+  f(x_i) &amp; =&amp;  y_0 L_0(x_i) + y_1 L_1(x_i) +\cdots+ y_n L_n(x_i)\\
+         &amp; =&amp;  y_0 \times 0 + y_1 \times 0 +\cdots+y_i\times 1+\cdots+ y_n
+         \times 0\\
+&amp; =&amp;  y_i
+\end{eqnarray*}$$
+<b><i>[QED]</i></b>
+</p>
+
+<p>
+<b>EXAMPLE:</b>&nbsp;
+  Let us apply Lagrange interpolation to the following table:
+<pre>
+i xi yi
+0  1  12
+1  3  10
+2 -2 -15
+</pre>  
+
+We have already computed the polynomials $L_0, L_1$ and $L_2.$ So the
+unique degree 3 interpolating polynomial is 
+$$\begin{eqnarray*}
+  f(x) &amp; =&amp;  y_0L_0(x)+ y_1L_1(x)+ y_2L_2(x)\\
+       &amp; =&amp;  12(6+x - x^2)/6 + 10(x^2+x-2)/10 - 15(x^2-4x+3)/15\\
+       &amp; =&amp;  -2x^2+7x+7.
+\end{eqnarray*}$$
+<img src="../image/box.png"></p>
+
+
+<p>
+<b>EXERCISE:</b>&nbsp;
+  Find the interpolating polynomial for the following points using
+  Lagrange's method.
+<pre>
+i xi   yi
+0  1   0
+1  3  -1
+2 -2   3
+3  0 100
+</pre>
+
+<img src="../image/box.png"></p>
+
+
+<p>
+<b>EXAMPLE:</b>&nbsp; Show that
+$$L_0(x)+L_1(x)+\cdots+L_n(x) = 1.$$
+Let $f(x)$ denote the left hand side. Notice that it is the Lagrangian interpolating
+polynomial if
+$$y_0=y_1=\cdots=y_n=1.$$
+Thus $f(x)$ is a polynomial of degree $\leq n$ interpolating the $(n+1)$ points
+$$(x_0,1),...,(x_n,1).$$
+Now consider the constant polynomial
+$$g(x)\equiv 1.$$
+It is a polynomial of degree $\leq n$  that
+interpolates the same $(n+1)$ points.
+<p></p>
+Since there is <i> exactly one</i> polynomial of degree $\leq n$ interpolating
+$(n+1)$ given points, we must have
+$$f(x)=g(x),$$
+that is,
+$$L_0(x)+L_1(x)+\cdots+L_n(x) = 1.$$
+<img src="../image/box.png"></p>
+
+
+
+
+<h2><a
+name="Newton's divided difference method">Newton's divided difference method</a></h2>
+
+Lagrange's method is one way to compute the interpolating polynomial for a
+given set of points. Here is another method called Newton's divided
+difference method. Remember that there is exactly one polynomial of degree
+$\leq n$ interpolating $n+1$ given points. So whether we use Lagrange's method
+or Newton's method we shall always come to the same answer. Only the way
+we compute it will be different, not the final answer. 
+<p></p>
+As before we are working with the points $(x_0,y_0),...,(x_n,y_n),$
+where all the $x_i$'s are distinct. We want to find the unique
+interpolating polynomial, $f(x),$ of degree $\leq n.$ Thus, we have that 
+$$f(x_i) = y_i \mbox{ for } 0\leq i \leq n.$$
+We define the <b>divided differences</b> of $f$ as follows.
+<ol type="">
+
+<li> 0-th order divided difference:
+$$f[x_0] = f(x_0)$$
+  </li>
+<li> 1-st order divided difference:
+$$f[x_1,x_0] = \frac{f[x_1]-f[x_0]}{x_1-x_0}$$
+  </li>
+<li> 2-nd order divided difference:
+$$f[x_2,x_1,x_0] = \frac{f[x_2,x_1]-f[x_1,x_0]}{x_2-x_0}$$
+  </li>
+<li> 3-rd order divided difference:
+$$f[x_3,x_2,x_1,x_0] = \frac{f[x_3,x_2,x_1]-f[x_2,x_1,x_0]}{x_3-x_0}$$
+</li>
+</ol>
+In general, for $1\leq k\leq n,$ 
+we have th $k$-th order divided difference:
+$$f[x_k,x_{k-1},\ldots,,x_1,x_0] = 
+\frac{f[x_k,\ldots,x_1]-f[x_{k-1},\ldots,x_0]}{x_k-x_0}$$
+
+Notice the following points:
+<ol type="">
+
+<li> The divided differences are computed step by step: the 0-th order
+  divided differences are just the given $f(x_i)$'s. The 1-st order
+  divided differences are computed from the 0-th order divided
+  differences. The 2-nd order is computed from the 1-st order, and so on. This step-by-step computation
+  is best done in a tabular way, as we discuss below.
+  </li>
+<li> To compute the divided differences we need only the value of
+  $f(x_i)$'s at the given $x_i$'s. So even without knowing the formula of
+  $f$ we can compute the divided differences.
+</li>
+
+<li>We are not assuming that the $x_i$'s are ordered. </li>
+
+</ol>
+
+
+<h3><a
+name="Divided difference table">Divided difference table</a></h3>
+The following tabular format of the divided differences is called the 
+  <b>divided difference table</b>. Here we have shown it for $n=2.$ 
+
+<pre>
+x0   f[x0]           
+              f[x1,x0]
+x1   f[x1]                  f[x2,x1,x0]
+              f[x2,x1]                  
+x2   f[x2]                                 
+</pre>
+
+We compute this table starting from the left and proceeding toward
+right. 
+
+<p>
+<b>EXAMPLE:</b>&nbsp;
+Consider these values:
+<pre>
+xi  0 1   3   4
+yi -5 1 25 55 
+</pre>
+Compute the divided difference
+table for it.
+<p></p>
+<b>SOLUTION:</b>
+
+<pre>
+0  -5                           
+          6                     
+1   1           2      
+         12         1             
+3   25          6                 
+         30                   
+4   55                          
+</pre>
+
+For instance, the 6 at the top of the $3^{rd}$ column is obtained as 
+$$6 = \frac{1-(-5)}{1-0}.$$
+The last 1 is computed as
+$$1 = \frac{6-2}{4-0}.$$
+<img src="../image/box.png"></p>
+
+
+<p>
+<b>EXERCISE:</b>&nbsp;
+  Compute the divided difference table for the following points.
+<pre>
+i     0   1     2   3   4
+xi    2   3    -2   1   0
+yi   22   -12   4   5   5
+</pre>
+
+<img src="../image/box.png"></p>
+The following J code will help you explore these. You may need
+to <code>load'trig'</code> (if you have not already writted it in
+your <code>startup.ijs</code>) in order to use <code>sin</code>:
+<span class="j">
+<pre>
+d=: dyad : '(x}.y) - (-x)}. y' 
+x=:  0.1 0.2 0.4 0.45 0.6 0.7 0.72 0.9
+y=: sin 0.1 0.2 0.4 0.45 0.6 0.7 0.72 0.9
+y0=:y
+y1=:(1 d y0) % (1 d x)
+y2=:(1 d y1) % (2 d x)
+y3=:(1 d y2) % (3 d x)
+y4=:(1 d y3) % (4 d x)
+y5=:(1 d y4) % (5 d x)
+y6=:(1 d y5) % (6 d x)
+y7=:(1 d y6) % (7 d x)
+]tab=: |: y,y1,y2,y3,y4,y5,y6,:y7
+</pre>
+</span>
+
+<p>
+<a href="javascript:hideShow('tab');">[J Help]</a>
+<div id="tab" style="display:none;background-color:#ffcccc;">
+<ul>
+
+<li>
+<code>3 }. 1 2 3 4 5</code> will remove the first 3 elements,
+and give <code>4 5</code>.</li>
+
+<li>
+<code>_3 }. 1 2 3 4 5</code> will remove the last 3
+elements, and give <code>1 2</code>.</li>
+
+<li>If <code>r1</code>, <code>r2</code> and <code>r3</code> are
+lists of numbers, then we make a matrix with these as rows
+using <code>r1, r2 ,: r3</code>.</li>
+
+</ul>
+</div>
+</p>
+
+<h3><a
+name="Using the table">Using the table</a></h3>
+Once the divided differences have been computed, we can compute the 
+interpolating polynomial $f(x)$ having degree $\leq n$ using the following
+  formula.
+
+<fieldset>
+<legend><b><i>Newton's divided difference formula</i></b></legend>
+$$\begin{eqnarray*}
+f(x) &amp; = &amp;  f[x_0] + \\
+  &amp;      &amp;  (x-x_0)f[x_1,x_0]+\\
+  &amp;      &amp;  (x-x_0)(x-x_1)f[x_2,x_1,x_0]+\\
+  &amp;      &amp;  (x-x_0)(x-x_1)(x-x_2)f[x_3,x_2,x_1,x_0]+\cdots+\\
+  &amp;      &amp;  (x-x_0)\cdots(x-x_{n-1})f[x_n,\ldots,x_0].
+\end{eqnarray*}$$
+</fieldset>
+     
+This of course looks very complicated. However, it is easy to compute it
+using the divided difference table already constructed. We show this in
+the next example.
+
+<p>
+<b>EXAMPLE:</b>&nbsp;
+  Consider the divided difference table constructed in the last example. 
+
+<pre>
+0   <font color="#0000ff">-5</font>              
+          <font color="#0000ff">6</font>      
+1    1         <font color="#0000ff">2</font>   
+         12        <font color="#0000ff">1</font> 
+3   25         6         
+         30           
+4   55                           
+</pre>
+
+Look at the numbers along the ``north-east edge'' (shown in blue in the table):
+$$-5, 6, 2, 1.$$
+These are
+$$f[x_0],f[x_1,x_0],f[x_2,x_1,x_0],f[x_3,x_2,x_1,x_0],$$
+respectively.
+These are the divided differences we shall need in Newton's fundamental
+formula. Apply the formula to see that the required interpolating
+polynomial 
+is 
+$$f(x) = -5+6x+2x(x-1)+x(x-1)(x-3) = x^3+6x^2+7x-5$$
+Though we used only the ''north-east edge'', we indirectly used the entire table, because we need all the 
+entries in the table to compute the final 1 in the table. 
+<img src="../image/box.png"></p>
+Here is some J code to implement the idea. 
+
+<span class="j">
+<pre>
+nx=: 0.5
+c=:{. tab
+terms=: 1,}: */\ nx-x
++/ c * terms
+</pre>
+</span>
+
+<p>
+<a href="javascript:hideShow('forward');">[J Help]</a>
+<div id="forward" style="display:none;background-color:#ffcccc;">
+<ul>
+
+<li>
+<code>{.</code> (head) extracts the first entry of a
+list. Here the first entry of the dividied difference table is
+its first row, <i>i.e.</i>, the "north-east edge".</li>
+
+<li>
+<code>*/</code> is the continued product operation, just
+as summation is the continued addition.</li>
+
+<li>
+<code>\</code> applies a function cumulatively to a
+list. For example, <code>f\ 1 2 3</code> means the list $f(1),
+f(1,2), f(1,2,3).$ In particular, <code>*/\ 1 2 3</code> will
+give <code>1, 1*2, 1*2*3</code>, <i>i.e.</i>, the cumulative
+products.</li>
+
+<li>
+<code>}:</code> (curtail) chop off the tail of a list. For
+example, <code>}: 1 2 3</code> is <code>1 2</code>.</li> 
+
+</ul>
+</div>
+</p>
+
+<p>
+<b>EXERCISE:</b>&nbsp;
+  Find the interpolating polynomial for the table for which we had already
+  used Lagrange's method earlier. Do you get the same answer? You should!
+<img src="../image/box.png"></p>
+
+
+<h2><a
+name="A strange observation">A strange observation</a></h2>
+It is also possible to compute the interpolating polynomial using a more
+graphical way based on the same divided difference table. We shall need
+this when we shall learn about Newton's forward, backward and central
+difference methods. 
+
+The divided difference table is like a isosceles triangle with a vertical base.
+<center>
+<table width="100%">
+<tr>
+<th><img width="" src="image/tab1.png"></th>
+</tr>
+<tr>
+<th>The blue part has the $x_i$'s, the red part has the divided differences.</th>
+</tr>
+</table>
+</center>
+A <b>path</b> in a divided
+difference table is any (possibly zigzag) line through the triangle
+starting from the base and going up to the apex. At each step it can either move up or down by 
+one unit:
+<center>
+<table width="100%">
+<tr>
+<th><img width="" src="image/tab2.png"></th>
+</tr>
+<tr>
+<th>A path</th>
+</tr>
+</table>
+</center>
+Here is a more numerical example.
+<p>
+<b>EXAMPLE:</b>&nbsp;
+Here are two paths.
+<center>
+<table width="100%">
+<tr>
+<th><img width="" src="image/paths.png"></th>
+</tr>
+<tr>
+<th></th>
+</tr>
+</table>
+</center>
+
+<img src="../image/box.png"></p>
+
+
+<p>
+<b>EXERCISE:</b>&nbsp;
+  Draw three other paths for the above table. How many such paths are
+  there in all?
+<img src="../image/box.png"></p>
+
+For each number in the triangle we have its <b>shadow</b>  (not a standard term). It is
+the set of $x_i$'s at the base of
+the small triangle with that number as its apex. 
+<center>
+<table width="100%">
+<tr>
+<th><img width="" src="image/tab3.png"></th>
+</tr>
+<tr>
+<th>Shadow of the red ball is the set of all the $x_i$'s in the black stretch</th>
+</tr>
+</table>
+</center>
+
+<p>
+<b>EXAMPLE:</b>&nbsp;
+  Here is a numerical  example of an shadow.
+<center>
+<table width="100%">
+<tr>
+<th><img width="" src="image/shadow.png"></th>
+</tr>
+<tr>
+<th></th>
+</tr>
+</table>
+</center>
+
+ The number 12 has
+shadow $\{1,3\},$ while the shadow of  $-5$ is $\{0\}.$
+<img src="../image/box.png"></p>
+
+Now we shall mention a strange fact involving
+paths and shadows:
+<ol type="">
+
+<li> Choose <i> any</i> path.
+  </li>
+<li> For each number, $Q,$ in the path, consider the shadow of the
+  number <i> preceding</i> it in the path. Suppose the
+  shadow is $\{x_i,x_{i+1},...,x_j\}.$ 
+Then the contribution of $Q$ to the required interpolating polynomial is
+$$Q\times(x-x_i)(x-x_{i+1})\cdots(x-x_{j-1}).$$
+Add the contributions of all the numbers down the entire path, and you get
+the required polynomial.  The first number in the path has no number
+preceding it. So it just contributes itself. 
+</li>
+</ol>
+Whatever path you choose, this procedure will always produce the same result: the unique interpolating polynomial! 
+
+<p>
+<b>EXAMPLE:</b>&nbsp;
+Here is the same divided difference table once again.
+<center>
+<table width="100%">
+<tr>
+<th><img width="" src="image/apath.png"></th>
+</tr>
+<tr>
+<th></th>
+</tr>
+</table>
+</center>
+
+Suppose we have chosen the path shown. The resulting computation is as
+follows. 
+
+The numbers in this path along with their shadows are given below.
+<center>
+<table style="" border="1">
+
+<tr>
+<th colspan="" rowspan="">Number</th>  <th colspan="" rowspan="">$25$</th><th colspan="" rowspan="">  $12$ </th><th colspan="" rowspan="">  $2$ </th>  <th colspan="" rowspan="">$1$</th>
+</tr>
+
+<tr>
+
+<th colspan="" rowspan="">Shadow</th><th colspan="" rowspan="">$ \{3\}$</th><th colspan="" rowspan="">$ \{1,3\}$</th><th colspan="" rowspan="">$ \{0,1,3\}$</th><th colspan="" rowspan=""> $\{0,1,3,4\}$</th>
+</tr>
+
+</table>
+</center>
+The contribution of the first number is itself, <i> <i>i.e.</i>,</i> 25. The second
+number contributes 
+$$12\cdot(x-3),$$
+since the shadow of the preceding number is $\{3\}.$ Similarly the next two
+numbers contribute
+$$2\cdot(x-1)(x-3)\mbox{ and } 1\cdot(x-0)(x-1)(x-3).$$
+Adding all these we get the required interpolating polynomial as
+$$\begin{eqnarray*}
+  f(x) &amp;  = &amp;  25 +\\
+       &amp;    &amp;  12\cdot(x-3) +\\
+       &amp;    &amp;  2\cdot(x-1)(x-3) +\\
+       &amp;    &amp;  1\cdot(x-0)(x-1)(x-3)\\
+       &amp;  = &amp;  x^3-2x^2+7x-5
+\end{eqnarray*}$$
+Check by direct computation that we indeed have
+$$f(0)=-5,~~~f(1)=1,~~~f(3)=25 \mbox{ and } f(4)=55.$$
+It is always a good idea to perform 
+this check in the examination to safeguard against mistakes.
+<img src="../image/box.png"></p>
+
+
+<span class="j">
+<pre>
+grow=: 4 : 'if. x=0 do. y,&gt;:&gt;./y else. y,&lt;:&lt;./y end.'
+]v=:? 7#2
+]pos=:;/(+/\.v,0),.i.8
+pos{tab
+]shdw=:}:grow/(|.v),+/v
+terms=:1,nx-shdw{x
++/ (pos{tab) * */\terms
+</pre>
+</span>
+
+<p>
+<a name="path"><b>
+<div id="path">PROJECT:</div>
+</b></a>&nbsp;Prove this strange fact rigourously. [Hint: The following properties of divided differences may help.]<img src="../image/box.png"></p>
+
+
+<h3><a
+name="Some properties of divided differences">Some properties of divided differences</a></h3>
+
+
+<p>
+<b>EXERCISE:</b>&nbsp;
+Show that $f[x_0,x_1] = f[x_1,x_0].$
+<img src="../image/box.png"></p>
+
+Similarly, the order in which the $x_i$'s are written in $f[x_k,...,x_0]$
+does not matter. That is why we could take <i> any</i> path through the
+divided difference table and still arrive the same answer.
+In particular do the following exercise.
+
+<p>
+<b>EXERCISE:</b>&nbsp;
+Let $\pi$ be any permutation of $\{0,1,...,k\}.$ Then show that
+$$f[x_0,x_1,...,x_k] = f[x_{\pi(0)},x_{\pi(1)},...,x_{\pi(k)}].$$
+<img src="../image/box.png"></p>
+
+
+<p>
+<b>EXERCISE:</b>&nbsp;
+Let $x_0,...,x_n$ be distinct real numbers with $a =
+\min\{x_i\}$ and $b = \max\{x_i\}.$
+Let $f:[a,b]\rightarrow\RR$ be an function differentiable $n$
+times. Then 
+$$
+f[x_0,...,x_n] = \frac{f^{(n)}(\xi)}{n!}
+$$
+for some $\xi\in(a,b).$
+<img src="../image/box.png"></p>
+
+
+<p>
+<b>EXERCISE:</b>&nbsp;
+  Show by direct computation that, for any $x\neq x_0,x_1$ and 
+  <i>any</i> function $f,$
+$$f(x) = f[x_0]+(x-x_0)f[x_1,x_0]+(x-x_0)(x-x_1)f[x,x_1,x_0].$$
+<img src="../image/box.png"></p>
+
+The above equality can be generalized to the following theorem.
+
+<fieldset>
+<legend><b><i>Newton's fundamental formula</i></b></legend>
+Let $f:\RR\rightarrow\RR$ be any function and let
+$x_0,...,x_n$ be distinct real numbers. Then for any $x\in\RR$
+$$
+f(x) = p_n(x) + R_n(x),
+$$
+where $p_n$ is the unique polynomial of degree at most $n$ that
+interpolates $f$ at $x_0,...,x_n,$ and the remainder term
+$R_n(x)$ is given by
+$$
+R_n(x) = \left[\prod_{i=0}^n(x-x_i)\right]f[x,x_0,...,x_n].
+$$
+</fieldset>
+
+<p>
+<b><i>Proof:</i></b>Use induction.<b><i>[QED]</i></b>
+</p>
+
+
+<p>
+<b>EXERCISE:</b>&nbsp;
+Prove by induction that Newton's divided difference
+interpolation formula holds.
+<img src="../image/box.png"></p>
+
+ 
+
+
+<h2><a
+name="Who cares and why?">Who cares and why?</a></h2>
+So far we have learned a number of methods to find the unique
+interpolating polynomial for a given set of points, $(x_i,y_i),$ ($0\leq i
+\leq n.$) The natural question is ``Why are we at all interested about
+finding the interpolating polynomial?''
+Here are two 
+applications of interpolating polynomials:
+<ol type="">
+  
+<li> as paintbrushes,
+  </li>
+<li> to get approximations.
+</li>
+</ol>
+ We shall discuss them now.
+<h3><a
+name="Polynomials as paintbrush">Polynomials as paintbrush</a></h3>
+The graphs of polynomials are smooth curves that can take various
+shapes. Engineers and computer graphics people use these much as a painter
+uses his brush: to produce a rich variety of nice flowing curves to suit
+aesthetic needs. The body of your mobile is a good example. Its nice
+curved outline is made of polynomials. To fit the circuit boards, keys etc
+properly this polynomial must pass through certain points. In other words,
+the outline of your mobile phone is made of the polynomials interpolating
+various fixed points. Same is true for car bodies. 
+
+<p></p>
+
+Nowadays we see computer printouts everywhere. Look at the letters in a
+high quality computer printout. You will notice that the outlines are smooth
+curves delicately placed to produce each letter. These outlines are again
+polynomials that interpolate certain points (<i> <i>e.g.</i>,</i> the letter has to
+touch the base line at a given place. 
+<p></p>
+Here is an example:
+<center>
+<table width="100%">
+<tr>
+<th><img width="" src="image/letterpoly.png"></th>
+</tr>
+<tr>
+<th>The letter C from the MS Comic Sans font</th>
+</tr>
+</table>
+</center>
+Each segment is of the form $(x(t),y(t))$
+for $t\in[0,1],$ where $x(t)$ and $y(t)$ are
+quadratic polynomials.
+
+<h3><a
+name="Polynomials for approximation">Polynomials for approximation</a></h3>
+There are many functions other than polynomials 
+whose graphs are also very smooth. Some of these are difficult to
+compute. Often it is possible to find a polynomial that has almost the
+same graph as the complicated function, but yet the polynomial is much
+easier to compute than the original function. In this case we call the
+polynomial as {\bf an approximating polynomial} for that function. 
+
+\medskip
+\noindent{\bf Problem statement:} We have some unknown function $g(x).$ We
+know the value of $g(x)$ only for $x=x_0,...,x_n,$ where $x_i$'s are
+given. If we denote $g(x_i)$ by $y_i,$ then we have the table
+<center>
+<table style="" border="1">
+
+<tr>
+<th colspan="" rowspan="">$i$</th><th colspan="" rowspan=""> 0</th><th colspan="" rowspan=""> 1</th><th colspan="" rowspan=""> $\cdots$</th><th colspan="" rowspan=""> $n$</th>
+</tr>
+
+<tr>
+<th colspan="" rowspan="">
+$x_i$</th><th colspan="" rowspan=""> $x_0$</th><th colspan="" rowspan=""> $x_1$</th><th colspan="" rowspan=""> $\cdots$</th><th colspan="" rowspan=""> $x_n$</th>
+</tr>
+
+<tr>
+<th colspan="" rowspan="">
+$i$</th><th colspan="" rowspan=""> $y_0$</th><th colspan="" rowspan=""> $y_1$</th><th colspan="" rowspan=""> $\cdots$</th><th colspan="" rowspan=""> $y_n$</th>
+</tr>
+
+</table>
+</center>
+We want to approximate $g(x_*)$ for some given $x_*$ that is different from the
+$x_i$'s. 
+
+The way to solve this problem using interpolating polynomials is
+straightforward. Just find the polynomial, $f,$ of degree $\leq n$
+interpolating these points. Then use $f(x_*)$ as an approximation to
+$g(x_*).$ 
+
+
+<p>
+<b>EXAMPLE:</b>&nbsp;
+  Consider the following table.
+
+<center>
+<table style="" border="1">
+
+<tr>
+<th colspan="" rowspan="">$i$</th><th colspan="" rowspan=""> 0</th><th colspan="" rowspan=""> 1</th><th colspan="" rowspan=""> 2</th><th colspan="" rowspan=""> 3</th>
+</tr>
+
+
+<tr>
+<th colspan="" rowspan="">$x_i$</th><th colspan="" rowspan=""> $0.0$</th><th colspan="" rowspan=""> $0.5$</th><th colspan="" rowspan=""> $1.0$</th><th colspan="" rowspan=""> $1.5$</th>
+</tr>
+
+<tr>
+<th colspan="" rowspan="">
+$g(x_i)$</th><th colspan="" rowspan=""> $0$ </th><th colspan="" rowspan="">  $0.4794$ </th><th colspan="" rowspan="">  $0.8415$ </th><th colspan="" rowspan="">  $0.9975$</th>
+</tr>
+
+</table>
+</center>
+Approximate $g(0.6).$ 
+
+We have equispaced $x_i$'s here, the common difference being $h=0.5.$ Let
+us use Newton's forward difference formula. We start by constructing the
+difference table.
+
+  <center>
+<table style="" border="1">
+
+<tr>
+<th colspan="" rowspan="">
+    $0.0$</th><th colspan="" rowspan=""> $0.0000$</th>
+</tr>
+
+<tr>
+<th colspan="" rowspan="">
+       </th><th colspan="" rowspan="">     </th><th colspan="" rowspan=""> $0.4794$</th>
+</tr>
+
+<tr>
+<th colspan="" rowspan="">
+    $0.5$</th><th colspan="" rowspan=""> $0.4794$ </th><th colspan="" rowspan="">     </th><th colspan="" rowspan=""> $-0.1174$</th>
+</tr>
+
+<tr>
+<th colspan="" rowspan="">
+       </th><th colspan="" rowspan="">     </th><th colspan="" rowspan=""> $0.3620$ </th><th colspan="" rowspan="">    </th><th colspan="" rowspan=""> $-0.0886$</th>
+</tr>
+
+<tr>
+<th colspan="" rowspan="">
+    $1.0$</th><th colspan="" rowspan=""> $0.8415$ </th><th colspan="" rowspan="">     </th><th colspan="" rowspan=""> $-0.2060$</th>
+</tr>
+
+<tr>
+<th colspan="" rowspan="">
+       </th><th colspan="" rowspan="">     </th><th colspan="" rowspan=""> $0.1560$</th>
+</tr>
+
+<tr>
+<th colspan="" rowspan="">
+    $1.5$</th><th colspan="" rowspan=""> $0.9975$</th>
+</tr>
+  
+</table>
+</center>
+
+Using  Newton's forward path we compute $f(0.6)$ as
+$$\begin{eqnarray*}
+  f(0.6) &amp; =&amp;  \frac{0.0000}{0.5^0 0!} +\\
+         &amp;  &amp;  \frac{0.4794(0.6-0.0)}{0.5^1 1!} -\\
+         &amp;  &amp;  \frac{0.1174(0.6-0.0)(0.6-0.5)}{0.5^2 2!} -\\
+         &amp;  &amp;  \frac{0.0886(0.6-0.0)(0.6-0.5)(0.6-1.0)}{0.5^3 3!}\\ 
+         &amp; =&amp;  0.5640\\
+\end{eqnarray*}$$
+In fact, here $g(x)=\sin(x).$ So the actual value is $g(0.6) =0.5646.$
+Thus our approximation is correct  up to 2 decimal places. 
+<img src="../image/box.png"></p>
+
+\noindent{\bf Note:} Two numbers, $a$ and $b,$ are said to be equal up to
+$k$ decimal places if
+$$|a-b| &lt;  5\times10^{k+1}.$$
+
+<p>
+<b>EXERCISE:</b>&nbsp;
+  Use the table above to approximate $g(-1.0)$ and $g(2.0).$ Compare your
+  estimates with the actual values: $g(-1.0) = -0.8415$ and 
+$g(2.0) = 0.9093.$ Are these approximations as accurate as in the example
+  above? Why?
+<img src="../image/box.png"></p>
+
+
+<p>
+<b>EXERCISE:</b>&nbsp;
+  Approximate $h(0.75)$ based on the following values.
+<center>
+<table style="" border="1">
+
+<tr>
+<th colspan="" rowspan="">
+$i$</th><th colspan="" rowspan=""> 0</th><th colspan="" rowspan=""> 1</th><th colspan="" rowspan=""> 2</th><th colspan="" rowspan=""> 3 </th>
+</tr>
+
+<tr>
+<th colspan="" rowspan="">
+$x_i$</th><th colspan="" rowspan=""> $0.0$</th><th colspan="" rowspan=""> $0.1$</th><th colspan="" rowspan=""> $0.2$</th><th colspan="" rowspan=""> $0.3$</th>
+</tr>
+
+<tr>
+<th colspan="" rowspan="">
+$h(x_i)$</th><th colspan="" rowspan=""> $1.0000$</th><th colspan="" rowspan="">    $0.9950$</th><th colspan="" rowspan="">  $0.9801$</th><th colspan="" rowspan="">    $0.9553$</th>
+</tr>
+
+</table>
+</center>
+
+<img src="../image/box.png"></p>
+
+
+<h3>Comments</h3>
+To post an anonymous comment, click on the "Name" field. This
+will bring up an option saying "I'd rather post as a guest."
+<p></p><!--
+begin disqus code --> <div id="disqus_thread"></div>
+<script>
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+
+var disqus_config = function () {
+this.page.url = "https://www.isical.ac.in/~arnabc/numana/interpol1.html"; // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = "interpol1"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://txtbk.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript><!-- end disqus code --> 
+
+<hr/>
+<table width="100%" border="0">
+<tr>
+<td align="left"/>
+<td align="right"/>
+</tr>
+</table>
+<hr/>
+</body>
+</html>

@@ -1,0 +1,1210 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta content="text/html;charset=UTF-8" http-equiv="Content-Type"/>
+<link rel="stylesheet" type="text/css" href="../tools/ctut.css"/>
+<link type="text/css" rel="stylesheet" href="../tools/style.css"/>
+<style type="text/css">@font-face {font-family: SHREE_BAN_OTF_0592;src: local("../tools/SHREE_BAN_OTF_0592"),url(../tools/SHREE0592.woff) format("opentype");</style>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<script src="../tools/jquery-1.10.2.min.js"></script>
+
+<script>
+aha = function(code) {
+  window.open("https://rdrr.io/snippets/embed/?code="+code)
+}
+
+togglePhoto = function(photoId) {
+   var me = document.getElementById("pic_"+photoId)
+   if(me.style.display=="block"){
+     me.style.display="none";
+   }
+   else if (me.style.display=="none"){
+     me.style.display="block";
+   }
+}
+
+hideShow = function(lb) {
+   var me = document.getElementById(lb)
+   if(me.style.display=="block"){
+     me.style.display="none";
+   }
+   else if (me.style.display=="none"){
+     me.style.display="block";
+   }
+}
+
+grabData = function(data){
+  return "https://farm"+data.photo.farm+".staticflickr.com/"+data.photo.server+"/"+data.photo.id+"_"+
+            data.photo.secret+".jpg"
+}
+
+fromFlickr = function(photoId) {
+
+$.getJSON("https://api.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=23a138c73bdbe1e68601aa7866924e62&user_id=109924623@N07&photo_id="+photoId+"&lang=en-us&format=json&jsoncallback=?",
+  function(data) {
+    imgURL = grabData(data)
+    var l = document.getElementById("lnk_"+photoId)
+    l.href = "https://www.flickr.com/photos/109924623@N07/"+photoId
+    var i = document.getElementById("pic_"+photoId)
+    i.src=imgURL
+    i.onload = function() {
+      document.getElementById("status_"+photoId).innerHTML="[Image loaded. Click to show/hide.]"
+    }
+  })
+}
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js","color.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+    tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]},
+    TeX: {
+      Macros: {
+        h: ["{\\hat #1}",1],
+        b: ["{\\overline #1}", 1],
+        row: "{\\mathcal R}",
+        col: "{\\mathcal C}",
+        nul: "{\\mathcal N}"
+      }
+    }
+  });
+</script><script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script src="../tools/htmlwidgets.js"></script>
+<link href="../tools/rgl.css" rel="stylesheet"></link>
+<script src="../tools/rglClass.src.js"></script>
+<script src="../tools/CanvasMatrix.src.js"></script>
+<script src="../tools/rglWebGL.js"></script>
+</head>
+<body>
+<a href="http://www.isical.ac.in/~arnabc/">[Home]</a>
+<h3>Table of contents</h3>
+<ul>
+<li>
+<a href="#Fixed-point iteration">Fixed-point iteration</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;
+<a href="#Checking convergence">Checking convergence</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;
+<a href="#Rate of convergence">Rate of convergence</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;
+<a href="#Convergence rate of Newton-Raphson">Convergence rate of Newton-Raphson</a>
+</li>
+<li>
+<a href="#Combining Newton-Raphson and bisection methods">Combining Newton-Raphson and bisection methods</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;
+<a href="#Regula falsi">Regula falsi</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;
+<a href="#Secant method">Secant method</a>
+</li>
+<li>
+<a href="#Polynomial roots">Polynomial roots</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;
+<a href="#Horner's method to compute, differentiate and deflate a polynomial">Horner's method to compute, differentiate and deflate a polynomial</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="#Computing">Computing</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="#Differentiating">Differentiating</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;
+<a href="#Deflating a polynomial by Horner's method">Deflating a polynomial by Horner's method</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;
+<a href="#Finding complex roots">Finding complex roots</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;
+<a href="#Muller's method">Muller's method</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;
+<a href="#Real root isolation">Real root isolation</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="#Proof">Proof</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;
+<a href="#How Matlab does it">How Matlab does it</a>
+</li>
+</ul>
+<hr/>
+
+$
+\newcommand{\bf}{{\bf f}}
+\newcommand{\bx}{{\bf x}}
+\newcommand{\by}{{\bf y}}
+\newcommand{\bz}{{\bf 0}}$
+<title>Nonlinear equations</title>
+
+<table width="100%">
+<tr>
+<td align="right"><i>Last
+updated on:
+SUN MAR 22 IST 2020</i></td>
+</tr>
+</table>
+
+
+
+<h1><a
+name="Fixed-point iteration">Fixed-point iteration</a></h1>
+A value $a$ is called a fixed point of a function $f(x)$ if
+$f(a) = a.$ Finding the fixed point of $f(x)$ is the same as
+finding a zero of $f(x)-x.$ One simple way to compute a fixed point
+of $f(x)$ is to start with some initial guess $x_0$ and then to
+iterate 
+$$
+x_{k+1} = f(x_k).
+$$
+However, this is not guaranteed to converge. 
+<p>
+<b>EXAMPLE:</b>&nbsp;
+Let us try to solve the equation 
+$$
+x = \cos(x).
+$$
+We start with the initial guess
+ $x_0=1.$
+Here are the values of a few iteration:
+<pre>
+k       x_k     cos(x_k)
+-------------------------
+  2   1.00000   0.54030
+  3   0.54030   0.85755
+  4   0.85755   0.65429
+  5   0.65429   0.79348
+  6   0.79348   0.70137
+  7   0.70137   0.76396
+  8   0.76396   0.72210
+  9   0.72210   0.75042
+  10   0.75042   0.73140
+  11   0.73140   0.74424
+  12   0.74424   0.73560
+  13   0.73560   0.74143
+  14   0.74143   0.73751
+  15   0.73751   0.74015
+  16   0.74015   0.73837
+  17   0.73837   0.73957
+  18   0.73957   0.73876
+  19   0.73876   0.73930
+  20   0.73930   0.73894
+</pre>
+
+<img src="../image/box.png"></p>
+It is instructive to see the iterations graphically. A fixed
+point of $f(x)$ means a point where the graph of $f(x)$
+meets the $y=x$ line. The fixed point iterations above may
+be visualised as the following "cobweb diagram" (the blue line is
+the graph of $\cos x,$ the red diagonal is the $y=x$
+line).
+<center>
+<table width="100%">
+<tr>
+<th><img width="" src="image/cobweb1.png"></th>
+</tr>
+<tr>
+<th> Cobweb Diagram</th>
+</tr>
+</table>
+</center>
+The following code snippet produces this.
+<span class="j">
+<pre>
+fp1=: (],f),:(f,f)
+fp=: ],fp1 @ {. @ {:
+f=: cos
+x=: (i.100) % 99
+plot x ; f x
+pd x ; x
+pd ;/ |: fp^:20 (1 2 $ 1 0)
+pd'show'
+</pre>
+</span>
+
+<p></p>
+
+The next example shows a case where the fixed point iteration does not
+converge.
+
+<p>
+<b>EXAMPLE:</b>&nbsp;
+Let us apply the fixed point iteration to solve $x = f(x)=x^2.$ If we
+start from $|x_0|&gt;1,$ the sequence $\{x_k\}$ defined by 
+$$
+x_k = x_{k-1}^2
+$$ 
+diverges to infinity. If, however, $|x_0|&lt; 1$ then the sequence
+converges to the fixed point $0.$ To converge to the fixed point 1,
+you need to start with $x_0=\pm1.$
+<img src="../image/box.png"></p>
+
+Notice that the iteration $x_{k+1} = f(x_k)$ does not make sense if
+$f(x_k)$ falls outside the domain of $f,$ since then we cannot
+compute $x_{k+2} = f(x_{k+1})$ in the next step. So we need to make
+the following assumptions:
+<ol type="">
+
+<li>There is an interval $[a,b]$ such that $f(x)$ maps $[a,b]
+$ into $[a,b],$</li>
+
+<li>$f(x)$ is continuous over $[a,b]$</li>
+
+<li>$x_0\in[a,b].$</li>
+
+</ol>
+
+
+<fieldset>
+<legend><b><i>Theorem</i></b></legend>
+The above conditions guarantee that $f(x)$ has at least one fixed
+point in $[a,b].$
+</fieldset>
+
+<p>
+<b><i>Proof:</i></b>
+If $f(a)=a$ or $f(b)=b,$ we are done. Otherwise, 
+$f(a)?a$ and $f(b)&lt; b.$ Let the points $(a,f(a))$ and
+$(b,f(b))$ be denoted by $A$ and $B,$ respectively. Then
+the graph of $f(x)$ is a continuous curve from $A$ to $B,$
+and hence it must intersect the diagonal at least once. Any such
+intersection is a fixed point of $f(x).$ 
+<center>
+<table width="100%">
+<tr>
+<th><img width="" src="image/fixed.png"></th>
+</tr>
+<tr>
+<th>A continuous curve from $A$ to $B$ must cross the diagonal</th>
+</tr>
+</table>
+</center>
+
+<b><i>[QED]</i></b>
+</p>
+
+The following theorem gives  a sufficient condition for the fixed point
+iteration to converge. 
+
+<fieldset>
+<legend><b><i>Theorem</i></b></legend>
+Let $f(x)$ satisfy the conditions above. We further assume that
+$f(x)$ is differentiable over $[a,b]$ and
+$|f'(x)| \leq K$ for $x\in[a,b]$ for some $K&lt;1.$ Then $f(x)$ has 
+exactly one fixed point in $[a,b],$ and the iteration  converges to
+this point.
+</fieldset>
+
+<p>
+<b><i>Proof:</i></b>
+We already know that $f(x)$ has at least one fixed point in
+$[a,b].$ Let it have at least two fixed points $\xi$ and
+$\eta$ in $[a,b],$ if possible. Define $g(x) = f(x)-x.$
+Then $g(\xi) = g(\eta)=0.$ So, by Rolle's theorem, $g'$ must
+vanish for some point $\theta$ in $(\xi,\eta).$ Hence, 
+$$
+g'(\theta) = f'(\theta)-1=0,
+$$
+which is impossible since $|f'(x)| &lt;  1$ for all $x\in[a,b].$
+This proves that $f(x)$ has exactly one fixed point in $[a,b].$
+
+<p></p>
+
+Let this unique fixed point be denoted by $\xi.$
+We want to show that $x_n\rightarrow \xi$ as $n\rightarrow\infty.$
+Define $e_n = x_n-\xi.$ 
+Then 
+$$\begin{eqnarray*}
+e_{n+1} &amp;  = &amp;  x_{n+1}-\xi\\
+&amp;  = &amp;  f(x_n)-f(\xi)\\
+&amp;  = &amp;  f'(\lambda)(x_n-\xi),
+\end{eqnarray*}$$
+for some $\lambda$ between $x_n$ and $\xi,$ by the mean
+value theorem. Thus,
+$$
+e_{n+1} = f'(\lambda) e_n\leq K|e_n|.
+$$
+Using this repeatedly,
+$$
+|e_n| \leq K^n |e_0| \rightarrow 0 \mbox{ as } n\rightarrow\infty,
+$$
+completing the proof.
+<b><i>[QED]</i></b>
+</p>
+
+
+<h2><a
+name="Checking convergence">Checking convergence</a></h2>
+Here we shall take a second look at numerical methods to solve
+equations of the form
+$$
+f(x)=0,
+$$
+that we cannot easily solve analytically.
+<p></p>
+A typical numerical method (like the Newton-Raphson method) is iterative in nature, <i>i.e.</i>, it generates
+a sequence $x_0,x_1,x_2,...$ that (hopefully) converges to a
+root of the equation. In the first part of the course, we have
+deliberately avoided the question: How to check for convergence?
+We have just used the naive approach of stopping whenever two
+successive iterates are "close enough". Here  we provide a longer list:
+<ol type="">
+
+<li>We can  stop if  $|f(x_n)|&lt; \eta,$ where $\eta$ is 
+a prespecified tolerance in the $f$-space.</li>
+
+<li> Often we use the stopping criterion
+$|x_n-x_{n-1}|&lt; \epsilon,$ where $\epsilon $
+is a prespecified tolerance in the $x$-space. This is very
+popular because it is easy to compute. This is what we have been
+using so far. While it often works well in practice, it is really not a
+guarantee that $x_n$ is near the true root $\xi$ or $f(x_n)$ is near
+0. If you are using this stopping criterion then it is a wise thing to
+separately check that $f(x_n)$ is indeed close to zero.</li>
+
+<li>Usually, it is better to use the criterion $|[|
+\frac{x_n-x_{n-1}}{x_{n-1}} |]| &lt; \epsilon,$
+where $\epsilon $ is some specified relative tolerance.</li>
+
+<li>We must keep a provision to deal with divergent (or very slowly
+convergent) sequences. So we must stop if $n\geq n_{max},$ where
+$n_{max}$ is some prespecified maximum number of iteration. If this
+number is reached, we should output a ``No convergence''
+message. 
+</li>
+
+</ol>
+Thus, a typical iterative algorithm to solve $f(x)=0$ may need three
+convergence checking inputs from the user: $\epsilon, \eta$ and
+$n_{max}.$ Of these, $n_{max}$ and at least one of
+$\epsilon$ and $\eta$ must be present. 
+
+<p></p>
+
+<b>Always treat iterative method outputs with suspicion!</b> The
+reason is simple: 
+<blockquote>
+
+<img src="image/alert.png">
+The convergence behaviour of an infinite
+sequence is not affected by only finitely many terms. Yet a
+computer can check only finitely many terms to determine convergence.
+</blockquote>
+The
+following example is meant to scare you. 
+
+<p>
+<b>EXAMPLE:</b>&nbsp;
+A foolish guy is trying to find the sum $\sum_1^\infty
+\frac 1n.$ He is using the iterative method:
+$$
+s_n = s_{n-1} + \frac 1n\mbox{ for } n\in{\mathbb N}
+$$
+starting with $s_0 = 0.$ He is using $\epsilon =
+0.000001.$ What is the result?
+<p></p>
+<b>SOLUTION:</b>
+He tests $|s_n-s_{n-1}| &lt; \epsilon,$ <i>i.e.</i>, $\frac 1n &lt;
+\epsilon,$ which occurs for $n=1+10^7.$ 
+<p></p>
+So this fellow will find a finite limit of this divergent
+sequence.
+<span class="j">
+<pre>
++/% 1+i.1+1e7
+</pre>
+</span>
+The answer is 16.6953. Wow!
+<img src="../image/box.png"></p>
+
+Before you lose all faith in iterative methods, however, do please try
+the next exercise:
+
+<p>
+<b>EXERCISE:</b>&nbsp;
+We know $\sum\frac{1}{n^2} = \frac{\pi^2}{6}.$ Use the iteration
+$$
+s_n = s_{n-1} + \frac{1}{n^2}\mbox{ for } n\in{\mathbb N}
+$$
+starting with $s_0 = 0.$ Use the same $\epsilon $ as
+before. How close are you getting to $\frac{\pi^2}{6}$
+<p>
+<b>Hint:</b>
+<blockquote>
+
+<span class="j">
+<pre>
++/% *~1+i.1+1e7
+</pre>
+</span>
+
+</blockquote>
+</p>
+<img src="../image/box.png"></p>
+
+
+<h2><a
+name="Rate of convergence">Rate of convergence</a></h2>
+So far we have seen that fixed point iteration converges under certain
+conditions. The next question is `How fast does it converge?' To quantify
+rate of convergence we need the following definition.
+
+<fieldset>
+<legend><b>Definition: </b></legend>
+Suppose that we have generated the sequence $\{x_n\}$ by the fixed
+point iteration that converges to a fixed point $\xi.$ Define $e_n
+= x_n-\xi.$ We shall assume that $e_n\neq 0 $ for all $n.$
+We say that the fixed point iteration converges <i>with rate $p$</i> if
+$$
+\lim_{n\rightarrow\infty}\left|\frac{e_n}{e_{n-1}^p}\right|
+$$
+is finite and nonzero.
+</fieldset>
+The assumption  that $e_n$'s are all nonzero is actually a trivial
+one, since if $e_n=0$ for some $n$ then  $e_k=0$ for
+all $k\geq n.$ In this  case we have exactly found the answer, and so we
+shall not care about the rate of convergence.
+
+<fieldset>
+<legend><b><i>Theorem</i></b></legend>
+Let $f$ be a continuously differentiable function with $|f'(x)| &lt;  1$ for $x\in[a,b].$ Let $\xi$ be the
+unique  fixed point of $f(x)$ in $[a,b].$ If
+$f'(\xi)\neq0,$ then the rate of convergence is linear.
+</fieldset>
+
+<p>
+<b><i>Proof:</i></b>
+It is easy to see that 
+$$
+\lim_{n\rightarrow\infty}\left|\frac{e_n}{e_{n-1}}\right| = |f'(\xi)|.
+$$
+<b><i>[QED]</i></b>
+</p>
+
+
+<fieldset>
+<legend><b><i>Theorem</i></b></legend>
+Let Let $f$ be twice continuously differentiable function with $|f'(x)| &lt;  1$ for $x\in[a,b].$ Let $\xi$ be the
+unique  fixed point of $f(x)$ in $[a,b].$ If
+$f'(\xi)=0,$ and $f''(\xi)\neq0$ then the rate of convergence is quadratic.
+</fieldset>
+
+<p>
+<b><i>Proof:</i></b>
+We have for some $\lambda_n$ between $\xi$
+and $x_n,$ 
+$$\begin{eqnarray*}
+f(x_n) 
+&amp; =&amp;  f(\xi) + f'(\xi)(x_n-\xi) + \frac{f''(\lambda_n)}{2!}(x_n-\xi)^2\\
+&amp; =&amp;  f(\xi)+ \frac{f''(\lambda_n)}{2!}(x_n-\xi)^2.
+\end{eqnarray*}$$
+
+So 
+$$
+e_{n+1} = x_{n+1}-\xi = f(x_n)-f(\xi) =  \frac{f''(\lambda_n)}{2!}e_n^2.
+$$
+
+Taking limit as $n\rightarrow\infty$ and using the continuity
+of $f''$ we have
+$$
+\left|\frac{e_{n+1}}{e_n^2}\right| \rightarrow  \frac{f''(\xi)}{2}
+$$
+completing the proof.
+<b><i>[QED]</i></b>
+</p>
+
+
+<h2><a
+name="Convergence rate of Newton-Raphson">Convergence rate of Newton-Raphson</a></h2>
+To solve $g(x)=0,$ the Newton-Raphson iteration is 
+$$
+x_{n+1} = x_n-\frac{g(x_n)}{g'(x_n)}.
+$$
+This is a fixed point iteration $x_{n+1} = f(x_n),$ where
+$$
+f(x) = x-\frac{g(x)}{g'(x)}.
+$$
+Let $\xi$ be a zero of $g(x)$ where the iteration
+converges. Assume that $g'(\xi)\neq0.$ Then 
+$$
+f'(\xi) = 1-\frac{(g'(\xi))^2-g(\xi)g''(\xi)}{(g'(\xi))^2} = 0.
+$$
+However, if $g'(\xi)=0,$ then the Newton-Raphson iteration converges
+only linearly.
+
+<h1><a
+name="Combining Newton-Raphson and bisection methods">Combining Newton-Raphson and bisection methods</a></h1>
+We have learned about the Newton-Raphson and bisection methods in
+the first part of the course. The Newton-Raphson method converges
+fast, but requires the derivative. The bisection method converges
+slowly, does not require the derivative to exist (needs only
+continuity), and requires two initial points, $x_0$
+and $x_1,$ suchthat $f(x_0)$ and $f(x_1)$ have
+opposite signs.
+
+<p></p>
+It is possible to merge these two methods into a single method
+that tries to balance to the good properties of both, while
+avoiding their disdvantages. The method has two variants: you
+call it <b>Regula Falsi</b> when you consider as a faster alternative to
+the bisection method, and call it the <b>secant method</b> when you
+consider at a derivative-free version of the Newton-Raphson method.
+<h2><a
+name="Regula falsi">Regula falsi</a></h2>
+This method is a close kin of the bisection method. Here also we start
+with an interval $(l_0,r_0)$ such that $f(l_0)$ and
+$f(r_0)$ have opposite signs. However, unlike the bisection method,
+here we define $m_k$ as the value of $x$ where the line joining 
+$(l_k,f(l_k))$ and $(r_k,f(r_k))$ intersects the $x$-axis. 
+
+<center>
+<table width="100%">
+<tr>
+<th><img width="" src="image/regfal.png"></th>
+</tr>
+<tr>
+<th>Regula falsi</th>
+</tr>
+</table>
+</center>
+
+<h2><a
+name="Secant method">Secant method</a></h2>
+Here we shall approximate $f(x)$ locally using a straight
+line. Suppose that we know that $f(x_0)=y_0$ and $f(x_1)=y_1.$
+We shall join the points $(x_0,y_0)$ and $(x_1,y_1)$ with a
+straight line and see where it hits the $x$-axis. The value of
+$x$ where the line hits the $x$-axis will be called $x_2.$
+In general, if $L_i$ denotes the straight line joining
+$(x_{i-1},y_{i-1})$ and $(x_{i},y_{i})$ then $x_{i+1}$ is
+defined as the value of $x$ where $L_i$ hits the
+$x$-axis. (If $L_i$ happens to be parallel to the $x$-axis,
+the algorithm stops with the message ``Failure.'') 
+<center>
+<table width="100%">
+<tr>
+<th><img width="" src="image/secant.png"></th>
+</tr>
+<tr>
+<th>Secant method</th>
+</tr>
+</table>
+</center>
+
+We proceed like this until  convergence.
+
+<p>
+<b>EXAMPLE:</b>&nbsp;
+Let us apply this method to solve $\cos(x)=x.$ We shall take
+$x_0=0$ and $x_1 = 0.5.$ 
+
+<pre>
+k    x_k
+2  0.8033194
+3  0.7353735
+4  0.7390341
+5  0.7390852
+6  0.7390851
+7  0.7390851
+</pre>
+So the answer is 0.739085 up to 6 decimal places.
+<img src="../image/box.png"></p>
+
+
+<span class="j">
+<pre>
+rf=: monad :'y,(],f)+/({: y) * 1, -%/-/_2{.y'
+f=:]-cos
+rf^:10 (],.f) 0 0.5
+</pre>
+</span>
+
+
+<h1><a
+name="Polynomial roots">Polynomial roots</a></h1>
+Finding the roots of a polynomial is important in different branches of
+science. It is a special case of solving nonlinear equations. However, it
+has one difference from the functions discussed so far, namely, a
+polynomial may have complex roots. We shall first see how we can apply
+Newton-Raphson method to find a real root of a polynomial starting from an
+initial approximation. Later we shall attack the problem of finding
+complex roots of polynomials. 
+
+Let $f(x)$ be the polynomial whose root we want to find. Let
+$x_0$ be an initial approximation to the root. Then the
+Newton-Raphson iteration is 
+$$
+x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)}.
+$$
+This is just the general Newton-Raphson iteration, nothing special about
+polynomials. The fact that $f(x)$ is a polynomial makes the
+computation of $f'(x)$ simple, as we show next.
+
+<h2><a
+name="Horner's method to compute, differentiate and deflate a polynomial">Horner's method to compute, differentiate and deflate a polynomial</a></h2>
+
+<h3><a
+name="Computing">Computing</a></h3>
+Suppose that $f(x) = a_0+a_1x+a_2x^2+\cdots+a_nx^n.$ Then
+Horner's method is to to compute it in a nested form, so that we
+do not have to compute each power of $x$ from scratch (<i>e.g.</i>,
+if we have already computed $x^2$, we can compute $x^3$
+as $x^2\times x,$ instead of $x\times x\times x$). Here
+is an example.
+
+<p>
+<b>EXAMPLE:</b>&nbsp;
+Express $1+3x-4x^2+10x^3$ in Horner's form.
+<p></p>
+<b>SOLUTION:</b>
+$1+x(3+x(-4+x(10))).$
+<img src="../image/box.png"></p>
+The general scheme to compute $f(x) =
+a_0+a_1x+a_2x^2+\cdots+a_nx^n$ is
+$$\begin{eqnarray*}
+b_n &amp;  = &amp;  a_n\\
+b_i &amp;  = &amp;  a_i + b_{i+1}x \quad\mbox{ for } i=n-1,...,0.
+\end{eqnarray*}$$
+The required value of the polynomial is $b_0.$
+
+<h3><a
+name="Differentiating">Differentiating</a></h3>
+We can use Horner's method to differentiate a
+polynomial $f(x),$ because $f'(x)$ is
+again a polynomial. So  we can compute it by Horner's method:
+$$\begin{eqnarray*}
+c_{n-1} &amp;  = &amp;  na_n\\
+c_i &amp;  = &amp;  ia_i + c_{i+1}x \quad \mbox{ for } i=n-2,...,0.
+\end{eqnarray*}$$
+At the end of the iteration $c_0$ stores the required value of
+$f'(x).$
+
+<h2><a
+name="Deflating a polynomial by Horner's method">Deflating a polynomial by Horner's method</a></h2>
+Suppose that we have found one zero, $\alpha,$ of a polynomial, $f(x).$
+Then $(x-\alpha)$ is a factor of $f(x).$ 
+To find the other roots of the polynomial we need to divide $f(x)$ by 
+$(x-\alpha)$ to get a polynomial of degree one less than that of
+$f(x).$
+This is called <i>deflating</i> the polynomial by
+$\alpha.$ The $b_i$'s of Horner's method can be used to compute
+the deflated polynomial. The following theorem is the key to this method.
+
+<fieldset>
+<legend><b><i>Theorem</i></b></legend>
+Let $f(x) = a_0+a_1x+a_2x^2+\cdots+a_nx^n$ be a polynomial. Consider
+the Horner's iteration scheme to evaluate it at $x=\alpha:$
+$$\begin{eqnarray*}
+b_n &amp;  = &amp;  a_n\\
+b_i &amp;  = &amp;  a_i + b_{i+1}\alpha \quad\mbox{ for } i=n-1,...,0.
+\end{eqnarray*}$$
+Define $g(x) = b_1+b_2x+b_3x^2+\cdots+b_nx^{n-1}.$
+Then 
+$$
+f(x) = b_0 + (x-\alpha) g(x).
+$$
+</fieldset> 
+
+<p>
+<b><i>Proof:</i></b>Direct computation.<b><i>[QED]</i></b>
+</p>
+
+This theorem has two implications. First, putting $x=\alpha$ in
+the theorem we get $f(\alpha)=b_0,$ which is the output of
+Horner's method. Second, if $\alpha$ is
+a root of $f(x)$ then $g(x)$ is the deflated polynomial
+$f(x)/(x-\alpha).$ 
+
+<p>
+<b>EXAMPLE:</b>&nbsp;
+Let us apply this method to deflate the polynomial 
+$$
+f(x) = (x-1)(x-2)^2 = -4+8x-5x^2+x^3
+$$
+at the root $x=2.$
+Here
+$$\begin{eqnarray*}
+b_3 &amp;  = &amp;  1\\
+b_2 &amp;  = &amp;  -5+2\times1 = -3\\
+b_1 &amp;  = &amp;  8+2\times(-3) = 2\\
+b_0 &amp;  = &amp;  -4+2\times2 = 0.
+\end{eqnarray*}$$
+Since $b_0=0$ we know that $2$ is a root of the polynomial. The
+deflated polynomial is 
+$$
+b_1+b_2x+b_3x^2 = 2-3x+x^2.
+$$
+<img src="../image/box.png"></p>
+
+
+<h2><a
+name="Finding complex roots">Finding complex roots</a></h2>
+Newton-Raphson iteration has the property that if we start with a real
+$x_0$ and $f(x)$ is a real polynomial ({\em <i>i.e.</i>,} the
+coefficients of $f(x)$ are all real numbers,) then all the
+$x_n$'s are real numbers as well. So we cannot find complex roots
+using Newton-Raphson method if we start from a real initial
+value. However, it is possible to find complex roots of a polynomial by
+Newton-Raphson method if we start from a complex $x_0.$ In fact, we
+can even deal with complex polynomials (where we allow the coefficients to
+be complex as well.) Horner's algorithm for evaluating, differentiating
+and deflating works even for complex polynomials.
+
+<p>
+<b>EXAMPLE:</b>&nbsp;
+Let us apply the complex Newton-Raphson method to find a root of $f(x) =
+x^2+1$ starting from $x_0 = 1+i.$ The iteration is
+$$
+x_{n+1} = x_n - \frac{x_n^2+1}{2x_n} = \frac{1}{2}\left(x_n-\frac{1}{x_n}\right).
+$$ 
+Here are the values of $x_n:$
+
+<pre>
+n   x_n
+--------------------------
+0   1+i
+1   0.25+0.75i
+2   -0.075+0.975i
+3   0.001715686+0.997304i
+4   -4.641846e-06+1.000002i
+5   -1.002868e-11+1i
+6   8.463657e-23+1i
+7   i
+</pre>
+
+<img src="../image/box.png"></p>
+
+
+<h2><a
+name="Muller's method">Muller's method</a></h2>
+This is another method for finding the complex roots of a polynomial.
+It has a number of advantages:
+<ol type="">
+
+<li>Fast convergence.</li>
+
+<li>Relatively insensitive to the choice of initial values. So we can
+afford to start with rather crude initial approximations. </li>
+
+<li> Unlike Newton-Raphson method, here we do not need to compute the
+derivative of the function.</li>
+
+<li>This method can find complex roots even if the initial values are
+real numbers.</li>
+
+<li>Just like Newton-Raphson method, this method can also be applied to
+find complex roots of nonlinear functions other than polynomials.</li>
+
+</ol>
+
+
+<center>
+<table width="100%">
+<tr>
+<th><img width="" src="image/muller.png"></th>
+</tr>
+<tr>
+<th>Muller's method</th>
+</tr>
+</table>
+</center>
+
+Muller's method is a direct generalization of the secant method. In secant
+method we approximate $f(x)$ by linear interpolation. In Muller's
+method we use quadratic interpolation, {\em <i>i.e.</i>,} we fit a parabola. In
+secant method we need $x_{n-1}$ and $x_n$ to find
+$x_{n+1}.$ In Muller's method we need <i>three</i> points
+$x_{n-2}, x_{n-1}$ and $x_n$ to compute $x_{n+1}.$ A
+parabola is a quadratic polynomial, and so has two roots (may be just one
+repeated root,) and the roots may be complex. We take $x_{n+1}$ to be the root that is
+closer to $x_n.$ The iteration needs three values $x_0,x_1$ and
+$x_2$ to start. Since the algorithm converges fast even from remote
+initial values, one can as well take $x_0=-1, x_1=0, x_2=1.$  Once a
+root is found, we can deflate the polynomial by the root, and then again
+apply Muller's method with the same three initial values.
+
+Here are some important points that may help you to implement Muller's
+method:
+<ol type="">
+
+<li>Suppose that you already have $x_{n-2},x_{n-1}$ and $x_n,$
+and you are about to compute $x_{n+1}.$ For this you have to find the interpolating
+parabola $p(x)$ through the three points
+$$
+(x_{n-2},y_{n-2}), (x_{n-1},y_{n-1}) \mbox{ and } (x_{n},y_{n}),
+$$
+where $y_i = f(x_i).$ Then you need to find the two roots of $p(x)$ by
+the usual formula for quadratic polynomials, and pick the root closer to
+$x_n.$ Since you have to compute the distance of the roots from
+$x_n$ it is wiser to express $p(x)$ in terms of powers of
+$(x-x_n)$ rather than powers of $x.$ You may check that 
+$$
+p(x) = A(x-x_n)^2 + B(x-x_n) + C,
+$$
+where
+$$\begin{eqnarray*}
+A &amp;  = &amp;  \frac{(y_{n-2}-y_n)(x_{n-1}-x_n)-(y_{n-1}-y_n)(x_{n-2}-x_n)}
+                     {(x_{n-2}-x_n) (x_{n-1}-x_n) (x_{n-2}-x_{n-1})}\\
+B &amp;  = &amp;  \frac{(y_{n-1}-y_n)(x_{n-2}-x_n)^2 -
+                      (y_{n-2}-y_n)(x_{n-1}-x_n)^2}
+                     {(x_{n-2}-x_n) (x_{n-1}-x_n) (x_{n-2}-x_{n-1})}\\
+C &amp;  = &amp;  y_n.
+\end{eqnarray*}$$
+Notice that the denominators are the same for both $A$ and $B.$
+So do not compute it twice.</li>
+
+<li>Though we are talking about the interpolating <i>parabola</i>, actually
+the interpolating polynomial has degree <i>less than</i> or equal to 2. So
+you have to remember about the two boundary cases: when $p(x)$ is of
+degree 1, in which case it has just one root; and when $p(x)$ has
+degree 0, in which case you have no choice but to stop with a ``Failure''
+message. </li>
+
+</ol>
+
+
+<h2><a
+name="Real root isolation">Real root isolation</a></h2>
+
+<b>Real root isolation</b> means identifying one interval per
+distinct root of a polynomial such that there is no other root
+inside that interval. This is generally used as a first step
+before launching more precise methods (<i>e.g.</i>, Newton-Raphson) to
+pin point the roots.
+<p></p>
+There are various methods to perform real root isolation. We
+shall discuss the method using Sturm's sequence of a polynomial. 
+The method works for polynomials that have no repeated root. Such
+polynomials are also called <b>squarefree</b>.
+<p></p>
+Let's start with an example. 
+
+<p>
+<b>EXAMPLE:</b>&nbsp;
+Suppose that we start with the polynomial 
+$$
+p(x) = 8 + 22x + 21 x^2 + 24 x^3 + 13 x^4 + 2x^5. 
+$$
+We shall now start creating a sequence of polynomials, called
+the <b>Sturm's sequence</b>. The sequence starts
+with $p_0(x),$ which is always $p(x),$ itself.
+<p></p>
+The next polynomial, $p_1(x)$ is always $p'(x).$ Thus,
+here 
+$$
+p_1(x) = 22 + 42 x + 72 x + 52 x^3 + 10x^4. 
+$$
+Soon it will become bothersome to write all the powers
+of $x.$ So it is better to write the polynomials as a list
+of coefficients (in increasing powers of $x$). The first two
+polynomials are then
+$$\begin{eqnarray*}
+8 ~&amp;~ 22 ~&amp;~ 21 ~&amp;~ 24 ~&amp;~ 13 ~&amp;~ 2\\
+22 ~&amp;~  42 ~&amp;~ 72 ~&amp;~ 52 ~&amp;~ 10
+\end{eqnarray*}$$
+After this, the sequence proceeds like this: 
+<blockquote>$p_k = $ negative of
+the remainder of $p_{k-2}$ divided by $p_{k-1}.$</blockquote>
+ Thus,
+here 
+$$\begin{eqnarray*}
+8 ~&amp;~ 22 ~&amp;~ 21 ~&amp;~ 24 ~&amp;~ 13 ~&amp;~ 2\\\hline\\
+22 ~&amp;~  42 ~&amp;~ 72 ~&amp;~ 52 ~&amp;~ 10\\\hline\\
+-2.28 ~&amp;~ -6.68 ~&amp;~ 6.12 ~&amp;~ 3.92\\\hline\\
+-43.1643 ~&amp;~ -109.824 ~&amp;~ -32.2314\\\hline\\
+-7.41164 ~&amp;~ -12.729\\\hline\\
+-9.85481
+\end{eqnarray*}$$
+We stop once we reach a nonzero constant polynomial (we are bound
+to reach one such). 
+<img src="../image/box.png"></p>
+
+
+<span class="j">
+<pre>
+f=:4 : 'y- (((#y)-#x)#0),x * (({:y) % {:x)'
+s=:3 : '(&gt;: (0=y) i: 0) {. y'
+r=:s@f ^: (#@[ &lt;: #@])
+rm=:r^:_
+
+p0=: 8  22 21 24 13 2
+]p1=:  p.. p0
+]p2=: - p1 rm p0
+]p3=: - p2 rm p1
+]p4=: - p3 rm p2
+]p5=: - p4 rm p3
+</pre>
+</span>
+
+
+Next, we take some value of $x,$ which is not a root
+of $p(x).$ We evaluate all the
+polynomials there. We count the total number of sign changes in
+the resulting requence of numbers ($0$ may be counted as
+either $+$ or $-$ or may be ignored, the answer will
+not change). 
+Call this $\sigma(x).$ For example, in our example, the
+sequence of values at $x=0$ is
+$$
+8, 22, -2.28, -43.1643, -7.41164, -9.85481.
+$$ 
+The sequence of signs is
+$$
++ + - - - -.
+$$
+There is just a single sign change. So $\sigma(0) = 1.$
+
+<center>
+<table width="100%">
+<tr>
+<th><img width="" src="image/sturm2.png"></th>
+</tr>
+<tr>
+<th>Sturm's sequence with $\sigma$ values</th>
+</tr>
+</table>
+</center>
+
+<fieldset>
+<legend><b><i>Sturm's theorem</i></b></legend>
+Let $a&lt;b\in{\mathbb R}$ be two numbers that are not zeros
+of $p(x).$ Then $\sigma(a)-\sigma(b)$ is the number of
+real roots of $p(x)$ in the interval $(a,b).$
+</fieldset>
+
+Before we see its proof. Let's put it to action. 
+
+<p>
+<b>EXAMPLE:</b>&nbsp;
+Find the number of real roots of the polynomial from the last
+example in $(-10,0.9).$
+<p></p>
+<b>SOLUTION:</b>
+If we evaluate all the polynomials at $x=-10$ we shall get 
+$$
+-92112,~~ 54802,~~ -3243.48,~~ -2168.06,~~ 119.878,~~ -9.85481.
+$$
+Since the first number is nonzero, $-10$ is not a zero
+of $p(x).$ The signs are 
+$$
+-+--+-
+$$
+There are 4 sign changes. In other words, $\sigma(-10)=4.$ Next, we evaluate at $x=0.9$ to get 
+$$
+72.0163,~~ 162.589,~~ -0.47712,~~ -168.113,~~ -18.8677,~~ -9.85481
+$$
+with signs
+$$
+++----.
+$$
+So $\sigma(0.9) = 1.$
+
+<p></p>
+Thus, we conclude that there are $\sigma(-10)-\sigma(0.9) = 4-1
+= 3$ roots of $p(x)$ in $(-10,0.9).$
+<img src="../image/box.png"></p>
+We can keep on halving the interval until we get small intervals,
+over each of which $\sigma$ changes by exactly 1. Each of
+these intervals, then is guaranteed to contain exactly one root.
+<p></p>
+
+Here are some J
+snippets to help you.
+
+<span class="j">
+<pre>
+st=:p0,p1,p2,p3,p4,:p5
+st p. _10 
+* st p. _10
+c=:+/@:(}.~:}:)@:*
+</pre>
+</span>
+
+
+<h3><a
+name="Proof">Proof</a></h3>
+The proof of the Sturm's theorem uses certain properties of the
+Sturm's sequence that is visible from a plot:
+<center>
+<table width="100%">
+<tr>
+<th><img width="" src="image/sturm.png"></th>
+</tr>
+<tr>
+<th>Sturm's sequence</th>
+</tr>
+</table>
+</center>
+
+<a href="javascript:hideShow('how');">[Creating the plot in J]</a>
+<div id="how" style="display:none;background-color:#ffcccc;">
+
+
+<span class="j">
+<pre>
+f0=: p0 &amp; p.
+f1=: p1 &amp; p.
+f2=: p2 &amp; p.
+f3=: p3 &amp; p.
+f4=: p4 &amp; p.
+f5=: p5 &amp; p.
+x =: _0.7+200%~i.100
+plot (]; f0,f1,f2,f3,f4,:f5) x
+</pre>
+</span>
+
+</div>
+
+
+<p></p>
+The properties:
+<ol type="">
+
+<li>Whenever $p_k$ vanishes, $p_{k-1}$
+and $p_{k+1}$ (if they exist) are nonzero, and negatives of
+each other. In particular, two consecutive polynomials cannot
+have a common zero.
+<blockquote>
+<b>Proof idea:</b> $p_0$ and $p_1$ cannot have any
+common zero because $p_0$ is squarefree. $p_2$ is
+negative of the remainder of $p_0$ divided by $p_1$,
+<i>i.e.</i>, $p_2$ is like $-(p_0-$some multiple
+of $p_1).$ When $p_1=0,$ we have $p_2 = -p_0.$</blockquote>
+
+</li>
+
+<li>The last polynomial is a nonzero constant.
+<blockquote>
+<b>Proof idea:</b> By the construction, it cannot be zero.
+<p></p>
+Can $p_n$ be non-constant? No, because
+then $p_n$ must have at least one root (possibly complex),
+and also it divides $p_{n-1}$ (else the sequence would have
+continued further). So at that zero of $p_n$ is shared
+by $p_{n-1},$ leading to a
+contradiction.</blockquote>
+
+</li>
+
+</ol>
+Now consider the function $\sigma(\cdot).$ It is a step
+function taking only integer values. 
+
+
+<p></p>
+
+
+<b>FACT:</b> A jump can occur only at
+the zeroes of $p_0$.
+<p></p>
+
+<b>Proof:</b> Let $c$ be a number that is <i>not</i> a zero
+of $p_0.$ It may be a zero for some or none of the
+other $p_k$'s. If it is not a zero of any of
+the $p_k$'s then the sign sequence does not change, and
+so $\sigma$ has no jump. If $c$ is a zero of
+some $p_k,$ then look at the sign sequence
+around $k$-th term: it must be like $-*+$
+or $+*-$. Any such pattern must contribute exactly one sign
+change, irrespective of the value of $*$. [QED}
+
+<p></p>
+
+
+<b>FACT:</b> At each
+zero of $p_0$, the $\sigma $ function must jump down by
+an amount 1. 
+<p></p>
+
+<b>Proof:</b> Let $c$ be a zero $p_0.$ So it changes
+sign there (since it is squarefree). There are two possible
+cases: 
+<center>
+<table width="100%">
+<tr>
+<th><img width="" src="image/cases.png"></th>
+</tr>
+<tr>
+<th>The two cases</th>
+</tr>
+</table>
+</center>
+In both cases the number of sign changes goes down by one, because
+following the same argument
+as in the last proof, the other $p_k$'s cannot contribute to
+the sign change. Hence the result. [QED]
+
+<p></p>
+
+Sturm's theorem is now an immediate consequence.
+
+<h2><a
+name="How Matlab does it">How Matlab does it</a></h2>
+Matlab has a function called <code>roots</code> that finds all the roots of
+a polynomial. For instance, to find the roots of the polynomial $1+2x+3x^2$ you
+issue the command 
+<blockquote>
+<code>roots([3 2 1])</code>
+</blockquote> Matlab's algorithm works as
+follows.
+
+To compute all the roots
+(including the complex ones) of a polynomial
+$$
+a_0+a_1x+a_2x^2+\cdots+a_nx^n,
+$$
+with $a_n\neq 0,$ 
+Matlab first forms its
+{\em companion matrix}
+$$
+\left[\begin{array}{ccccccccccc}
+-\frac{a_{n-1}}{a_n} &amp;  \cdots &amp; &amp;  \cdots&amp;  -\frac{a_{0}}{a_n}\\
+ &amp;  1 &amp;  &amp;  0 \\
+ &amp;   &amp;  \ddots \\
+&amp;  0 &amp;  &amp;  1\\
+&amp;  &amp;  &amp;  &amp;  -1
+
+\end{array}\right]
+$$
+ The companion matrix has the given polynomial as
+its characteristic polynomial (Check!) Now Matlab applies a suitable
+eigenvalue finding algorithm 
+to this matrix.
+
+
+<h3>Comments</h3>
+To post an anonymous comment, click on the "Name" field. This
+will bring up an option saying "I'd rather post as a guest."
+<p></p><!--
+begin disqus code --> <div id="disqus_thread"></div>
+<script>
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+
+var disqus_config = function () {
+this.page.url = "https://www.isical.ac.in/~arnabc/numana/nonlin2.html"; // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = "nonlin2"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://txtbk.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript><!-- end disqus code --> 
+
+<hr/>
+<table width="100%" border="0">
+<tr>
+<td align="left"/>
+<td align="right"/>
+</tr>
+</table>
+<hr/>
+</body>
+</html>

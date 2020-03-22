@@ -1,0 +1,775 @@
+<NOTE>
+@{
+<M>\newcommand{\bx}{{\bf x}}
+\newcommand{\by}{{\bf y}}
+\newcommand{\bu}{{\bf u}}
+\newcommand{\bb}{{\bf b}}
+\newcommand{\bv}{{\bf v}}
+\renewcommand{\bc}{{\bf c}}
+\newcommand{\bz}{{\bf 0}}
+\newcommand{\ba}{{\bf a}}
+\newcommand{\bq}{{\bf q}}
+</M>
+
+<TITLE>Matrix algorithms</TITLE>
+<HEAD1>Matrix algorithms</HEAD1>
+<HEAD2>Gauss-Jordan elimination</HEAD2>
+We shall start with a few concepts already familiar to you. 
+
+<EXM>
+Consider the following three equations:
+<MULTILINE>
+2x-3y+z& =& 5\\
+3x+y+2z& =& 15\\
+2x + 3z& =& -2
+</MULTILINE>
+This is an example of a <I> system of linear equations.</I>
+</EXM>
+
+We can write a system of <M>m</M> linear equations in <M>n</M> unknowns
+using matrix notation:
+<D>
+A \bx = \bb,
+</D>
+where <M>A_{m\times n}</M> is called the <I> coefficient matrix,</I>
+<M>\bx_{n\times 1}</M> is called the vector of unknowns, and
+<M>\bb_{m\times 1}</M> is called the rhs vector.
+
+<EXM>
+The system in the last example can be written as
+<D>
+<MAT>2& -3& 1\\3& 1& 2\\2& 0& 3</MAT> <MAT>x\\y\\z</MAT> = <MAT>5\\15\\-2</MAT>.
+</D>
+Thus, here
+<D>
+A = <MAT>2& -3& 1\\3& 1& 2\\2& 0& 3</MAT>,~~~\bx = <MAT>x\\y\\z</MAT>,~~~
+\bb = <MAT>5\\15\\-2</MAT>.
+</D>
+</EXM>
+
+ If the rhs vector <M>\bb</M> is <M>\bz</M>, then we call the system <B> homogeneous</B>, else we call it <B> non-homogeneous</B>. 
+
+<P/>
+
+Any value of <M>\bx</M> for which <M>A\bx = \bb,</M> is called a <I>
+solution</I>  of the system. A system of linear equations has either exactly
+one solution, or infinitely many solutions or no solution at all. In the
+last case we call the system <B> inconsistent</B>. Otherwise it is called
+<B> consistent</B>.
+
+
+The next example shows the method for solving a system of linear
+equations that we learn at high school.
+
+<EXM>
+Consider the following system of three linear equations, which we call
+<M>\alpha_1,\beta_1</M> and <M>\gamma_1.</M>
+
+
+<SYSTEM>
+\alpha_1 :~~~& x& -y& +z& =& 2 \\
+\beta_1 :~~~& 2x& +5y& -z& =& 9 \\
+\gamma_1 :~~~& x& +2y& -3z& =&  -4
+</SYSTEM>
+In high school we used to solve this by eliminating the unknowns one by
+one until only one remained. Here we shall do this for all the unknowns simultaneously. 
+
+<COMMENT>
+A = matrix(c(1,2,1,-1,5,2,1,-1,-3),3,3)
+b = c(2,9,-4)
+solve(A,b)
+</COMMENT>
+Let us first eliminate <M>x</M> from the last two equations by subtracting
+multiples of the first equation from them. Here are the resulting 3
+equations, which we call
+<M>\alpha_2,\beta_2</M> and <M>\gamma_2.</M>
+
+<SYSTEM>
+\alpha_2=& \alpha_1 :~~~& x& -y& +z& =& 2 \\
+\beta_2=& \beta_1-2\alpha_1 :~~~&  & 7y& -3z& =& 5 \\
+\gamma_2=& \gamma_1-\alpha_1 :~~~&  & 3y& -4z& =&  -6
+</SYSTEM> 
+We want the coefficient of <M>y</M> in the second equation to be <M>1:</M>
+<SYSTEM>
+\alpha_3=& \alpha_2 :~~~& x& -y & +z& =& 2 \\
+\beta_3=& [[17]]\beta_2 :~~~&  & y& -[[37]]z& =& [[57]] \\
+\gamma_3=&  \gamma_2 :~~~&  & 3y & -4z& =&  -6
+</SYSTEM>
+Now let us eliminate <M>y</M> from the all the equations except
+the second one:
+<SYSTEM>
+\alpha_4=& \alpha_3+\beta_2 :~~~& x& & +[[47]]z& =& [[19][7]] \\
+\beta_4=& \beta_3 :~~~&  & y& -[[37]]z& =& [[57]] \\
+\gamma_4=& \gamma_3-3\beta_2 :~~~&  &  & -\frac{19}{7}z& =&  -\frac{57}{7}
+</SYSTEM>
+Next, we want the coefficient of <M>z</M> in the third equation
+to be <M>1:</M>
+<SYSTEM>
+\alpha_5=& \alpha_4 :~~~& x& & +[[47]]z& =& [[19][7]] \\
+\beta_5=& \beta_4 :~~~&  & y& -[[37]]z& =& [[57]] \\
+\gamma_5=& -[[7][19]]\gamma_4 :~~~&  &  & z& =&  3
+</SYSTEM>
+Finally, eliminate <M>z</M> from all but the last equation:
+<SYSTEM>
+\alpha_6=& \alpha_5-[[74]]\gamma_5 :~~~& x& & & =& 1 \\
+\beta_6=& \beta_5+[[73]] \gamma_5 :~~~&  & y& & =& 2 \\
+\gamma_6=& \gamma_5 :~~~&  &  & z& =&  3
+</SYSTEM>
+This gives us the final solution.
+<P/>
+</EXM>
+
+This is what is called Gauss-Jordan elimination 
+in computational matrix theory. While doing
+Gauss-Jordan elimination it is customary to write the system at each step in
+the <B> augmented matrix form</B>. This is done in the example below.
+ 
+<EXM> The augmented matrix form of the given system is as follows.
+<D><AUGMAT1>
+1& -1& 1& 2 \\
+2& 5& -1& 9 \\
+1& 2& -3&  -4
+</AUGMAT1></D>
+It is obtained by appending the rhs after the matrix. We draw a vertical
+line to keep the rhs separate. 
+<P/>
+Here is a sequence of augmented matrices that we encountered
+during the process:
+<D>
+<AUGMAT1>
+\fbox1 & -1 & 1 & 2\\
+2 & 5 & -1 & 7\\
+1 & 2 & -3 & -4
+</AUGMAT1>
+\stackrel{S\searrow}{\longrightarrow}
+<AUGMAT1>
+1 & -1 & 1 & 2\\
+0 & \fbox7 & -3 & 5\\
+0 & 3 & -4 & -6
+</AUGMAT1>
+\stackrel{M}{\longrightarrow}
+<AUGMAT1>
+1 & -1 & 1 & 2\\
+0 & \fbox1 & -[[37]] & [[57]]\\
+0 & 3 & -4 & -6
+</AUGMAT1>
+\stackrel{S\searrow}{\longrightarrow}
+<AUGMAT1>
+1 & 0 & [[47]] & 2\\
+0 & 1 & -[[37]] & [[57]]\\
+0 & 0 & \fbox{$-[[19][7]]$} & -[[57][7]]
+</AUGMAT1>
+\stackrel{M}{\longrightarrow}
+<AUGMAT1>
+1 & 0 & [[47]] & 2\\
+0 & 1 & -[[37]] & [[57]]\\
+0 & 0 & \fbox1 & 3
+</AUGMAT1>
+\stackrel{S\searrow}{\longrightarrow}
+<AUGMAT1>
+1 & 0 & 0 & 1\\
+0 & 1 & 0 & 2\\
+0 & 0 & 1 & 3
+</AUGMAT1>
+</D>
+Here we have used 3 symbols <M>S</M>, <M>M</M>
+and <M>\searrow</M>. Let us understand them. Before each step we
+choose an entry in the lhs of the augmented matrix (framed inside rectangles above). This
+is called the <B>pivot</B>, and its row and column are called the <B>pivotal
+row</B>  and <B>pivotal column</B>. Initially the top left hand entry is chosen as the
+pivot.
+<UL><LI>An <M>M</M>-step divides the pivotal row by the pivot
+(so that the pivot becomes <M>1</M>). </LI>
+<LI>An <M>S</M>-step subtracts suitable multiples of the pivotal
+row from the other rows to make the all the entries in the pivotal
+column zero (except the pivot itself).</LI>
+<LI>The <M>\searrow</M> step moves the pivot one step downwards
+and to the right.</LI></UL>
+</EXM>
+
+
+
+<BOX name="Gauss-Jordan elimination (without pivoting)">
+In Gauss-Jordan elimination of a <M>n\times n</M> system
+we start with the pivot at the <M>(1,1)</M>-th position. Then we 
+perform the following operations.
+<D>
+\underbrace{(M,S,\searrow),\cdots,(M,S,\searrow)}
+_{n-1\mbox{ times}},M,S.
+</D>
+</BOX>
+The following J code implements this:
+<J>
+m=: 3 : 'y % pj{y'
+s=: 4 : 'y - (pj{y) * x'
+</J>
+Let's try them out on a random matrix:
+<J>
+]'a1 b1 c1 d1'=:? 4 5$ 100
+pj=:0
+]a2=: m a1
+]b2=: a2 s b1
+]c2=: a2 s c1
+]d2=: a2 s d1
+pj=:1
+]b3=: m b2
+]a3=: b3 s a2
+]c3=: b3 s c2
+]d3=: b3 s d2
+pj=:2
+]c4=: m c3
+]a4=: c4 s a3
+]b4=: c4 s b3
+]d4=: c4 s d3
+pj=:3
+]d5=: m d4
+]a5=: d5 s a4
+]b5=: d5 s b4
+]c5=: d5 s c4
+</J>
+<HEAD3>Pivoting</HEAD3>
+The <M>M</M>- and <M>S</M>-steps require the pivot to 
+be nonzero. However, in the above algorithm the pivot may become
+zero. 
+<EXM>
+If the system is 
+<SYSTEM>
+ & 3 y & - 5z & = & -1\\
+4x & + y & + z & = & 6\\
+-x & - 8y & - z & = & -4
+</SYSTEM>
+then the <M>(1,1)</M>-th entry is 0. 
+
+<P/>
+
+Yet it is hardly a problem, because we may swap the first and last
+equations to rewrite the system as
+<SYSTEM>
+-x & - 8y & - z & = & -4\\
+4x & + y & + z & = & 6\\
+ & 3 y & - 5z & = & -1
+</SYSTEM>
+Also, we could have swapped <M>x</M> and <M>y</M> to get
+<SYSTEM>
+ 3 y  &   & - 5z & = & -1\\
+ + y  & 4x & + z & = & 6\\
+ - 8y &-x & - z & = & -4
+</SYSTEM>
+</EXM>
+These are called <B>pivoting</B>.
+It is useful
+even when the pivot is nonzero, but is very small in absolute value. 
+This is because
+division by numbers near zero in a computer introduces large errors in the output. 
+
+
+<P/>
+
+In terms of augmented matrices, pivoting means swapping rows and/or columns. Suppose the pivot is at
+the <M>(i,j)</M>-th entry. Then we look at all the <M>(r,s)</M>-th
+entries in the lhs of the augmented matrix, where <M>r\geq i</M> and <M>s \geq j.</M>  The set of all such <M>(r,s)</M>-th
+ entries is shown in red in the diagram below.
+<CIMG web="piv.png">Green dot is the current pivot position. The largest (in abs value) entry in the red
+region will go there.</CIMG>
+Notice that we do not cross the vertical separator.
+
+<P/>
+We find an entry with the maximum absolute value in the red region. We bring this entry to the
+ <M>(i,j)</M>-th position:
+<Q>If this is the
+ <M>(r,s)</M>-th entry then swap the 
+<M>i</M>-th row of the augmented matrix with <M>r</M>-th row, and the <M>j</M>-column with the
+<M>s</M>-th column. Note that the order of row and column swaps does not
+matter.</Q>
+ In our example we
+swap row 2 with row 3, and column 2 with column 3 to get
+<D>
+<AUGMAT1>
+\fbox0 &  3 &  -5 &  -1\\
+4 &  1 &  1 &  6\\
+-1 &  -8 &  -1 &  -4
+</AUGMAT1>
+\stackrel{P}{\longrightarrow}
+<AUGMAT1>
+\fbox{-8} &  -1 &  -1 &  -4\\
+1 &  4 &  1 &  6\\
+3 &  0 &  -5 &  -1
+</AUGMAT1>
+</D>
+Here <M>P</M> is our symbol for complete pivoting.
+<P/>
+Recall that the columns of the matrix correspond to the variables of the
+equations. So swapping the columns also involves reordering the variables. 
+A simple
+way to keep track of the order of the variables is to write the variables
+above the 
+columns. If we call the variables as <M>x,y,z</M> in the last example then
+we shall write:
+
+<D>
+<AUGMAT1>
+x &  y & z\\
+\hline
+\fbox0 &  3 &  -5 &  -1\\
+4 &  1 &  1 &  6\\
+-1 &  -8 &  -1 &  -4
+</AUGMAT1>
+\stackrel{P}{\longrightarrow}
+<AUGMAT1>
+y &  x & z\\
+\hline
+\fbox{-8} &  -1 &  -1 &  -4\\
+1 &  4 &  1 &  6\\
+3 &  0 &  -5 &  -1
+</AUGMAT1>
+</D>
+
+
+<BOX name="Gauss-Jordan elimination (with pivoting)">
+We perform the following steps:
+<D>
+\underbrace{P,M,S,\searrow,\cdots,P,M,S,\searrow}
+_{n-1\mbox{ times}},M,S.
+</D>
+</BOX>
+The following J code swaps columns. 
+<J>
+p=: dyad : '(x{y) (|. x)} y'"1
+'a1 b1 c1'=: 2 4 p a,b,:c
+</J>
+<HEAD3>Inversion using Gauss-Jordan elimination</HEAD3>
+Gauss-Jordan elimination (with pivoting) may  be used to find inverse of a
+given nonsingular square matrix, since finding inverse is the same as
+solving the system 
+<D>
+AX = I.
+</D>
+
+
+<EXM>
+Suppose that we want to find the inverse of the matrix 
+<M><MAT>1& -1& 1 \\
+2& 5& -1 \\
+1& 2& -3</MAT>.</M>
+Then we append an identity matrix of the same size to the right of this
+matrix to get the 
+augmented matrix 
+<D><AUGMAT2>
+1& -1& 1& 1 & 0 & 0\\
+2& 5& -1& 0 & 1& 0\\
+1& 2& -3& 0& 0& 1
+</AUGMAT2>.</D>
+Now go on applying Gauss-Jordan elimination until the
+left hand matrix is reduced to identity. The right hand part at the final step
+will give the required inverse. 
+<D>
+<AUGMAT2>
+\fbox1& -1& 1& 1 & 0 & 0\\
+2& 5& -1& 0 & 1& 0\\
+1& 2& -3& 0& 0& 1
+</AUGMAT2> 
+\stackrel{M,S,\searrow}{\longrightarrow}
+<AUGMAT2>
+1& -1&  1&  1& 0& 0 \\
+0& \fbox7 & -3& -2& 1& 0 \\
+0& 3 & -4& -1& 0& 1
+</AUGMAT2>
+\stackrel{M,S,\searrow}{\longrightarrow}
+<AUGMAT2>
+1& 0&  [[4][7]]& [[5][7]]& [[1][7]]& 0 \\
+0& 1& [[-3][7]]& [[-2][7]]& [[1][7]]& 0 \\
+0& 0 & \fbox{$[[-19][7]]$}& [[-1][7]]& [[-3][7]]& 1
+</AUGMAT2>
+\stackrel{M,S,\searrow}{\longrightarrow}
+<AUGMAT2>
+1& 0& 0&  [[91][133]]& [[7][133]]& [[4][19]] \\
+0& 1& 0& [[-35][133]]& [[28][133]]& [[-3][19]] \\
+0& 0& 1& [[1][19]]& [[3][19]]& [[-7][19]]
+</AUGMAT2></D> 
+
+Thus, the required inverse is 
+<D><MAT> [[91][133]]& [[7][133]]& [[4][19]]
+\\[[-35][133]]& [[28][133]]& [[-3][19]]
+\\[[1][19]]& [[3][19]]& [[-7][19]]</MAT>.</D> 
+Here we have not used pivoting. In practice you should use pivoting.
+</EXM>
+The following J code will help you to play with this idea.
+<J>
+mat=: ? 4 4 $ 0
+'a1 b1 c1 d1'=: mat,. e. i. 5
+</J>
+<HEAD3>Determinant using Gaussian elimination</HEAD3>
+<EXR>Find out how one may use the  Gauss-Jordan
+elimination algorithm to compute the determinant. </EXR>
+
+
+<PROJ>Write a program that will apply Gauss-Jordan elimination to an arbitrary matrix of order
+ <M>m\times n</M>  over <M>\rr.</M>  The resulting form is called the <B>reduced row echelon
+ form</B>  of the matrix. Use this form to find  bases of the column space, row space and null space of the matrix.</PROJ>
+
+<HEAD2><M>QR</M> decomposition</HEAD2>
+<THM>
+For any <M>n</M> by <M>p</M> matrix <M>A</M> with <M>n\geq p</M> we have
+an <M>n</M> by <M>n</M> orthogonal matrix <M>Q</M> and an <M>n</M> by
+<M>p</M> upper triangular matrix <M>R</M> such that
+<D>A = QR.</D>
+</THM>
+
+This decomposition is the matrix version of the Gram-Schmidt
+Orthogonalization (GSO). To see this we first consider the case where <M>A</M>
+is full column rank (<I> i.e.,</I> the columns are independent.) Call the
+columns 
+<D>
+\ba_1,...,\ba_p.
+</D>
+Apply GSO to get an orthonormal set of vectors 
+<D>
+\bq_1,...,\bq_p
+</D>
+given by
+<D>
+\bq_i  =  unit(\ba_i-\sum_{j=1}^{i-1}(\bq_j'\ba_i) \bq_j)
+</D>
+computed in the order <M>i=1,...,p.</M> Here <M>unit(\bv)</M> is defined as
+<D>
+unit(\bv) = \bv/\|\bv\|,\quad \bv\neq \bz.
+</D>
+
+Notice that <M>span\{\ba_1,...,\ba_i\}=span\{\bq_1,...,\bq_i\}.</M> 
+So we can write 
+<D>\ba_i = r_{1i} \bq_1 + r_{2i} \bq_2 + \cdots + r_{ii} \bq_i.</D>
+Indeed, we have (check!)
+<D>r_{ji}  = <CASES>\bq_j' \ba_i <IF>j < i</IF> \|\ba_i- \sum_{j=1}^{i-1} r_{ji} \bq_j\|<IF>j=i</IF></CASES>.</D>
+Define the matrix <M>R</M> using the <M>r_{ij}</M>'s, and collect the <M>\bq_i</M>'s into <M>Q.</M>
+<P/>
+
+The following J code will let you explore the idea.
+<J>
+d=:+/@:*
+u=: % (%:@ d~)
+</J>
+Let's create some vectors:
+<J>
+]'a1 a2 a3'=: ? 3 4 $ 0
+q1=: u a1
+q2=: u a2 - q1* a2 d q1
+q3=: u a3 - (q1 * a3 d q1) + q2 * a3 d q2
+]r11=: d~ a1
+]r12=: q1 d a2
+]r22=: d~ a2 - r12 * q1
+</J>
+If <M>A</M> is not full column rank, then some
+<M>(\ba_i-\sum_{j=1}^{i-1}(\bq_j'\ba_i)\bq_j)</M> will be zero, hence we cannot apply
+<M>unit</M> to it. But then we can take <M>\bq_i</M> equal to any unit
+norm vector orthogonal to <M>\bq_1,...,\bq_{i-1}</M> and set <M>r_{ii}=0.</M> 
+<P/>
+However, GSO is not the best way to compute <M>QR</M> decomposition of a
+matrix. This is because in the <M>unit</M> steps you have to divide
+by the norms which may be too small. Division by small numbers in a computer may lead to numerical instability. The standard
+ way to implement it is
+using Householder's transformation, that we discuss next.
+
+<HEAD2>Householder's transformation</HEAD2>
+If <M>A</M> is any orthogonal matrix, then we now that <M>\|Ax\| = \|x\|.</M>
+In other words an orthogonal matrix does not change shape or size of an object. It can
+only rotate and reflect it. We want to ask if the reverse is true:
+<Q> If 
+<M>x</M> and <M>y</M> are two vectors of same length, then does there
+exist an orthogonal <M>A</M> that takes <M>x</M> to <M>y</M> and vice
+versa? That is, we are looking for an orthogonal <M>A</M> (possibly
+depending on <M>x,y</M>) such that
+<D>
+Ax = y \mbox{ and } Ay=x?
+</D></Q>
+The answer is ''Yes.'' In fact, there may be many. Householder's transform
+is one such:
+<D>
+A = I-2uu', \mbox{ where } u = unit(x-y).
+</D>
+
+<EXR ref="" paper="" marks="">
+Show that this <M>A</M> is orthogonal and it sends <M>x</M> to <M>y</M>
+and vice versa.
+</EXR>
+
+<EXR ref="" paper="" marks="">
+Show that in 2 dimensions Householder's transform is the only such
+transform. Show that this uniqueness does not hold for higher dimensions.
+</EXR>
+
+<EXR ref="" paper="" marks="">
+In general you need <M>n^2</M> scalar multiplications to multiply
+an <M>n\times n</M> matrix with an <M>n\times 1</M> vector.
+However, show that if the matrix is a Householder matrix then only
+<M>2n</M> scalar multiplications are needed.
+</EXR>
+
+<HEAD3>Using Householder for <M>QR</M></HEAD3>
+The idea is to shave the columns of <M>X</M> one by one by multiplying
+with Householder matrices. For any non zero vector <M>u</M> define
+<M>H_u</M> as the Householder matrix that reduces <M>u</M> to 
+<D>
+v = <MAT>\|u\|^2\\0\\\vdots\\0</MAT>.
+</D>
+
+<EXR ref="" paper="" marks="">
+Let us partition a vector <M>\bu</M> as
+<D>
+\bu_{n\times 1} = <MAT>\bu_1\\\bu_2</MAT>,
+</D>
+where both <M>\bu_1,\bu_2</M> are vectors (<M>\bu_2</M> being 
+<M>k\times 1).</M> Consider the <M>n\times n</M>
+matrix
+<D>
+H = <MAT>I &  0\\0 &  H_{\bu_2}</MAT>.
+</D>
+Show that <M>H</M> is orthogonal and compute <M>Hu.</M> We shall say that
+<M>H</M> shaves the last <M>k-1</M> elements of <M>u.</M>
+</EXR>
+
+Let the first column of <M>X</M> be <M>a.</M> Let <M>H_1</M> shave its
+lower <M>n-1</M> entries.  Consider  the second column  <M>b</M> of
+<M>H_1A.</M> Let <M>H_2</M> shave off its lower <M>n-2</M> entries.
+Next let <M>c</M> denote the third column of <M>H_2H_1X,</M> and so on.
+Proceeding in this way, we get <M>H_1,H_2,...,H_p</M> all of which are
+orthogonal Householder matrices. Define
+<D>
+Q = (H_1H_2\cdots H_p)'
+</D>
+and <M>R = Q'X</M> to get a <M>QR</M> decomposition.
+
+<EXR ref="" paper="" marks="">
+Carry this out for the following <M>5\times 4</M> case.
+<D>
+<MAT>
+1&  2 &  3 &  4\\
+1&  3 &  2 &  4\\
+1&  -2 &  5 &  0\\
+7&  2 &  1 &  3\\
+-2&  8 &  5 &  4
+</MAT>
+</D>
+</EXR>
+
+<HEAD3>Efficient implementation</HEAD3>
+Notice that though the Householder matrix 
+<D>
+I - 2\bu\bu'
+</D>
+is an <M>n\times n</M> matrix, it is actually determined by only <M>n</M>
+numbers. Thus, we can effectively store the matrix in linear space. In
+particular, the matrix <M>H_1</M> needs only <M>n</M> spaces, <M>H_2</M>
+needs only <M>n-1</M> spaces and so on. 
+
+So we shall try to store these in the ``shaved'' parts of <M>X.</M>
+Let 
+<M>H_1 = 1-2\bu_1\bu_1'</M> and <M>H_1X</M> be partitioned as
+<D>
+<MAT>\alpha &  v'\\0 &  X_1</MAT>.
+</D>
+Then we shall try to store  <M>\bu_1</M> in place of the
+0's. But <M>\bu_1</M> is an <M>n\times 1</M> vector, while we
+have only <M>n-1</M> zeroes. So the standard practice is to
+store <M>\alpha</M> (which is the squared norm  of the first
+column) in a separate array, and store <M>\bu_1</M> in place of
+the first column of <M>A.</M>
+
+The final output will be a <M>n\times p</M> matrix and
+a <M>p</M>-dimensional vector (which is like an extra row
+in <M>A).</M> The matrix is packed with the
+<M>u</M>'s and the strictly upper triangular part of <M>R:</M>
+<CIMG web="qrpack.png">Output of efficient <M>QR</M>
+  decomposition</CIMG>
+The ``extra row'' stores the diagonal entries of <M>R.</M>
+It is possible to ``unpack'' <M>Q</M> from the <M>u</M>'s. However, if we
+need <M>Q</M> only to multiply some <M>x</M> to get <M>Qx,</M> then even
+this unpacking is not necessary. 
+
+<EXR ref="" paper="" marks="">
+Write a program that performs the above multiplication without explicitly
+computing <M>Q.</M>
+</EXR>
+ 
+<PROJ>Write a program to implement the above efficient version of <M>QR</M>
+decomposition of a full column rank matrix <M>A.</M> Your program
+  should be able to detect if <M>A</M> is not full column rank,
+  in which case it should stop with an error message.
+</PROJ>
+
+This is not entirely easy to do. So let's proceed step by
+step. First we chalk out the basic flowchart. 
+<CIMG web="qrflow1.png">The main algo</CIMG>
+
+The easiest part to expand here is the input part. The only
+subtlety is to remember to allocate an extra row in <M>A.</M>
+
+<CIMG web="qrflow2.png">The input part</CIMG>
+
+Now comes the tricky step: the ``shaving''. There are two parts
+here. First, we have to compute the <M>\bu</M> vector, and save it
+in the <M>A</M> matrix. Second, we have to multiply the later
+columns by <M>H_{\bu}.</M>
+<CIMG web="qrflow3.png">How to ``shave''</CIMG>
+
+The flowchart below is quite technical in nature. It tells you
+how to compute the <M>\bu</M> vector, and save it in the <M>A</M>
+matrix. It also saves the diagonal element of <M>R</M> in the
+``extra row'' of <M>A.</M>
+<CIMG web="qrflow4.png">Processing the ''shaved'' column ($i$)</CIMG>
+Updating the subsequent columns is basically multiplying by a
+Householder matrix.
+<CIMG web="qrflow5.png">Updating column <M>j</M></CIMG>
+
+<HEAD3>Application to least squares</HEAD3>
+An important use is in solving least squares problems. Here we are given a
+(possibly inconsistent) system
+<D>
+A\bx = \bb,
+</D>
+where <M>A</M> is full column rank (need not be square.) Then we have the
+following theorem.
+
+<THM>
+The above system has unique least square solution <M>\bx</M> given by
+<D>
+\bx = A(A'A)^{-1}A'\bb.
+</D>
+Note that the full column rankness of <M>A</M> guarantees the existence
+of the inverse.
+</THM>
+
+However, computing the inverse directly and then performing matrix
+multiplication is not an efficient algorithm. A better way (which is used
+in standard software packages) is to first form a <M>QR</M> decomposition
+of <M>A</M> as
+<M>A = QR.</M>
+The given system now looks like
+<D>
+QR\bx = \bb.
+</D>
+The lower part of <M>R</M> is made of zeros:
+<D>
+Q<MAT>R_1\\O</MAT>\bx = \bb,
+</D>
+or
+<D>
+<MAT>R_1\\O</MAT>\bx = Q'\bb,
+</D>
+Partition <M>Q'\bb</M> appropriately to get
+<D>
+<MAT>R_1\\O</MAT>\bx = <MAT>\bc_1\\\bc_2</MAT>,
+</D>
+where <M>\bc_1</M> is <M>p\times 1.</M> This system is made of two systems:
+<D>
+R_1 \bx = \bc_1
+</D>
+and 
+<D>
+O \bx = \bc_2.
+</D>
+The first system is always consistent and can be solved by
+back-substitution. The second system is trivial and inconsistent unless
+<M>\bc_2=\zz.</M> 
+
+<COMMENT>Show that the original system is consistent iff \bc_2=\zz.</COMMENT>
+
+<EXR ref="" paper="" marks="">
+Show that <M>x=R_1^{-1}\bc_1</M> is the least square solution of the original
+system. Notice that you use back-substituting to find this <M>\bx</M> and not
+direct inversion of <M>R_1.</M> 
+</EXR>
+
+<EXR ref="" paper="" marks="">
+Find a use of <M>\bc_2</M> to compute the residual sum of squares:
+<D>
+\|\bb-A\bx\|^2.
+</D>
+</EXR>
+
+<HEAD2>Eigenanalysis: power method</HEAD2>
+Finding the eigenvalues and eigenvectors of matrices is a fundamental
+problem of numerical linear algebra. The subject in its entirety is well
+beyond the scope of the present course. We shall deal with only a special
+case : real symmetric matrices. The main reason why this special case is
+simpler than the general cases is the following theorem.
+
+<THM>A real symmetric matrix is guaranteed to have real eigenvalues and a
+full set of eigenvectors (<I> i.e.,</I> if the matrix is <M>n\times n</M>
+then there are <M>n</M> independent eigenvectors. In fact, the eigen
+vectors can be chosen to be mutually orthogonal.</THM>
+<PF>You should know the proof from your linear algebra course.</PF>
+
+Here we work with a real diagonalisable matrix <M>A,</M> that has
+unique eigenvalue with maximum absolute value. The
+algorithm finds this eigenvalue, and one eigenvector for it.
+<P/>
+We start with a vector <M>v</M> and constructs the sequence 
+<D>
+unit(Av), unit(sA^2v), unit(A^3v), unit(A^4v),... 
+</D>
+Under some condition the sequence converges to an eigenvector
+corresponding to the eigenvalue with the maximum absolute value.
+Let's take an example before exploring the condition. 
+<J>
+mp=: +/ . *
+n2=: +/@: ^&2
+u=: % (^&0.5 @ n2)
+pow=: u@ ([ mp ])
+
+a=:? 5 5 $ 0
+a=: a + |: a
+
+v=.? 5#0
+   
+]w=: a pow^:_ v
+</J>
+<HEAD3>When does it work?</HEAD3>
+We explore this question through a number of theorems.
+
+<THM>
+Let <M>A</M> be a real  <M>n\times n</M> diagonalisable matrix
+with <M>k</M> distinct eigenvalues. Let the eigenspace
+corresponding to the <M>i</M>-th eigenvalue be <M>E_i.</M> Then 
+<D>
+\rr^n = E_1\oplus\cdots\oplus E_k.
+</D>
+</THM>
+
+Thanks to this theorem, every <M>\bv\in \rr^n</M> may be
+uniquely split into components along
+the <M>E_i</M>'s. Let <M>E_1</M> be the eigenspace corresponding
+to the eigenvalue with the largest absolute value. We shall
+denote the component of <M>\bv</M> along <M>E_1</M> by <M>P_1(\bv).</M> Thus, we get a function <M>P_1:\rr^n\to E_1.</M>
+<P/>
+The power algorithm works if and only if the initial vector
+satisfies the condition <M>P(\bv)\neq\bz.</M>
+
+<THM>
+Let <M>A</M>, <M>E_1</M> and <M>P(\cdot)</M> be as above. Then the sequence 
+<D>
+unit(A\bv),~~unit(A^2\bv),~~unit(A^3\bv),~~unit(A^3\bv),~~
+</D>
+is well-defined and converges to a nonzero vector in <M>E_1</M>
+if  <M>P_1(\bv)\neq\bz.</M>
+</THM>
+<PF>
+<U><I>If part:</I></U> Let 
+<D>\bv = \bv_1 +\cdots +\bv_k,</D>
+where <M>\bv_i\in E_i</M> for <M>i=1,...,k.</M>
+
+<P/>
+Then 
+
+<D>A^p\bv = \sum_{i=1}^k \lambda_i^p\bv_i = 
+\lambda_1^p \sum_{i=1}^k (*([[\lambda_i][\lambda_1]])*)^p\bv_i\neq bz,</D>
+
+since <M>\bv_1\neq\bz.</M>
+<P/>
+
+So 
+<D>unit(A^p\bv) = unit(*(\sum_{i=1}^k
+(*([[\lambda_i][\lambda_1]])*)^p\bv_i)*)\to unit(\bv_1).</D>
+</PF>
+
+@}
+</NOTE>

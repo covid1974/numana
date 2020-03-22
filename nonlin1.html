@@ -1,0 +1,556 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta content="text/html;charset=UTF-8" http-equiv="Content-Type"/>
+<link rel="stylesheet" type="text/css" href="../tools/ctut.css"/>
+<link type="text/css" rel="stylesheet" href="../tools/style.css"/>
+<style type="text/css">@font-face {font-family: SHREE_BAN_OTF_0592;src: local("../tools/SHREE_BAN_OTF_0592"),url(../tools/SHREE0592.woff) format("opentype");</style>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<script src="../tools/jquery-1.10.2.min.js"></script>
+
+<script>
+aha = function(code) {
+  window.open("https://rdrr.io/snippets/embed/?code="+code)
+}
+
+togglePhoto = function(photoId) {
+   var me = document.getElementById("pic_"+photoId)
+   if(me.style.display=="block"){
+     me.style.display="none";
+   }
+   else if (me.style.display=="none"){
+     me.style.display="block";
+   }
+}
+
+hideShow = function(lb) {
+   var me = document.getElementById(lb)
+   if(me.style.display=="block"){
+     me.style.display="none";
+   }
+   else if (me.style.display=="none"){
+     me.style.display="block";
+   }
+}
+
+grabData = function(data){
+  return "https://farm"+data.photo.farm+".staticflickr.com/"+data.photo.server+"/"+data.photo.id+"_"+
+            data.photo.secret+".jpg"
+}
+
+fromFlickr = function(photoId) {
+
+$.getJSON("https://api.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=23a138c73bdbe1e68601aa7866924e62&user_id=109924623@N07&photo_id="+photoId+"&lang=en-us&format=json&jsoncallback=?",
+  function(data) {
+    imgURL = grabData(data)
+    var l = document.getElementById("lnk_"+photoId)
+    l.href = "https://www.flickr.com/photos/109924623@N07/"+photoId
+    var i = document.getElementById("pic_"+photoId)
+    i.src=imgURL
+    i.onload = function() {
+      document.getElementById("status_"+photoId).innerHTML="[Image loaded. Click to show/hide.]"
+    }
+  })
+}
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js","color.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+    tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]},
+    TeX: {
+      Macros: {
+        h: ["{\\hat #1}",1],
+        b: ["{\\overline #1}", 1],
+        row: "{\\mathcal R}",
+        col: "{\\mathcal C}",
+        nul: "{\\mathcal N}"
+      }
+    }
+  });
+</script><script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script src="../tools/htmlwidgets.js"></script>
+<link href="../tools/rgl.css" rel="stylesheet"></link>
+<script src="../tools/rglClass.src.js"></script>
+<script src="../tools/CanvasMatrix.src.js"></script>
+<script src="../tools/rglWebGL.js"></script>
+</head>
+<body>
+<a href="http://www.isical.ac.in/~arnabc/">[Home]</a>
+<h3>Table of contents</h3>
+<ul>
+<li>
+<a href="#Nonlinear equations">Nonlinear equations</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;
+<a href="#Newton-Raphson method">Newton-Raphson method</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;
+<a href="#Nonlinear systems">Nonlinear systems</a>
+</li>
+<li>
+<a href="#Bisection method">Bisection method</a>
+</li>
+</ul>
+<hr/>
+
+$
+\newcommand{\ff}{{\bf f}}
+\newcommand{\xx}{{\bf x}}
+\newcommand{\yy}{{\bf y}}
+\newcommand{\z}{{\bf 0}}$
+<title>Nonlinear equations</title>
+
+<table width="100%">
+<tr>
+<td align="right"><i>Last
+updated on:
+THU FEB 27 IST 2020</i></td>
+</tr>
+</table>
+
+<h1><a
+name="Nonlinear equations">Nonlinear equations</a></h1>
+It often happens that we have to solve a nonlinear  equation,
+$$
+f(x)=0
+$$
+that we cannot easily solve analytically. A simple such example is $x = \cos x.$  Here $f(x) = x-\cos x.$
+<p></p>
+Any solution to $f(x)=0$ is
+called a <i>root</i> or <i>zero</i> of $f(x).$ In this page we
+shall learn two methods to approximately compute zeros of nonlinear functions.
+<p></p>
+All the methods will be iterative in nature, <i>i.e.</i>, we shall generate
+a sequence $x_0,x_1,x_2,...$ that (hopefully) converges to the
+required root. 
+
+<h2><a
+name="Newton-Raphson method">Newton-Raphson method</a></h2>
+This is a very popular method that usually converges rapidly. It solves
+the equation $f(x) = 0,$
+assuming that we can compute $f'(x).$ The iterations start with an
+initial guess $x_0$ and proceeds as
+$$
+x_{k+1} = x_k - \frac{f(x_k)}{f'(x_k)}.
+$$
+There are two equivalent ways to think about the Newton-Raphson
+iterations. The first is using the following diagram:
+<center>
+<table width="100%">
+<tr>
+<th><img width="" src="image/nr.png"></th>
+</tr>
+<tr>
+<th>Approximating $f(x)$ by the tangent at $x_k$</th>
+</tr>
+</table>
+</center>
+Here we draw the tangent through $(x_k,f(x_k))$ and use this as a
+local approximation of $f(x).$ The point where the tangent hits the
+$x$-axis is taken $x_{k+1}.$ 
+<p></p>
+The second way to look at the same thing is to approximate $f(x)$ using
+Taylor approximation:
+$$f(x) \approx f(x_k)+f'(x_k)(x-x_k).$$
+Now if we want $f(x)=0$ then we need $f(x_k)+f'(x_k)(x-x_k) = 0,$
+or
+$$
+x = x_k -\frac{f(x_k)}{f'(x_k)}.
+$$
+This motivates defining 
+$$
+x_{k+1} = x_k+h = x_k -\frac{f(x_k)}{f'(x_k)}.
+$$
+
+<p>
+<b>EXAMPLE:</b>&nbsp;
+Let us solve $\cos(x)=x$ using Newton-Raphson method starting with
+$x_0=1.$ Here $f(x) = \cos(x)-x,$ and hence $f'(x) =
+-\sin(x)-1.$ So the Newton-Raphson iteration is
+$$
+x_{k+1} = x_k + \frac{\cos(x_k)-x_k}{\sin(x_k)+1}.
+$$
+A few iterations are as follows. 
+<pre>
+k      x
+-------------
+1   0.7503639
+2   0.7391129
+3   0.7390851
+4   0.7390851
+</pre>
+We already see convergence.
+<img src="../image/box.png"></p>
+The following J code lets you explore this.
+<span class="j">
+<pre>
+f=:-cos
+nr=:- (f % (1+sin))
+nr^:(i.10) 1
+</pre>
+</span>
+<a href="javascript:hideShow('j1');">J help</a>
+<div id="j1" style="display:none;background-color:#ffcccc;">
+
+<ul>
+
+<li>
+<code>f g</code> means the function $y\mapsto
+f(y,g(y)).$ For example, <code>-cos</code> means $y\mapsto y-\cos y.$</li>
+
+</ul>
+
+</div>
+
+
+<p>
+<b>EXERCISE:</b>&nbsp;
+Solve using the Newton-Raphson method:
+<ol type="">
+
+<li>$e^x = \cos x$ for $x\in\left(-\frac \pi2,0\right).$</li>
+
+
+<li>$1-2x+3x^3+5x^4-x^5 = 0.$</li>
+
+</ol>
+
+
+<img src="../image/box.png"></p>
+
+<h2><a
+name="Nonlinear systems">Nonlinear systems</a></h2>
+It is possible to use Newton-Raphson method to solve a <i>system</i> of
+nonlinear equations:
+$$\begin{eqnarray*}
+f_1(x_1,...,x_n)&amp;  = &amp; 0\\
+&amp;  \vdots &amp; \\
+f_n(x_1,...,x_n) &amp; =&amp;  0
+\end{eqnarray*}$$
+Note that the number of unknowns equals the number of equations. We can
+write this using vector notation as
+$$
+\ff(\xx) = \z,
+$$
+where $\xx = (x_1,...,x_n)'$ and $\ff(\xx) =(f_1(\xx),...,f_n(\xx))'.$ 
+The Newton-Raphson iteration for this system is
+$$
+\xx_{n+1} = \xx_n - (D\ff(\xx_n))^{-1}\ff(\xx_n),
+$$
+where $D\ff(\xx)$ is the Jacobian matrix with $(i,j)$-th entry
+given by 
+$$
+\frac{\partial f_i(\xx)}{\partial x_j}.
+$$
+
+<p>
+<b>EXAMPLE:</b>&nbsp;
+Let us solve the system 
+$$\begin{eqnarray*}
+xy+x^2-y^3-1 = 0\\
+x+2y-xy^2 -2 =0
+\end{eqnarray*}$$
+Here $f_1(x,y) = xy+x^2-y^3-1$ and $f_2(x,y) = x+2y-xy^2 -2.$ So
+the Jacobian matrix is 
+$$
+D\ff(\xx) = \left[\begin{array}{ccccccccccc}y+2x  &amp;  x-3y^2 \\
+              1-y^2 &amp;  2-2xy  
+\end{array}\right]
+$$
+This has inverse given by 
+$$
+(D\ff(\xx))^{-1} = \frac{1}{(y+2x)(2-2xy)-(x-3y^2)(1-y^2)}
+\left[\begin{array}{ccccccccccc}2-2xy &amp;  3y^2-x\\ 
+     y^2-1      &amp;  y+2x
+\end{array}\right]
+$$
+The following table shows a few sample iterations.
+<pre>
+n    x             y
+-------------------------------------
+0   0.34         0.5
+1   1.0896157    0.6101134
+2   0.8689638    0.9595518
+3   0.9842601    0.9682277
+4   0.9902055    0.9854784
+5   0.9951545    0.9927297
+6   0.9975793    0.9963689
+7   0.9987903    0.9981854
+8   0.9993953    0.9990929
+9   0.9996977    0.9995465
+10  0.9998489    0.9997733
+11  0.9999244    0.9998866
+12  0.9999622    0.9999433
+13  0.9999811    0.9999717
+14  0.9999906    0.9999858
+15  0.9999953    0.9999929
+16  0.9999976    0.9999965
+17  0.9999988    0.9999982
+18  0.9999994    0.9999991
+19  0.9999997    0.9999996
+20  0.9999999    0.9999998
+</pre>
+Obviously we are converging to the solution $x=1,y=1.$
+<img src="../image/box.png"></p>
+
+
+<span class="j">
+<pre>
+f=: 3 : '( ((r*s) + (r^2) - (s^3) + 1), (r+(2*s)-(r*s^2)+2) ) [ ''r s''=:y'
+d=: 3 : '(2 2 $ (s+2*r), (r-3*s^2), (1-s^2), (2 * 1-r*s)) [''r s''=:y'
+nr2=:  - f %. d
+nr2^:(i.20) 0.34 0.5
+</pre>
+</span>
+<a href="javascript:hideShow('j2');">J help</a>
+<div id="j2" style="display:none;background-color:#ffcccc;">
+
+<ul>
+
+<li>
+<code>f=:3 :'...'</code> creates  a
+fnction $f(y).$ The explicit formula for $f$ is
+written in place of the <code>...</code>.</li>
+
+<li>
+<code>'r s'=:y</code> will split $y\equiv(y_0,y_1)$ into
+two components, and make <code>r</code> equal to $y_0$
+and <code>s</code> equal to $y_1.$</li>
+
+<li>To write single quotes inside single quotes use two single
+quotes <code>''</code>.</li>
+
+<li>
+<code>[</code> is the function $(x,y)\mapsto x.$ It
+evaluates  $y$ and then $x$ and then
+returns $x.$</li>
+
+<li>
+<code>b %. A</code> solves the system $A\vec x = \vec
+b$ in the least squares sense assuming $A$ to be full
+column rank.</li>
+
+</ul>
+
+</div>
+
+<p></p>
+
+
+For $n=2$ it was easy to invert the matrix analytically. For higher
+dimensions we should not explicitly invert the Jacobian matrix. Instead,
+we should solve the system 
+$$
+(D\ff(\xx_n)) \yy= \ff(\xx_n)
+$$
+for $\yy$ at each step. We shall learn such solution techniques in the next page.
+
+<p>
+<b>EXERCISE:</b>&nbsp;
+Solve using the Newton-Raphson method:
+$$\begin{eqnarray*}
+\sin xy + e^y &amp; = &amp; 7.10964\\
+(x+y)^2 - \cos(xy^2) &amp; = &amp; 24.1561
+\end{eqnarray*}$$
+
+
+<img src="../image/box.png"></p>
+
+<h1><a
+name="Bisection method">Bisection method</a></h1>
+While the Newton-Raphson method is very efficient, it requires us to compute the derivative of $f.$  Thus, it is unsuitable
+ in cases where $f$  is not differentiable or where the derivative is too difficult to be computed. Now we shall learn
+ a method that may be used to solve the (nonlinear) equation 
+$$
+f(x)=0,
+$$
+where $f(x)$ is continuous, but not necessarily differentiable. 
+<p></p>
+The method is conceptually much simpler than the Newton-Raphson method. To understand it
+suppose that the graph of $f(x)$ is as shown below.
+<center>
+<table width="100%">
+<tr>
+<th><img width="" src="image/bisec.png"></th>
+</tr>
+<tr>
+<th>$f(x)$ has a zero at $a$</th>
+</tr>
+</table>
+</center>
+Notice that here the graph of $f(x)$  cuts the $x$-axis. This is a requirement for the bisection method.
+<p></p>
+Suppose also that we know two numbers $l_0$ and $r_0$ such that 
+$f(x)$ has different signs at $x=l_0$ and $x=r_0.$
+<p></p>
+Then, by intermediate value theorem for continuous functions, we know that
+$f(x)$ must have at least one zero in the interval $(l_0,r_0).$
+To find such a zero, we proceed by stepwise guessing. Our first guess is
+the midpoint of $(l_0,r_0),$ <i>i.e.</i>,
+ $$m_0 = \frac{l_0+r_0}{2}.$$ 
+If $f(m_0)=0$
+then we are done! Otherwise, we look at the two halves $[l_0,m_0]$  and $[m_0,r_0].$  Exactly one of them must
+ have opposite signs of $f$  at the two ends. Call this half $[l_1,r_1].$
+For instance, if $sign(f(m_0))\neq sign(f(l_0))$ then we take 
+$l_1=l_0$ and $r_1=m_0.$ 
+<p></p>
+By the intermediate value theorem, we know that $f$  must have a zero in $(l_1,r_1).$
+Now repeat the process, <i>i.e.</i>, take $m_1$ as the midpoint of $(l_1,r_1),$ and take the 
+the appropriate half as $(l_2,r_2).$. Proceeding in this
+ way we get $(l_k,r_k)$ for
+$k=1,2,3,...$ until the length of the interval is small enough.
+
+<p>
+<b>EXAMPLE:</b>&nbsp;
+Let us apply the bisection method to solve the equation $\cos(x)=x.$
+This is same as finding  the zero of 
+$$
+f(x) = \cos(x)-x.
+$$
+It is easy to see that $f(0) = 1$ and $f(\frac{\pi}{2}) =
+-\frac{\pi}{2}.$ Since these have opposite signs we can start the
+bisection method with 
+$$
+l_0=0~~~\mbox{ and }~~~ r_0 = \frac{\pi}{2} = 1.5708.
+$$
+Our first guess is
+$$
+m_0 = \frac{l_0+r_0}{2} =  0.7854.
+$$
+Proceeding like this we get the following table.
+<pre>
+k left         right       mid
+------------------------------
+0    0         1.5708   0.7854
+1    0         0.7854   0.3927
+2    0.3927    0.7854   0.5890
+3    0.5890    0.7854   0.6872
+4    0.6872    0.7854   0.7363
+5    0.7363    0.7854   0.7609
+6    0.7363    0.7609   0.7486
+7    0.7363    0.7486   0.7424
+8    0.7363    0.7424   0.7394
+9    0.7363    0.7394   0.7378
+</pre>
+We proceed until the interval is short enough, <i>i.e.</i>,
+$(r_k-l_k)&lt;  \epsilon$ for some specified $\epsilon.$ In the
+above table we have stopped once the $l_k$ and $r_k$ are equal
+up to the first two decimal places. Thus, we see that the answer is 0.74
+up to the first two decimal places.
+<img src="../image/box.png"></p>
+
+The following J code explores this. 
+<span class="j">
+<pre>
+f=:-cos
+m=:0.5 *  +/ 
+n=:{.,m
+p=:m,{:
+c=:0&amp;&gt; @f @ m
+bis=: (c * p) + (-.@c * n)
+bis^:(i.20) 0 1
+</pre>
+</span>
+<a href="javascript:hideShow('j3');">J help</a>
+<div id="j3" style="display:none;background-color:#ffcccc;">
+
+<ul>
+
+<li>
+<code>0&amp;&gt;</code> is "less than 0". If $f(x,y)$ is some
+function, then <code>5&amp;f</code> is the function $y\mapsto
+f(5,y)$ and <code>f&amp;5</code> is $y\mapsto f(y,5).$
+Here <code>&gt;</code> is the greater than function, which returns 0
+or 1.
+</li>
+
+<li>
+<code>-.</code> is negation. It turns 0 into 1 and <i>vice versa</i>.</li>
+
+<li>
+<code>(c * n) + (-.@c * p)</code> is a mathematical way to specify
+if-else.  </li>
+
+</ul>
+
+</div>
+
+<p></p>
+
+
+<p>
+<b>EXERCISE:</b>&nbsp;
+Use the bisection method to solve $2e^x-2x-3 = 0$ for $x\in(0,2).$
+<img src="../image/box.png"></p>
+
+<p>
+<a name="rabbit"><b>
+<div id="rabbit">PROJECT:</div>
+</b></a>&nbsp;
+A certain trait in rabbits is controlled by a pair of alleles, $a$  and $A.$  Each rabbit receives one of these
+ from the father and another from the mother. Thus, the possible pairs are $aa,$  $aA$  and $AA$  (order is
+ immaterial). The probability that a parent gives an $a$  to the offspring is $p$  (unknown). So the probability
+ of an $A$  is $q = 1-p.$  The father's contribution is independent of the mother's, and so the probabilities of
+ $aa,$  $aA$  and $AA$  in the offspring are, respectively, $p^2,$  $2pq$  and $q^2.$  Our
+ aim is to estimate $p.$  Unfortunately, it is impossible to detect the pair an offspring has. It is only possible to
+ detect if an offspring has at least one $A$, <i>i.e.</i>, whether $aa$  or $\{aA, AA\}.$  The probabilities are,
+ respectively, $p^2$  and $q^2+2pq.$  In a random sample of 100 offsprings, only 23 are without any $A.$ 
+The probability of this is 
+$$L(p)=p^{46}\big(q^2 +2pq\big)^{77}.$$
+The value of $p\in(0,1)$  for which this is the maximum is called the <b>maximum likelihood estimator</b>  of $p.$  Find
+ it. 
+<img src="../image/box.png"></p>
+
+
+
+<p>
+<a name="fit"><b>
+<div id="fit">PROJECT:</div>
+</b></a>&nbsp;
+The file <a
+href="data.txt">data.txt</a>  has $n=996$ random numbers that are generated from the density 
+$$f(x; p, a) = \frac{ p^a}{\Gamma(p)} e^{-a x},\quad x&gt;0$$
+for unknown constants $p, a &gt; 0.$  The principle of maximum likelihood estimation suggests estimating 
+$p,a $ by maximising
+$$L(p,a) = \prod_{i=1}^n f(x_i; p,a),$$
+where $x_1,...,x_n$  are the data in the file. Perform this estimation, and check your answer
+graphically by overlaying the graph of $f(x;p,a)$  on the histogram of the data. 
+<p></p>
+
+<font color="#ff0000">[Hint: You might find the R functions <code>gamma</code>, <code>dgamma</code>  and 
+ <code>digamma</code>   useful here.]</font>
+<img src="../image/box.png"></p>
+
+<h3>Comments</h3>
+To post an anonymous comment, click on the "Name" field. This
+will bring up an option saying "I'd rather post as a guest."
+<p></p><!--
+begin disqus code --> <div id="disqus_thread"></div>
+<script>
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+
+var disqus_config = function () {
+this.page.url = "http://www.isical.ac.in/~arnabc/numana/nonlin1.html"; // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = "nonlin1"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://txtbk.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript><!-- end disqus code --> 
+<hr/>
+<table width="100%" border="0">
+<tr>
+<td align="left"/>
+<td align="right"/>
+</tr>
+</table>
+<hr/>
+</body>
+</html>

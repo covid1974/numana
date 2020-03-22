@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Creator: fig2dev Version 3.2 Patchlevel 5e -->
+
+<!-- CreationDate: Mon Jan  6 13:30:27 2020 -->
+
+<!-- Magnification: 1.050 -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="4.8in"
+   height="2.8in"
+   viewBox="1404 918 5765 3345"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="simpcub.svg">
+  <metadata
+     id="metadata48">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs46" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="640"
+     inkscape:window-height="480"
+     id="namedview44"
+     showgrid="false"
+     inkscape:zoom="0.68981479"
+     inkscape:cx="216.00001"
+     inkscape:cy="126"
+     inkscape:window-x="53"
+     inkscape:window-y="34"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg2" />
+  <g
+     style="stroke-width:.025in; fill:none"
+     id="g4">
+    <!-- Ellipse -->
+    <ellipse
+       transform="translate(3779,2354) rotate(-0.00000000)"
+       rx="87"
+       ry="87"
+       style="fill:#000000;stroke:#000000;stroke-width:8;"
+       id="ellipse6" />
+    <!-- Ellipse -->
+    <ellipse
+       transform="translate(4724,2472) rotate(-0.00000000)"
+       rx="87"
+       ry="87"
+       style="fill:#000000;stroke:#000000;stroke-width:8;"
+       id="ellipse8" />
+    <!-- Ellipse -->
+    <ellipse
+       transform="translate(2834,1882) rotate(-0.00000000)"
+       rx="87"
+       ry="87"
+       style="fill:#000000;stroke:#000000;stroke-width:8;"
+       id="ellipse10" />
+    <!-- Line -->
+    <polyline
+       points="6495,1889 5794,1713 "
+       style="stroke:#000000;stroke-width:8; stroke-linejoin:miter; stroke-linecap:butt; "
+       id="polyline12" />
+    <!-- Arrowhead on XXXpoint 6495 1889 - 5534 1649-->
+    <polygon
+       points="5811 1639 5548 1652 5774 1786 5811 1639  "
+       style="stroke:#000000;stroke-width:8;stroke-miterlimit:8; fill:#000000;"
+       id="polygon14" />
+    <!-- Line -->
+    <polyline
+       points="4251,1534 4251,2227 "
+       style="stroke:#000000;stroke-width:8; stroke-linejoin:miter; stroke-linecap:butt; "
+       id="polyline16" />
+    <!-- Arrowhead on XXXpoint 4251 1534 - 4251 2495-->
+    <polygon
+       points="4176 2228 4251 2480 4327 2228 4176 2228  "
+       style="stroke:#000000;stroke-width:8;stroke-miterlimit:8; fill:#000000;"
+       id="polygon18" />
+    <!-- Line -->
+    <polyline
+       points="4724,2479 4724,3779 "
+       style="stroke:#000000;stroke-width:8; stroke-linejoin:miter; stroke-linecap:butt; "
+       id="polyline20" />
+    <!-- Line -->
+    <polyline
+       points="3779,2362 3779,3779 "
+       style="stroke:#000000;stroke-width:8; stroke-linejoin:miter; stroke-linecap:butt; "
+       id="polyline22" />
+    <!-- Line -->
+    <polyline
+       points="2834,1889 2834,3779 "
+       style="stroke:#000000;stroke-width:8; stroke-linejoin:miter; stroke-linecap:butt; "
+       id="polyline24" />
+    <!-- Line -->
+    <polyline
+       points="2834,1889 2362,2007 "
+       style="stroke:#000000;stroke-width:32; stroke-linejoin:miter; stroke-linecap:butt; "
+       id="polyline26" />
+    <!-- Line -->
+    <polyline
+       points="2834,1889 2837,1888 2845,1887 2857,1885 2877,1881 2902,1877 2933,1870 2967,1864 3005,1858 3043,1851 3081,1844 3118,1838 3152,1833 3184,1827 3214,1823 3240,1820 3266,1817 3289,1814 3310,1813 3330,1812 3348,1811 3365,1811 3385,1811 3405,1812 3425,1814 3444,1816 3462,1820 3481,1824 3498,1829 3516,1836 3531,1844 3547,1853 3562,1861 3575,1871 3588,1883 3601,1895 3611,1907 3622,1920 3632,1933 3640,1948 3650,1964 3658,1981 3667,1998 3675,2017 3683,2038 3692,2060 3700,2082 3709,2107 3717,2131 3724,2156 3733,2180 3740,2205 3746,2229 3754,2254 3760,2277 3766,2299 3773,2321 3779,2342 3785,2363 3791,2384 3798,2405 3804,2426 3812,2447 3819,2468 3827,2489 3837,2510 3846,2531 3856,2551 3866,2570 3878,2587 3889,2605 3902,2621 3914,2637 3927,2650 3941,2664 3955,2677 3971,2688 3988,2699 4006,2710 4025,2720 4046,2729 4068,2738 4090,2746 4114,2752 4138,2759 4163,2763 4187,2767 4213,2769 4237,2770 4261,2769 4284,2768 4306,2765 4328,2761 4349,2755 4368,2749 4387,2742 4406,2734 4425,2725 4445,2714 4464,2703 4483,2689 4503,2676 4523,2661 4543,2646 4563,2629 4583,2614 4602,2596 4621,2579 4639,2562 4657,2545 4675,2529 4691,2512 4707,2496 4724,2479 4740,2464 4756,2447 4773,2430 4790,2413 4808,2395 4826,2377 4844,2359 4861,2341 4879,2322 4898,2302 4916,2283 4934,2264 4952,2246 4969,2227 4985,2209 5001,2192 5016,2175 5030,2158 5044,2141 5058,2125 5071,2109 5085,2093 5098,2076 5111,2058 5125,2041 5138,2024 5151,2005 5165,1986 5177,1967 5190,1948 5203,1929 5215,1910 5227,1891 5238,1872 5249,1855 5258,1838 5269,1820 5277,1803 5286,1787 5294,1771 5303,1753 5312,1734 5320,1715 5329,1696 5338,1674 5348,1651 5357,1627 5366,1600 5378,1571 5388,1542 5399,1512 5408,1485 5417,1461 5424,1442 5428,1428 5432,1420 5433,1417 "
+       style="stroke:#000000;stroke-width:32; stroke-linejoin:bevel; stroke-linecap:butt; "
+       id="polyline28" />
+    <!-- Line -->
+    <polyline
+       points="2834,1889 2835,1890 2837,1891 2841,1895 2849,1899 2858,1905 2871,1913 2887,1924 2906,1937 2927,1950 2951,1966 2978,1984 3006,2002 3038,2020 3070,2040 3105,2061 3141,2081 3177,2102 3215,2124 3256,2145 3297,2166 3341,2188 3386,2211 3435,2232 3486,2254 3540,2276 3595,2298 3655,2320 3716,2342 3779,2362 3842,2381 3903,2397 3963,2412 4018,2426 4072,2437 4123,2447 4172,2455 4217,2461 4261,2468 4302,2472 4343,2476 4381,2478 4417,2480 4453,2482 4488,2483 4520,2483 4552,2483 4580,2483 4607,2483 4632,2482 4653,2482 4671,2481 4687,2481 4700,2480 4709,2480 4717,2479 4721,2479 4723,2479 4724,2479 "
+       style="stroke:#000000;stroke-width:8; stroke-linejoin:bevel; stroke-linecap:butt; "
+       id="polyline30" />
+    <!-- Line -->
+    <polyline
+       points="1417,3779 5196,3779 "
+       style="stroke:#00ff00;stroke-width:8; stroke-linejoin:miter; stroke-linecap:butt; fill:#b2b2b2; "
+       id="polyline32" />
+    <!-- Line -->
+    <polyline
+       points="1889,944 1889,4251 "
+       style="stroke:#00ff00;stroke-width:8; stroke-linejoin:miter; stroke-linecap:butt; fill:#b2b2b2; "
+       id="polyline34" />
+    <!-- Text -->
+    <text
+       xml:space="preserve"
+       x="2125"
+       y="1298"
+       fill="#000000"
+       font-family="Times"
+       font-style="italic"
+       font-weight="normal"
+       font-size="252"
+       text-anchor="start"
+       id="text36">quadratic interpolant</text>
+    <!-- Text -->
+    <text
+       xml:space="preserve"
+       x="5433"
+       y="2243"
+       fill="#000000"
+       font-family="Times"
+       font-style="italic"
+       font-weight="normal"
+       font-size="252"
+       text-anchor="start"
+       id="text38">f(x) is cubic</text>
+    <!-- Text -->
+    <text
+       xml:space="preserve"
+       x="4133"
+       y="2716"
+       fill="#000000"
+       font-family="Times"
+       font-style="normal"
+       font-weight="bold"
+       font-size="252"
+       text-anchor="start"
+       id="text40">-</text>
+    <!-- Text -->
+    <text
+       xml:space="preserve"
+       x="3307"
+       y="2125"
+       fill="#000000"
+       font-family="Times"
+       font-style="normal"
+       font-weight="bold"
+       font-size="252"
+       text-anchor="start"
+       id="text42">+</text>
+  </g>
+</svg>

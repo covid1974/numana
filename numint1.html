@@ -1,0 +1,472 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta content="text/html;charset=UTF-8" http-equiv="Content-Type"/>
+<link rel="stylesheet" type="text/css" href="../tools/ctut.css"/>
+<link type="text/css" rel="stylesheet" href="../tools/style.css"/>
+<style type="text/css">@font-face {font-family: SHREE_BAN_OTF_0592;src: local("../tools/SHREE_BAN_OTF_0592"),url(../tools/SHREE0592.woff) format("opentype");</style>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<script src="../tools/jquery-1.10.2.min.js"></script>
+
+<script>
+aha = function(code) {
+  window.open("https://rdrr.io/snippets/embed/?code="+code)
+}
+
+togglePhoto = function(photoId) {
+   var me = document.getElementById("pic_"+photoId)
+   if(me.style.display=="block"){
+     me.style.display="none";
+   }
+   else if (me.style.display=="none"){
+     me.style.display="block";
+   }
+}
+
+hideShow = function(lb) {
+   var me = document.getElementById(lb)
+   if(me.style.display=="block"){
+     me.style.display="none";
+   }
+   else if (me.style.display=="none"){
+     me.style.display="block";
+   }
+}
+
+grabData = function(data){
+  return "https://farm"+data.photo.farm+".staticflickr.com/"+data.photo.server+"/"+data.photo.id+"_"+
+            data.photo.secret+".jpg"
+}
+
+fromFlickr = function(photoId) {
+
+$.getJSON("https://api.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=23a138c73bdbe1e68601aa7866924e62&user_id=109924623@N07&photo_id="+photoId+"&lang=en-us&format=json&jsoncallback=?",
+  function(data) {
+    imgURL = grabData(data)
+    var l = document.getElementById("lnk_"+photoId)
+    l.href = "https://www.flickr.com/photos/109924623@N07/"+photoId
+    var i = document.getElementById("pic_"+photoId)
+    i.src=imgURL
+    i.onload = function() {
+      document.getElementById("status_"+photoId).innerHTML="[Image loaded. Click to show/hide.]"
+    }
+  })
+}
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js","color.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+    tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]},
+    TeX: {
+      Macros: {
+        h: ["{\\hat #1}",1],
+        b: ["{\\overline #1}", 1],
+        row: "{\\mathcal R}",
+        col: "{\\mathcal C}",
+        nul: "{\\mathcal N}"
+      }
+    }
+  });
+</script><script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script src="../tools/htmlwidgets.js"></script>
+<link href="../tools/rgl.css" rel="stylesheet"></link>
+<script src="../tools/rglClass.src.js"></script>
+<script src="../tools/CanvasMatrix.src.js"></script>
+<script src="../tools/rglWebGL.js"></script>
+</head>
+<body>
+<a href="http://www.isical.ac.in/~arnabc/">[Home]</a>
+<h3>Table of contents</h3>
+<ul>
+<li>
+<a href="#Numerical Integration">Numerical Integration</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;
+<a href="#Trapezium rule">Trapezium rule</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;
+<a href="#Simpson's rule">Simpson's rule</a>
+</li>
+<li>
+<a href="#Monte Carlo integration">Monte Carlo integration</a>
+</li>
+</ul>
+<hr/>
+<title>Numerical Integration</title>
+
+<table width="100%">
+<tr>
+<td align="right"><i>Last
+updated on:
+THU FEB 20 IST 2020</i></td>
+</tr>
+</table>
+
+<h1><a
+name="Numerical Integration">Numerical Integration</a></h1>
+Suppose that we are given a function $f(x),$ and we are to compute
+$$
+\int_a^bf(x)\,dx,
+$$
+where $a,b$ are given numbers. One method
+ is to first find an indefinite integral of $f(x):$
+$$
+F(x) = \int f(x)\,dx,
+$$
+and then to compute $F(b)-F(a).$ This method depends on our ability to compute the
+indefinite integral $F(x).$ There are many situations where computing
+$F(x)$ is difficult or even impossible. In such cases, we resort to
+<b>numerical integration</b> or <b>quadrature.</b> A numerical integration
+method has the advantage that we do not need to find the indefinite
+integral, but it has the disadvantage that the answer may be approximate. 
+There are many different methods of numerical integration. In this page,
+we shall learn two such techniques, both belonging to a family called
+<b>Newton-Cotes quadrature</b>.
+
+<h2><a
+name="Trapezium rule">Trapezium rule</a></h2>
+First we split $[a,b]$  into  a grid of equally spaced $x$-values, and evaluate $f(x) $ at those points:
+<center>
+<table width="100%">
+<tr>
+<th><img width="" src="image/trap1.png"></th>
+</tr>
+<tr>
+<th>Take a grid of $x$-values</th>
+</tr>
+</table>
+</center>
+Then we join the points  by line segments: 
+<center>
+<table width="100%">
+<tr>
+<th><img width="" src="image/trap2.png"></th>
+</tr>
+<tr>
+<th>Continuous piecewise linear approximation</th>
+</tr>
+</table>
+</center>
+Each piece is a trapezium:
+<center>
+<table width="100%">
+<tr>
+<th><img width="" src="image/trap3.png"></th>
+</tr>
+<tr>
+<th>This trapezium has
+ area $\frac 12(y_{k-1}+y_k)\times\delta x$</th>
+</tr>
+</table>
+</center>
+We add the areas of all the trapeziums to approximate $\int_a^b f(x)\, dx.$
+<fieldset>
+<legend><b><i>Trapezium rule</i></b></legend>
+Choose some positive integer $n.$ Split the interval $[a,b]$
+into $n$ equal parts using the break points 
+$$x_0,x_1,...,x_n,$$ 
+ where $x_i = a + i\delta
+ x.$  Here $\delta x = \frac{b-a}{n}.$
+Note that $x_0 = a $ and $x_n = b.$
+<p></p>
+Next, we compute
+$$
+y_i = f(x_i)\mbox{   for } i=0,1,...,n.
+$$
+Then the trapezium rule is the approximation
+$$\int_a^bf(x)\,dx\approx \frac{\delta x}{2}\{y_0+2(y_1+\cdots+y_{n-1})+y_n\}.$$
+</fieldset>
+
+
+
+<p>
+<b>EXAMPLE:</b>&nbsp;
+Compute 
+$$
+\int_1^2\frac{1}{\sqrt{2\pi}} e^{-x^2/2}\,dx,
+$$
+by trapezium rule using $n=5.$ We split the interval $[1,2]$
+into 4 equal parts and compute $y_i$'s.
+<pre>
+i     y
+-----------
+0    0.2420
+1    0.1826
+2    0.1295
+3    0.0863
+4    0.0540
+</pre>
+So by applying trapezium rule the integral is approximately 
+$$
+{0.25\over2}\times[0.2420 + 2\times(0.1826+0.1295+0.0863) +0.0540] = 0.1366.
+$$
+It is instructive to compare this with the actual value, which is 0.1359.
+<img src="../image/box.png"></p>
+The following J code allows you to use a finer grid:
+<span class="j">
+<pre>
+trap=:0.1 * 0.5 *  {.+{: + 2*+/@: }.@ }:
+x=: 1+(i.11) % 10
+y=: (^-x*x%2) % %: 2p1
+trap y
+</pre>
+</span>
+
+
+<h2><a
+name="Simpson's rule">Simpson's rule</a></h2>
+
+In trapezium rule we interpolated by straight lines, <i>i.e.</i>,
+polynomials of degree $\leq 1.$ If we use polynomials of
+degree $\leq 2$, then we may expect better accuracy. To fit
+such a polynomial, we need three points. So we split  the
+interval into an <i>even</i> number of subintervals, and fit a parabola (<i>i.e.</i>, 
+polynomial of degree $\leq 2$) over two consecutive
+subintervals, <i>i.e.</i>, first parabola over subintervals 1 and 2, the next parabola over subintervals 3 and 4, etc.
+<center>
+<table width="100%">
+<tr>
+<th><img width="" src="image/simp.png"></th>
+</tr>
+<tr>
+<th>$y=\sin x$ shown in black. Parabolas
+in red</th>
+</tr>
+</table>
+</center>
+We may work out the exact formulae for the fitted polynomials,
+then integrate them, and add. But there's a simpler method.
+<p></p>
+Focus on a single pair of consecutive subintervals,
+say $[x_0,x_1]$ and $[x_1,x_2].$ We can see
+that the answer is going to be like $\delta x\times(a y_0 + b y_1 + c y_2).$ 
+<a href="javascript:hideShow('oops');">(Why?)</a>
+<div id="oops" style="display:none;background-color:#ffcccc;">
+In general, the area is going to depend
+on $x_0,x_1,x_2,y_0,y_1,y_2$. Now we shall perform some
+simple geometric transformations of the region to guess the form
+of this function:
+<ul>
+<li>First, translating
+the $x_i$'s by a fixed amount (keping the $y_i$'s
+fixed) is not going to change the area. So the area depends
+on $x_i$'s only through $\delta x.$</li>
+
+<li>If the region is stretched horizontally by some factor
+(keeping the vertical direction unaffected), then the area also
+gets multiplied by the same factor. So $\delta x$ must
+occur as a multiplicative factor. Thus, the area must be of the
+form $\delta x\times$some function of the $y_i$'s.</li>
+
+<li>If the region is stretched vertically by some factor, the
+area gets multipled by the same factor. So the area must be of
+the form $\delta x\times (ay_0+by_1+cy_2),$ for some
+constants $a,b,c.$
+</li>
+
+</ul>
+
+</div>
+
+<p></p>
+
+If our integrand were indeed a polynomial of degree $\leq
+2$, then this should give us the exact answer. In particular,
+this should give us the exact answer if the integrand
+were $1$ or $x$ or $x^2.$ This will give us three
+equations in three unknowns. Solving them you'll get $a = c=\frac 13$ and $b=\frac 43.$
+<p></p>
+
+
+<fieldset>
+<legend><b><i>Simpson's rule</i></b></legend>
+As in trapezium rule we need to subdivide the interval $[a,b]$ into
+$n$ equal parts. But for Simpson's rule $n$ needs to be an even
+number, say $2k.$ Evaluate $f(x)$ at the subdivision points to get
+$$
+y_0,y_1,...,y_{2k}.
+$$ 
+But now use the following formula
+$$\begin{eqnarray*}
+\int_a^bf(x)\,dx &amp;  \approx &amp;  \frac{\delta x}{3}\left[(y_0+y_{2k})\right.\\
+                         &amp; &amp;   + 2(y_2+y_4+\cdots+y_{2(k-1)}) \\
+  &amp; &amp;  + \left. 4(y_1+y_3+\cdots+y_{2k-1} )\right]. 
+\end{eqnarray*}$$
+</fieldset>
+
+
+<p>
+<b>EXAMPLE:</b>&nbsp;
+Now let us compute the integral from the last example using Simpson's
+rule. We shall again use $n=4.$ This time the value is
+$$\begin{eqnarray*}
+\frac{0.25}{3}\times\left[\right.  \times  (0.2420+0.0540)\\
+ &amp;  + &amp; \left.2\times(0.1295) + 
+ 4\times(0.1826 + 0.0863)\right] = 0.1359,
+\end{eqnarray*}$$
+
+which is correct up to 4 decimal places. Notice how Simpson's rule gives
+more accurate value here than the trapezium rule, though we have used
+the same $n$ in both methods.
+<img src="../image/box.png"></p>
+
+
+<span class="j">
+<pre>
+x=: 1+(i.11) % 10
+y=: (^-x*x%2) % %: 2p1
+ev=:2 4 6 8
+od=:1 3 5 7 9
+0.1* (%3) * (+/0 10{ y) + (2*+/ ev{y) + 4*+/od{y
+</pre>
+</span>
+
+
+<h1><a
+name="Monte Carlo integration">Monte Carlo integration</a></h1>
+This is a rather different approach that is conceptually very
+simple. Here we consider a definite integration problem as a
+problem of finding the area of a region. The approach is best
+explained by an example. 
+
+<p>
+<b>EXAMPLE:</b>&nbsp;
+Suppose that we want to find the value of $\pi.$ We consider
+this as the problem of finding the area of a unit circle. First,
+we bound the circle in a simpler region, say a square, as shown
+below. 
+<center>
+<table width="100%">
+<tr>
+<th><img width="" src="image/cinsq1.png"></th>
+</tr>
+<tr>
+<th>Circle in square</th>
+</tr>
+</table>
+</center>
+Now pretend that this square is a target board for dart throwing,
+and a child is throwing darts randomly at the board in a way that
+each point is as likely to be hit as any other point. Then the
+chance of a random dart landing in any given region is
+the area of that region divided by the area of the square (which
+is $(1+1)^2 = 4$). 
+A typical throw of 16 darts may produce a result like this:
+<center>
+<table width="100%">
+<tr>
+<th><img width="" src="image/cinsq2.png"></th>
+</tr>
+<tr>
+<th>16 random throws</th>
+</tr>
+</table>
+</center>
+Here the event "hitting the circle" has occured for 10 out of 16
+cases, so the sample proportion is $p_{16}=\frac{10}{16} =
+\frac 58.$ By laws of large numbers, we expect
+$$
+\frac \pi4\approx \frac 58,
+$$
+or $\pi\approx 2.5.$ This is of course a rather poor
+approximation, but the accuracy improves with increasing number
+of throws. As "randomly dart-throwing children" may not be easily
+available, we shall employ a computer for that purpose. We set up
+a coordinate system as follows. 
+<center>
+<table width="100%">
+<tr>
+<th><img width="" src="image/cinsq3.png"></th>
+</tr>
+<tr>
+<th>Coordinate system</th>
+</tr>
+</table>
+</center>
+A random dart hit is now $(X,Y),$ where $X,Y$ are
+independent $Unif(0,1)$ random variables. Checking if the
+dart has hit the disc is simply checking whether $X^2+Y^2 &lt;
+1.$ The following J code implements the idea.
+<span class="j">
+<pre>
+p=: _1+2*? 2 1000 $ 0
+in=:1&gt;+/*~ p
+'dot; pensize 3' plot ;/|: in # |:p
+0.004*+/in
+</pre>
+</span>
+<img src="../image/box.png"></p>
+
+We shall now use the idea to approximate an integral of the
+form $\int_a^b f(x)\, dx.$ Since we shall be approximating
+integrls using probabilities, we have to make sure that $f$
+does not change sign in the interval $[a,b].$ Let's assume
+that $f(x)\geq 0$ over the entire interval. Let $M&gt;0$ be
+some known upper bound for $f.$ Then the graph may be put
+inside a rectangle as follows:
+<center>
+<table width="100%">
+<tr>
+<th><img width="" src="image/ginrc1.png"></th>
+</tr>
+<tr>
+<th>Graph in rectangle</th>
+</tr>
+</table>
+</center> 
+Again we throw darts randomly at the rectangle and find the
+proportion of darts hitting the shaded region. Mathematically, we
+generate $X,Y$ independently with $X\sim Unif(a,b)$
+and $Y\sim Unif(0,M).$ Then we check the proportion of cases
+for which $Y &lt; f(X).$ The following J code snippet
+implements this idea for $f(x) = x^2$ over $[0,1]$ with
+upper bound $B=1.5.$ 
+<span class="j">
+<pre>
+x=: ? 1000 $ 0
+y=: 1.5 * ? 1000 $ 0
+0.0015 * +/ y &lt; x*x
+</pre>
+</span>
+This technique may be used to approximate the area of any region
+that may be bounded in a box and for which we may test
+containment. It easily extends to higher dimensions (volume,
+hypervolume etc). 
+
+<p></p>
+
+
+<h3>Comments</h3>
+To post an anonymous comment, click on the "Name" field. This
+will bring up an option saying "I'd rather post as a guest."
+<p></p><!--
+begin disqus code --> <div id="disqus_thread"></div>
+<script>
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+
+var disqus_config = function () {
+this.page.url = "https://www.isical.ac.in~/arnabc/numana/numint1.html"; // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = "numint1"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://txtbk.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript><!-- end disqus code --> 
+
+<hr/>
+<table width="100%" border="0">
+<tr>
+<td align="left"/>
+<td align="right"/>
+</tr>
+</table>
+<hr/>
+</body>
+</html>

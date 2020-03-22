@@ -1,0 +1,288 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta content="text/html;charset=UTF-8" http-equiv="Content-Type"/>
+<link rel="stylesheet" type="text/css" href="../tools/ctut.css"/>
+<link type="text/css" rel="stylesheet" href="../tools/style.css"/>
+<style type="text/css">@font-face {font-family: SHREE_BAN_OTF_0592;src: local("../tools/SHREE_BAN_OTF_0592"),url(../tools/SHREE0592.woff) format("opentype");</style>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<script src="../tools/jquery-1.10.2.min.js"></script>
+
+<script>
+aha = function(code) {
+  window.open("https://rdrr.io/snippets/embed/?code="+code)
+}
+
+togglePhoto = function(photoId) {
+   var me = document.getElementById("pic_"+photoId)
+   if(me.style.display=="block"){
+     me.style.display="none";
+   }
+   else if (me.style.display=="none"){
+     me.style.display="block";
+   }
+}
+
+hideShow = function(lb) {
+   var me = document.getElementById(lb)
+   if(me.style.display=="block"){
+     me.style.display="none";
+   }
+   else if (me.style.display=="none"){
+     me.style.display="block";
+   }
+}
+
+grabData = function(data){
+  return "https://farm"+data.photo.farm+".staticflickr.com/"+data.photo.server+"/"+data.photo.id+"_"+
+            data.photo.secret+".jpg"
+}
+
+fromFlickr = function(photoId) {
+
+$.getJSON("https://api.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=23a138c73bdbe1e68601aa7866924e62&user_id=109924623@N07&photo_id="+photoId+"&lang=en-us&format=json&jsoncallback=?",
+  function(data) {
+    imgURL = grabData(data)
+    var l = document.getElementById("lnk_"+photoId)
+    l.href = "https://www.flickr.com/photos/109924623@N07/"+photoId
+    var i = document.getElementById("pic_"+photoId)
+    i.src=imgURL
+    i.onload = function() {
+      document.getElementById("status_"+photoId).innerHTML="[Image loaded. Click to show/hide.]"
+    }
+  })
+}
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js","color.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+    tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]},
+    TeX: {
+      Macros: {
+        h: ["{\\hat #1}",1],
+        b: ["{\\overline #1}", 1],
+        row: "{\\mathcal R}",
+        col: "{\\mathcal C}",
+        nul: "{\\mathcal N}"
+      }
+    }
+  });
+</script><script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script src="../tools/htmlwidgets.js"></script>
+<link href="../tools/rgl.css" rel="stylesheet"></link>
+<script src="../tools/rglClass.src.js"></script>
+<script src="../tools/CanvasMatrix.src.js"></script>
+<script src="../tools/rglWebGL.js"></script>
+</head>
+<body>
+<a href="http://www.isical.ac.in/~arnabc/">[Home]</a>
+<h3>Table of contents</h3>
+<ul>
+<li>
+<a href="#Numerical Analysis">Numerical Analysis</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;
+<a href="#Approximate versus exact">Approximate versus exact</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="#When an exact solution is impossible/difficult to find">When an exact solution is impossible/difficult to find</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="#When an &quot;exact solution&quot; is not a solution at all!">When an "exact solution" is not a solution at all!</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="#When the exact solution is less reliable than the
+approximate one">When the exact solution is less reliable than the
+approximate one</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;
+<a href="#Who uses numerical analysis">Who uses numerical analysis</a>
+</li>
+</ul>
+<hr/>
+
+<title>Numerical Analysis</title>
+
+<table width="100%">
+<tr>
+<td align="right"><i>Last
+updated on: FRI JAN 17 IST 2020</i></td>
+</tr>
+</table>
+
+<h1><a
+name="Numerical Analysis">Numerical Analysis</a></h1>
+Numerical analysis is all about solving equations (approximately)
+using a
+computer. Here the term "equation" is used in a very general
+sense: You'll be given a set up, and some partial information
+about it, and you have to find some other information based on
+that. Here are some examples:
+<ul>
+<li>Finding the area under a given curve.</li>
+
+
+<li>Finding the roots of a given 10-degree polynomial.</li>
+
+
+<li>Finding all solutions of a given linear system of
+equations in 1000 variables.</li>
+
+
+<li>Solving  a given differential equation.</li>
+
+</ul>
+While all these sound nice, many students feel uncomfortable
+about solving equations only <i>approximately</i>. For them,
+numerical analysis seems to be much less useful than the exact
+techniques learnt in school. Let us first understand why this is
+not so. 
+
+<h2><a
+name="Approximate versus exact">Approximate versus exact</a></h2>
+We shall discuss some scenarios where an approximate solution is
+a desirable thing.
+
+<h3><a
+name="When an exact solution is impossible/difficult to find">When an exact solution is impossible/difficult to find</a></h3>
+ Take for example the
+integral 
+$$
+\int_a^b e^{-x^2}\, dx.
+$$
+We need to find this integral for given $a,b$ in many
+problems of probability, statistics and physics. The high-school
+technique of first finding an antiderivative $F(x)$
+of $e^{-x^2},$ and then computing $F(b)-F(a),$ does not
+work here. Liouville has proved that $F(x)$ cannot be
+expressed in terms of any combination of trigonometric, exponential, logarithmic
+or algebraic functions! 
+
+<p></p>
+
+In some situation involving real data, we may get a rather
+complicated function (<i>e.g.</i>, motion
+of the moon after taking into account the attraction of Jupiter),
+and we may need to find when that function takes a certain value. (See
+the <b>moonpos</b> procedure
+in  <a href="https://idlastro.gsfc.nasa.gov/contents.html">Astrolib</a>
+if you are astronomically inclined.) Even finding out
+if the equation may be solved exactly, is a difficult problem.
+
+<h3><a
+name="When an "exact solution" is not a solution at all!">When an "exact solution" is not a solution at all!</a></h3>
+Suppose that you are trying to make a telescope, and find that
+the distance between two lenses must be $x$ cm, where $x^2-2 = 0.$
+<p></p>
+The exact solution is of course $x = \sqrt 2$. But what does
+this $\sqrt 2$ really mean? It means a positive number whose
+square is 2. Thus, this "exact solution" is a mere restatement of
+the original problem! However, $x\approx 1.414$ is of much
+more use here.
+<p></p>
+Similarly, if the exact answer to some problem is $\pi$,
+then you are basically reducing that problem to the problem of
+finding the ratio of the circumference and diameter of a
+circle. Many "exact solutions" are just saying that the problem at
+hand has the same solution as some other problem.
+ 
+<h3><a
+name="When the exact solution is less reliable than the
+approximate one">When the exact solution is less reliable than the
+approximate one</a></h3>
+In mathematics, we are fond of certain frequently used functions,
+like sine, cosine, logarithm, exponential, square root, etc. We
+are generally happy if we can express the answer to some problem
+in terms of these favourite functions. For example, most students
+of mathematics will consider 
+$$
+\frac{-10 + \sqrt{10^2-4\times 7\times\frac{2}{3}}}{2\times 7}
+$$
+to be an exact root of the equation $7x^2 + 10x + \frac 23 = 0.$ 
+
+<p></p>
+When we need the exact numerical value (say correct up to 4
+decimal places), we simplify the expression down to 
+$$
+\frac{-10+\sqrt{\frac{244}{3}}}{14}.
+$$
+No approximation so far. Now we have to find $\frac{244}{3},$
+which cannot be stored exactly in a computer (recurring). So we
+approximate it to $81.3333.$ Next we feed this into the
+square root. Even $\sqrt{81.3333}$ cannot be stored exactly
+in a computer. So another layer of approximation is
+needed: $9.0185.$ We have again used a 4-decimal place
+approximation. Thus, 
+<ul>
+
+<li>$\frac{244}{3}$ and $81.3333$ match up to 4 decimal
+places.</li>
+
+<li>$\sqrt{81.3333}$ and $9.0185$ match up to 4 decimal
+places.</li>
+
+</ul>
+But that does not guarantee that $\sqrt{\frac{244}{3}}$
+and $9.0185$ match up to 4 decimal places!
+Our favourite functions may not behave nicely with approximations!
+<p></p>
+Next we add the $-10$ (this does not entail any extra
+approximation). But when you finally divide by 14, yet another
+layer of approximation is inevitable. So all that we can say 
+about the final answer: $-0.0701$  is that it may contain an
+error of unknown order of magnitude!
+<p></p>
+A numerical method will not try to express answers in terms of
+the favourite functions. It will consider the input to output as
+a single function: (coefficients mapped to roots). Then it will
+approximate this single function directly. Thus, typically,
+you will have a more reliable error estimate here. 
+
+<h2><a
+name="Who uses numerical analysis">Who uses numerical analysis</a></h2>
+Modern engineering and physics would hardly be possible without
+numerical analysis. Even computer-generate animation movies
+(<i>e.g.</i>, Shrek) or computer games involving collisions (<i>e.g.</i>,
+simulated soccer) make heavy use of numerical analysis.
+<p></p>
+In statistics, we often com across equations where the constants
+involved are based on observed data (and hence may be nasty
+beyond control). So  statistician cannot survive without
+numerical analysis.
+<p></p>
+
+
+<h3>Comments</h3>
+To post an anonymous comment, click on the "Name" field. This
+will bring up an option saying "I'd rather post as a guest."
+<p></p><!--
+begin disqus code --> <div id="disqus_thread"></div>
+<script>
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+
+var disqus_config = function () {
+this.page.url = "https://www.isical.ac.in/~arnabc/numana/intro.html"; // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = "intro"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://txtbk.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript><!-- end disqus code --> 
+
+<hr/>
+<table width="100%" border="0">
+<tr>
+<td align="left"/>
+<td align="right"/>
+</tr>
+</table>
+<hr/>
+</body>
+</html>

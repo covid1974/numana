@@ -1,0 +1,325 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta content="text/html;charset=UTF-8" http-equiv="Content-Type"/>
+<link rel="stylesheet" type="text/css" href="../tools/ctut.css"/>
+<link type="text/css" rel="stylesheet" href="../tools/style.css"/>
+<style type="text/css">@font-face {font-family: SHREE_BAN_OTF_0592;src: local("../tools/SHREE_BAN_OTF_0592"),url(../tools/SHREE0592.woff) format("opentype");</style>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<script src="../tools/jquery-1.10.2.min.js"></script>
+
+<script>
+aha = function(code) {
+  window.open("https://rdrr.io/snippets/embed/?code="+code)
+}
+
+togglePhoto = function(photoId) {
+   var me = document.getElementById("pic_"+photoId)
+   if(me.style.display=="block"){
+     me.style.display="none";
+   }
+   else if (me.style.display=="none"){
+     me.style.display="block";
+   }
+}
+
+hideShow = function(lb) {
+   var me = document.getElementById(lb)
+   if(me.style.display=="block"){
+     me.style.display="none";
+   }
+   else if (me.style.display=="none"){
+     me.style.display="block";
+   }
+}
+
+grabData = function(data){
+  return "https://farm"+data.photo.farm+".staticflickr.com/"+data.photo.server+"/"+data.photo.id+"_"+
+            data.photo.secret+".jpg"
+}
+
+fromFlickr = function(photoId) {
+
+$.getJSON("https://api.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=23a138c73bdbe1e68601aa7866924e62&user_id=109924623@N07&photo_id="+photoId+"&lang=en-us&format=json&jsoncallback=?",
+  function(data) {
+    imgURL = grabData(data)
+    var l = document.getElementById("lnk_"+photoId)
+    l.href = "https://www.flickr.com/photos/109924623@N07/"+photoId
+    var i = document.getElementById("pic_"+photoId)
+    i.src=imgURL
+    i.onload = function() {
+      document.getElementById("status_"+photoId).innerHTML="[Image loaded. Click to show/hide.]"
+    }
+  })
+}
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js","color.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+    tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]},
+    TeX: {
+      Macros: {
+        h: ["{\\hat #1}",1],
+        b: ["{\\overline #1}", 1],
+        row: "{\\mathcal R}",
+        col: "{\\mathcal C}",
+        nul: "{\\mathcal N}"
+      }
+    }
+  });
+</script><script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script src="../tools/htmlwidgets.js"></script>
+<link href="../tools/rgl.css" rel="stylesheet"></link>
+<script src="../tools/rglClass.src.js"></script>
+<script src="../tools/CanvasMatrix.src.js"></script>
+<script src="../tools/rglWebGL.js"></script>
+</head>
+<body>
+<a href="http://www.isical.ac.in/~arnabc/">[Home]</a>
+<h3>Table of contents</h3>
+<ul>
+<li>
+<a href="#Numerical Analysis (B-I, 2020)">Numerical Analysis (B-I, 2020)</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;
+<a href="#Class notes">Class notes</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;
+<a href="#Projects">Projects</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;
+<a href="#Practicals">Practicals</a>
+</li>
+<li>
+<a href="#Reference and extra reading">Reference and extra reading</a>
+</li>
+</ul>
+<hr/>
+
+<table width="100%">
+<tr>
+<td align="right"><i>Last
+updated on:
+WED MAR 04 IST 2020</i></td>
+</tr>
+</table>
+
+<h1><a
+name="Numerical Analysis (B-I, 2020)">Numerical Analysis (B-I, 2020)</a></h1>
+This is the course web page for Numerical Analysis as taught to
+the B. Stat (hons) first year students in the year 2020.
+
+
+<p></p>
+
+<table align="right" width="50%">
+<tr>
+<td><b>Notice board</b></td>
+</tr>
+<tr>
+<td>
+<iframe src="news.html"></iframe>
+</td>
+</tr>
+</table>
+
+<p></p>
+
+Marks distribution: 
+<ul>
+
+<li>Midsem: 20</li>
+
+<li>Sem: 50</li>
+
+<li>Projects: $5\times5$</li>
+
+<li>Practicals: 5</li>
+
+</ul>
+
+
+<h2><a
+name="Class notes">Class notes</a></h2>
+The following notes will continue to evolve during the course. 
+
+<p></p>
+
+Before the midsem:
+<ul>
+
+<li>
+<a href="intro.html">Introduction to numerical analysis</a>
+</li>
+
+<li>
+<a href="diff1.html">Differential equations (part 1)</a>
+</li>
+
+<li>
+<a href="nonlin1.html">Nonlinear equations (part 1)</a>
+</li>
+
+<li>
+<a href="mat1.html">Matrix algorithms (part 1)</a>
+</li>
+
+<li>
+<a href="numint1.html">Integration (part 1)</a>
+</li>
+
+<li>
+<a href="interpol1.html">Interpolation (part 1)</a>
+</li>
+
+</ul>
+After the midsem:
+<ul>
+
+<li>
+<a href="nonlin2.html">Nonlinear equations (part 2)</a>
+</li>
+
+<li>
+<a href="mat2.html">Matrix algorithms (part 2)</a>
+</li>
+
+<li>
+<a href="diff2.html">Differential equations (part 2)</a>
+</li>
+
+<li>
+<a href="numint2.html">Integration (part 2)</a>
+</li>
+
+<li>
+<a href="interpol2.html">Interpolation (part 2)</a>
+</li>
+
+<li>
+<a href="err.html">Error analysis</a>
+</li>
+
+</ul>
+
+
+<h2><a
+name="Projects">Projects</a></h2>
+Each student has to do 5 projects from the following list of
+projects. Each project carries 5 marks. The [Details] link for a project leads
+to the appropriate place in the notes where the project is presented.
+<ol type="">
+
+<li>Elastic pendulum simulation <a href="diff1.html#pendu">[Details]</a>
+</li>
+
+<li>Gravity well simulation (Taylor) <a href="diff1.html#gw">[Details]</a>
+</li>
+
+<li>Estimation in bio-statistics <a href="nonlin1.html#rabbit">[Details]</a>
+</li>
+
+<li>Fitting a distribution <a href="nonlin1.html#fit">[Details]</a>
+</li>
+
+<li>Gauss-Jordan elimination <a href="mat1.html#gj">[Details]</a>
+</li>
+
+<li>Least squares solution using $QR$ decomposition <a href="mat1.html#qr">[Details]</a>
+</li>
+
+<li>Path independence in divided difference
+table <a href="interpol1.html#path">[Details]</a>
+</li>
+
+<li>Soap film simulation <a href="mat2.html#soap">[Details]</a>
+</li>
+
+<li>$LU$ decomposition <a href="mat2.html#lu">[Details]</a>
+</li>
+
+<li>Gravity well simulation (Runge-Kutta) <a href="diff2.html#gw2">[Details]</a>
+</li>
+
+</ol>
+
+<h2><a
+name="Practicals">Practicals</a></h2>
+This is a computing course. The lectures will appear boring
+unless we actually try out the things as we learn them. Implementing the
+algorithms in traditional languages like C or R or Matlab is
+too time consuming to carry out during the class. Using a
+calculator is also prohibitively labourious.  
+<p></p>
+There is, however, a language
+called <a href="http://www.jsoftware.com">J</a> that combines
+the ease of a calculator with the power of a programming
+language. One may run J code offline in a smart phone
+(android/ipad).
+ Learning this language is not part of the syllabus. We shall use
+little snippets of J to perform numerical computations in class. 
+<p></p>
+Please install the J app
+from <a href="https://code.jsoftware.com/wiki/System/Installation/J901">here</a>. This
+app is not available in Google Play.
+<p></p>
+I would also suggest that you install the Hacker's Keyboard app
+from Google Play. This is a full keyboard app (complete with
+cursor keys etc).
+<p></p>
+The 5 marks for "Practicals" will be based on your active
+participation in the practical computations using J in class. 
+
+<h1><a
+name="Reference and extra reading">Reference and extra reading</a></h1>
+
+<ul>
+
+<li>
+
+<a href="http://www.ohiouniversityfaculty.com/youngt/IntNumMeth/">http://www.ohiouniversityfaculty.com/youngt/IntNumMeth/</a>
+
+</li>
+
+<li>
+<b>Matrix Computations</b> by Golub and van Loan</li>
+
+<li>
+<b>Rounding errors in algebraic processes</b> by
+J. H. Wilkinson</li>
+</ul>
+
+<h3>Comments</h3>
+To post an anonymous comment, click on the "Name" field. This
+will bring up an option saying "I'd rather post as a guest."
+<p></p><!--
+begin disqus code --> <div id="disqus_thread"></div>
+<script>
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+
+var disqus_config = function () {
+this.page.url = "https://www.isical.ac.in/~arnabc/numana/index.html"; // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = "index"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://txtbk.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript><!-- end disqus code --> 
+
+<hr/>
+<table width="100%" border="0">
+<tr>
+<td align="left"/>
+<td align="right"/>
+</tr>
+</table>
+<hr/>
+</body>
+</html>

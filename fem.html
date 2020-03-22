@@ -1,0 +1,345 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta content="text/html;charset=UTF-8" http-equiv="Content-Type"/>
+<link rel="stylesheet" type="text/css" href="../tools/ctut.css"/>
+<link type="text/css" rel="stylesheet" href="../tools/style.css"/>
+<style type="text/css">@font-face {font-family: SHREE_BAN_OTF_0592;src: local("../tools/SHREE_BAN_OTF_0592"),url(../tools/SHREE0592.woff) format("opentype");</style>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<script src="../tools/jquery-1.10.2.min.js"></script>
+
+<script>
+aha = function(code) {
+  window.open("https://rdrr.io/snippets/embed/?code="+code)
+}
+
+togglePhoto = function(photoId) {
+   var me = document.getElementById("pic_"+photoId)
+   if(me.style.display=="block"){
+     me.style.display="none";
+   }
+   else if (me.style.display=="none"){
+     me.style.display="block";
+   }
+}
+
+hideShow = function(lb) {
+   var me = document.getElementById(lb)
+   if(me.style.display=="block"){
+     me.style.display="none";
+   }
+   else if (me.style.display=="none"){
+     me.style.display="block";
+   }
+}
+
+grabData = function(data){
+  return "https://farm"+data.photo.farm+".staticflickr.com/"+data.photo.server+"/"+data.photo.id+"_"+
+            data.photo.secret+".jpg"
+}
+
+fromFlickr = function(photoId) {
+
+$.getJSON("https://api.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=23a138c73bdbe1e68601aa7866924e62&user_id=109924623@N07&photo_id="+photoId+"&lang=en-us&format=json&jsoncallback=?",
+  function(data) {
+    imgURL = grabData(data)
+    var l = document.getElementById("lnk_"+photoId)
+    l.href = "https://www.flickr.com/photos/109924623@N07/"+photoId
+    var i = document.getElementById("pic_"+photoId)
+    i.src=imgURL
+    i.onload = function() {
+      document.getElementById("status_"+photoId).innerHTML="[Image loaded. Click to show/hide.]"
+    }
+  })
+}
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js","color.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+    tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]},
+    TeX: {
+      Macros: {
+        h: ["{\\hat #1}",1],
+        b: ["{\\overline #1}", 1],
+        row: "{\\mathcal R}",
+        col: "{\\mathcal C}",
+        nul: "{\\mathcal N}"
+      }
+    }
+  });
+</script><script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script src="../tools/htmlwidgets.js"></script>
+<link href="../tools/rgl.css" rel="stylesheet"></link>
+<script src="../tools/rglClass.src.js"></script>
+<script src="../tools/CanvasMatrix.src.js"></script>
+<script src="../tools/rglWebGL.js"></script>
+</head>
+<body>
+<a href="http://www.isical.ac.in/~arnabc/">[Home]</a>
+<h3>Table of contents</h3>
+<ul>
+<li>
+<a href="#Soap film project">Soap film project</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;
+<a href="#Coordinate system">Coordinate system</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;
+<a href="#Numerical solution">Numerical solution</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;
+<a href="#Solving">Solving</a>
+</li>
+<li>&nbsp;&nbsp;&nbsp;
+<a href="#Practical problem">Practical problem</a>
+</li>
+</ul>
+<hr/>
+
+$
+\newcommand{\bc}{{\bf c}}
+\newcommand{\bz}{{\bf 0}}
+$
+<h1><a
+name="Soap film project">Soap film project</a></h1>
+Consider a frame like the following dipped in a soap solution.
+<center>
+<table width="100%">
+<tr>
+<th><img width="" src="image/soap1.png"></th>
+</tr>
+<tr>
+<th>Frame</th>
+</tr>
+</table>
+</center>
+When you take it out of the solution, a thin film of soap water
+will cling to it:
+<center>
+<table width="100%">
+<tr>
+<th><img width="" src="image/soap2.png"></th>
+</tr>
+<tr>
+<th>Soap film</th>
+</tr>
+</table>
+</center>
+We want to find the shape of the film. This is an important
+quetion in architecture, where a structure must be given the most
+natural shape to reduce stress. 
+<p></p>
+It is known that a soap film will always occupy the position that
+minimises its elastic potential energy. In the next section we
+shall see how to express this mathematically.
+
+<h2><a
+name="Coordinate system">Coordinate system</a></h2>
+We imagine an $xy$-plane under the frame:
+<center>
+<table width="100%">
+<tr>
+<th><img width="" src="image/soap3.png"></th>
+</tr>
+<tr>
+<th>Coordinate system</th>
+</tr>
+</table>
+</center>
+If the surface is given by a function $u(x,y),$ then its
+elastic potential energy is given by
+$$
+E(u) = \iint_R (u_x)^2 + (u_y)^2\, dxdy.
+$$
+This is to be minimised subject to the boundary condition that
+the $u(x,y)$ must match the frame height at the boundary.
+<p></p>
+In general, this is a difficult/impossible problem to solve
+analytically. 
+
+<h2><a
+name="Numerical solution">Numerical solution</a></h2>
+To proceed numerically, one starts with a
+triangulation of the base. 
+<center>
+<table width="100%">
+<tr>
+<th><img width="" src="image/basis0.png"></th>
+</tr>
+<tr>
+<th>Triangulation</th>
+</tr>
+</table>
+</center>
+Then the aim is to find the value of $u(x,y)$ at the
+vertices. Let $c_j$ denote the value of $u(x,y)$ at the
+$j$-th vertex. 
+<p></p>
+Since the target function involves $u_x$
+and $u_y$, we need to somehow approximate them using only
+the values at the vertices. For this we choose a set of <b>basis
+function</b>s, one for each vertex. It is constructed by "pulling
+up" the vertex to a height 1, while leaving all the other
+vertices at height 0. Here is one example where the vertex is not
+a boundary vertex:
+<center>
+<table width="100%">
+<tr>
+<th><img width="" src="image/basis1.png"></th>
+</tr>
+<tr>
+<th>A basis function</th>
+</tr>
+</table>
+</center>
+Here is another example, this time for a boundary vertex.
+<center>
+<table width="100%">
+<tr>
+<th><img width="" src="image/basis2.png"></th>
+</tr>
+<tr>
+<th>Another basis function</th>
+</tr>
+</table>
+</center>
+Notice that the graph of each basis function is a plane over over
+each triangle, and hence we may write a basis
+function $\phi_j(x,y)$ as
+$$
+\phi_j(x,y) = \alpha_{ij} + \beta_{ij}x + \gamma_{ij} y \mbox{
+for } (x,y)\in T_i.
+$$
+for suitable numbers $\alpha_{ij},$ $\beta_{ij}$
+and $\gamma_{ij}$. Here $T_i$'s are the triangles of
+the triangulation. Also, notice that $\alpha_{ij}, \beta_{ij},
+\gamma_{ij}$'s are zero if the $j$-th vertex is not part
+of $T_i$. Thus, most of these numbers are actually zero.
+
+<p></p>
+Then we can approximate $u(x,y)$ by 
+$$
+u(x,y) = \sum_j c_j \phi_j(x,y).
+$$
+So 
+$$
+u_x(x,y) = \sum_j c_j\beta_{ij} \mbox{ for } (x,y)\in T_i^\circ.
+$$
+Similarly for $u_y(x,y).$
+<p></p>
+$$
+E(u) = \sum_i \iint_{T_i} (\sum_j c_j \beta_{ij})^2 + (\sum_j c_j\gamma_{ij})^2 
+  = \sum_i |T_i| \{ (\sum_j c_j \beta_{ij})^2 + (\sum_j c_j\gamma_{ij})^2 \},
+$$
+where $|T_i|$ denotes the area of $T_i.$
+<p></p>
+
+Thus, 
+$$
+E(u) = \bc' M\bc,
+$$
+where $M$ is the PD matrix with $(j,j')$-th entry given
+by 
+$$
+m_{jj'} = \sum_i |T_i| (\beta_{ij}\beta_{ij'} + \gamma_{ij} \gamma_{ij'}).
+$$
+
+<h2><a
+name="Solving">Solving</a></h2>
+Suppose that the last $k$ of the $c_j$'s are
+known frame heights. Partition $\bc$
+as $(\bc_1,\bc_2).$ Then $\bc_2$ is known,
+and $\bc_1$ is to be chosen to minimise $E(u).$
+<p></p>
+Let us partition $M$ accordingly as
+$$
+M = \left[\begin{array}{ccccccccccc}M_{11} &amp; M_{12}\\M_{21} &amp; M_{22}
+\end{array}\right].
+$$
+Then 
+$$
+\bc' M\bc = \left[\begin{array}{ccccccccccc}\bc_1' &amp; \bc_2'
+\end{array}\right]\left[\begin{array}{ccccccccccc}M_{11} &amp;
+M_{12}\\M_{21} &amp; M_{22}
+\end{array}\right] \left[\begin{array}{ccccccccccc}\bc_1\\\bc_2
+\end{array}\right] = 
+\bc_1' M_{11}\bc_1 + 2\bc_1' M_{12}\bc_2 + \bc_2' M_{11}\bc_2.
+$$
+Differentiating w.r.t. $\bc_1$, and equating to zero, we get
+$$
+M_{11}\bc_1 + M_{12}\bc_2 = \bz,
+$$
+or
+$$
+\bc_1 = -M_{11} ^{-1} M_{12} \bc_2.
+$$
+This shows that the problem always has unique solution. 
+
+
+<h2><a
+name="Practical problem">Practical problem</a></h2>
+However,
+there is a practical difficulty. To get a reasonable
+approximation we need the number of vertices to be pretty
+large. In our example, the vertices are in a rectangular array formed
+by subdividing the sides of the base. If we use 100 subdivisions
+in both directions, then the number of vertices is $101^2,$
+of which $99^2=9801$ are interior vertices. Thus, we need to
+solve $9801$ equations in as many unknowns! For many real
+life problem we need even more vertices:
+<center>
+<table width="100%">
+<tr>
+<th><img width="" src="image/camgrid.png"></th>
+</tr>
+<tr>
+<th>Many vertices are needed to capture the
+nooks and corners.</th>
+</tr>
+</table>
+</center>
+
+<p></p>
+However, notice that $M_{11}$ is an extremely sparse
+matrix. Each row contains just 6 nonzero entries. So one should
+use Gauss-Seidel method here. 
+<p></p>
+The project is to solve this problem with 50 subdivisions for
+each side. The base is the unit square. The boundaries are the
+graphs of the functions $0, $ $x,$ $1$
+and $x^3.$ 
+
+<h3>Comments</h3>
+To post an anonymous comment, click on the "Name" field. This
+will bring up an option saying "I'd rather post as a guest."
+<p></p><!--
+begin disqus code --> <div id="disqus_thread"></div>
+<script>
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+
+var disqus_config = function () {
+this.page.url = "https://www.isical.ac.in/~arnabc/numana/fem.html"; // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = "fem"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://txtbk.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript><!-- end disqus code --> 
+
+<hr/>
+<table width="100%" border="0">
+<tr>
+<td align="left"/>
+<td align="right"/>
+</tr>
+</table>
+<hr/>
+</body>
+</html>
